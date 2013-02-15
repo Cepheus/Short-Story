@@ -1,4 +1,5 @@
 # Compiled Object files
+/obj
 *.slo
 *.lo
 *.o
@@ -11,3 +12,16 @@
 *.lai
 *.la
 *.a
+
+# Executable
+/bin
+*.exe
+
+# Code::Block speacial files
+*.cbp
+*.depend
+*.layout
+
+# Ogre3D local files
+Ogre.log
+/media

@@ -25,3 +25,11 @@
 # Ogre3D local files
 Ogre.log
 /media
+
+# Autres
+.directory
+Debug
+Release
+.project
+.cproject
+.settings/*

@@ -33,3 +33,5 @@ Release
 .project
 .cproject
 .settings/*
+ogre.cfg
+*.xml

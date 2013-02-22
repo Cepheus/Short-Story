@@ -16,12 +16,8 @@ MainApplication::~MainApplication(void)
 
 void MainApplication::createScene(void)
 {
-    mSceneMgr->setAmbientLight(ColourValue(0.5f, 0.5f, 0.5f));
-    Entity* ogreHead = mSceneMgr->createEntity("Head", "ogrehead.mesh");
-    SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("HeadNode");
-    headNode->attachObject(ogreHead);
-
     // Light
+    mSceneMgr->setAmbientLight(ColourValue(0.5f, 0.5f, 0.5f));
     Light* light = mSceneMgr->createLight( "MainLight" );
     light->setPosition(20, 80, 50);
 
@@ -35,6 +31,31 @@ void MainApplication::createScene(void)
 
     // Terrain
 
+
+    // Immeuble
+    Entity* cube = mSceneMgr->createEntity("Cube", "Cube.mesh");
+    Entity* cube001 = mSceneMgr->createEntity("Cube001", "Cube001.mesh");
+    Entity* cube002 = mSceneMgr->createEntity("Cube002", "Cube002.mesh");
+    Entity* cube004 = mSceneMgr->createEntity("Cube004", "Cube004.mesh");
+    Entity* cube008 = mSceneMgr->createEntity("Cube008", "Cube008.mesh");
+    Entity* cube020 = mSceneMgr->createEntity("Cube020", "Cube020.mesh");
+    Entity* cube022 = mSceneMgr->createEntity("Cube022", "Cube022.mesh");
+    Entity* cube023 = mSceneMgr->createEntity("Cube023", "Cube023.mesh");
+    Entity* mesh031 = mSceneMgr->createEntity("Mesh031", "Mesh031.mesh");
+    Entity* plane128 = mSceneMgr->createEntity("Plane128", "plane128.mesh");
+    SceneNode* immeubleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("ImmeubleNode");
+    //immeubleNode->attachObject(cube);
+    immeubleNode->attachObject(cube001);
+    immeubleNode->attachObject(cube002);
+    //immeubleNode->attachObject(cube004);
+    immeubleNode->attachObject(cube008);
+    //immeubleNode->attachObject(cube020);
+    //immeubleNode->attachObject(cube022);
+    //immeubleNode->attachObject(cube023);
+    //immeubleNode->attachObject(mesh031);
+    //immeubleNode->attachObject(plane128);
+
+    immeubleNode->setPosition(0.,50.,0.);
 
     // Rayon
     /*Ray ray = Ray(Vector3(mCamera->getPosition().x, 1000.0f, mCamera->getPosition().z), Vector3::NEGATIVE_UNIT_Y);

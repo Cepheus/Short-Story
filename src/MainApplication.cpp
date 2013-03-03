@@ -43,6 +43,12 @@ void MainApplication::createScene(void)
     immeubleNode->setPosition(0.,80.,0.); //0.,42.,0.
     immeubleNode->scale(100.,100.,100.);
 
+    //rain
+    Ogre::ParticleSystem * rainParticle = mSceneMgr->createParticleSystem("rain", "Rain");
+    Ogre::SceneNode * rainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode( "rainNode", Ogre::Vector3( 100, 0, 0 ) );
+    rainNode->translate(0, 900, 0, Ogre::Node::TS_PARENT);
+    rainNode->attachObject(rainParticle);
+
     // Rayon
     /*Ray ray = Ray(Vector3(mCamera->getPosition().x, 1000.0f, mCamera->getPosition().z), Vector3::NEGATIVE_UNIT_Y);
     pair<bool, Vector3> result = terrain->rayIntersects(ray);

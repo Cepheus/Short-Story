@@ -1,0 +1,42 @@
+// Exterieur genrated by blender2ogre 0.5.9
+
+material Exterieur 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Exterieur
+        {
+            ambient 0.800000011920929 0.040584515780210495 0.01001830119639635 1.0
+            diffuse 0.6400000190734865 0.032467613107973525 0.008014641076544538 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+            texture_unit 
+            {
+                texture brique.JPG
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
+        }
+    }
+}

@@ -7,59 +7,59 @@ using namespace Ogre;
 
 /**
  * Classe permettant d'initialiser un projet, et contenant la boucle de rendu.
- * Il faut commencer par appeler la méthode Initialize() puis start() qui lancera la boucle de rendu.
+ * Il faut commencer par appeler la mÃ©thode Initialize() puis start() qui lancera la boucle de rendu.
  */
 class ShortStory
 {
 private:
-    /** La racine de Ogre */
-    Root *mRoot;
-    /** Le renderWindow, la fenêtre de l'appli */
-    RenderWindow* mWindow;
-    /** Le scene manager, qui crée les objets */
-    SceneManager* mSceneMgr;
-    /** La caméra */
-    Camera* mCamera;
+	/** La racine de Ogre */
+	Root *mRoot;
+	/** Le renderWindow, la fenÃªtre de l'appli */
+	RenderWindow* mWindow;
+	/** Le scene manager, qui crÃ©e les objets */
+	SceneManager* mSceneMgr;
+	/** La camÃ©ra */
+	Camera* mCamera;
 
 public:
-    /** Constructeur */
-    ShortStory();
+	/** Constructeur */
+	ShortStory ();
 
-    /** Destructeur */
-    virtual ~ShortStory();
+	/** Destructeur */
+	virtual ~ShortStory ();
 
-    /** Initialise l'appli Ogre, notamment la gestion des inputs */
-    bool Initialize ();
+	/** Initialise l'appli Ogre, notamment la gestion des inputs */
+	bool Initialize ();
 
-    /** Lance la boucle de rendu */
-    bool start ();
+	/** Lance la boucle de rendu */
+	bool start ();
 
-    Root * getRoot ()
-    {
-        return mRoot;
-    }
+	Root * getRoot ()
+	{
+		return mRoot;
+	}
 
-    RenderWindow * getWindow ()
-    {
-        return mWindow;
-    }
+	RenderWindow * getWindow ()
+	{
+		return mWindow;
+	}
 
-    SceneManager * getSceneManager ()
-    {
-        return mSceneMgr;
-    }
+	SceneManager * getSceneManager ()
+	{
+		return mSceneMgr;
+	}
 
-    Camera * getCamera ()
-    {
-        return mCamera;
-    }
+	Camera * getCamera ()
+	{
+		return mCamera;
+	}
 
 private:
-    /**
-     * Initialise les objets généraux de la scène.
-     * Lumière par défaut, caméra...
-     */
-    virtual void initScene ();
+	/**
+	 * Initialise les objets gÃ©nÃ©raux de la scÃ¨ne.
+	 * LumiÃ¨re par dÃ©faut, camÃ©ra...
+	 */
+	virtual void initScene ();
 };
 
 #endif // SHORTSTORY_H

@@ -24,7 +24,8 @@
 
 # Ogre3D local files
 Ogre.log
-/media
+Ogre.cfg
+*.pro*
 
 # Autres
 .directory

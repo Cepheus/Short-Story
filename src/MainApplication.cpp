@@ -8,14 +8,25 @@ using namespace std;
 
 MainApplication::MainApplication(void)
 {
+    mGlobals = NULL;
+    mTerrain = NULL;
 }
 
 MainApplication::~MainApplication(void)
 {
+    if(mGlobals != NULL)
+    {
+        OGRE_DELETE mGlobals;
+    }
+    if(mTerrain != NULL)
+    {
+        OGRE_DELETE mTerrain;
+    }
 }
 
 void MainApplication::createScene(void)
 {
+
     //sky
     mSceneMgr->setSkyDome(true, "CloudySky", 5, 8);
 
@@ -34,29 +45,45 @@ void MainApplication::createScene(void)
     solNode->attachObject(sol);
 
     // Terrain
+    createTerrain();
 
     // Immeuble
     Entity* immeuble = mSceneMgr->createEntity("Immeuble", "immeuble.mesh");
     SceneNode* immeubleNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("ImmeubleNode");
     immeubleNode->attachObject(immeuble);
-
     immeubleNode->setPosition(0.,80.,0.); //0.,42.,0.
     immeubleNode->scale(100.,100.,100.);
 
-    //rain
+    // Personnage
+    //Entity* personnage = mSceneMgr->createEntity("Personnage", "");
+
+
+    // Pluie
     Ogre::ParticleSystem * rainParticle = mSceneMgr->createParticleSystem("rain", "Rain");
     Ogre::SceneNode * rainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode( "rainNode", Ogre::Vector3( 100, 0, 0 ) );
     rainNode->translate(0, 900, 0, Ogre::Node::TS_PARENT);
     rainNode->attachObject(rainParticle);
 
-    // Rayon
-    /*Ray ray = Ray(Vector3(mCamera->getPosition().x, 1000.0f, mCamera->getPosition().z), Vector3::NEGATIVE_UNIT_Y);
-    pair<bool, Vector3> result = terrain->rayIntersects(ray);
+}
 
-    if (result.first) {
-        mCamera->setY(result.second.y + 10);
-    }*/
+void MainApplication::createTerrain(void)
+{
+    /*mGlobals = OGRE_NEW TerrainGlobalOptions();
+    mGlobals->setMaxPixelError(8);
 
+    Vector3 lightdir(0.55f, -0.3f, 0.75f);
+    mLight = mSceneMgr->createLight("terrainLight");
+    mLight->setType(Light::LT_DIRECTIONAL);
+    mLight->setDirection(lightdir);
+    mLight->setDiffuseColour(ColourValue::White);
+    mLight->setSpecularColour(ColourValue(0.4f, 0.4f, 0.4f));
+
+    mGlobals->setLightMapDirection(mLight->getDerivedDirection());
+    mGlobals->setCompositeMapDistance(3000);
+    mGlobals->setCompositeMapAmbient(mSceneMgr->getAmbientLight());
+    mGlobals->setCompositeMapDiffuse(mLight->getDiffuseColour());
+
+    mTerrain = OGRE_NEW Terrain(mSceneMgr);*/
 }
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

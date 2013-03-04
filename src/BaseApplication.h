@@ -12,6 +12,7 @@ Filename:    BaseApplication.h
 #include <OgreSceneManager.h>
 #include <OgreRenderWindow.h>
 #include <OgreConfigFile.h>
+#include <OgreTerrain.h>
 
 #include <OISEvents.h>
 #include <OISInputManager.h>

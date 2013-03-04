@@ -5,6 +5,7 @@ Filename:    MainApplication.h
 #define __MainApplication_h_
 
 #include "BaseApplication.h"
+#include "OgreRay.h"
 
 class MainApplication : public BaseApplication
 {
@@ -14,6 +15,11 @@ public:
 
 protected:
     virtual void createScene(void);
+
+private:
+    void createTerrain(void);
+    Ogre::Terrain *mTerrain;
+    Ogre::TerrainGlobalOptions *mGlobals;
 };
 
 #endif // #ifndef __MainApplication_h_

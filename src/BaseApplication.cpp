@@ -2,6 +2,8 @@
 Filename:    BaseApplication.cpp
 */
 #include "BaseApplication.h"
+#include "OgreRay.h"
+#include <cmath>
 
 BaseApplication::BaseApplication(void)
     : mRoot(0),
@@ -362,6 +364,18 @@ bool BaseApplication::mouseMoved( const OIS::MouseEvent &arg )
 
 bool BaseApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+    // Rayon
+    OgreRay ray(mSceneMgr);
+    Ogre::Vector3 result;
+    Ogre::Vector3 direction = mCamera->getDirection();
+ 	if(ray.RaycastFromPoint(mCamera->getPosition(), direction, result)){
+		printf("Your mouse is over the position %f,%f,%f\n", result.x, result.y, result.z);
+		Ogre::Vector3 distance = mCamera->getPosition();
+		printf("Distance : %lf\n", sqrt(pow(distance.x-result.x,2)+pow(distance.y-result.y,2)+pow(distance.z-result.z,2)));
+	}
+    else{
+		printf("No mouse collision\n Are you looking the sky ?\n");
+ 	}
     if (mTrayMgr->injectMouseDown(arg, id)) return true;
     mCameraMan->injectMouseDown(arg, id);
     return true;
@@ -369,6 +383,7 @@ bool BaseApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButton
 
 bool BaseApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+
     if (mTrayMgr->injectMouseUp(arg, id)) return true;
     mCameraMan->injectMouseUp(arg, id);
     return true;

@@ -16,6 +16,7 @@
 # Executable
 /bin
 *.exe
+*.dll
 
 # Code::Block speacial files
 *.cbp

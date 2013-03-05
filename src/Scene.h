@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include <Ogre.h>
+#include "ShortStory.h"
 #include <Terrain/OgreTerrain.h>
 
 using namespace Ogre;
@@ -13,9 +14,11 @@ class Scene
 {
 private:
 	/** Le scene manager, qui crée les objets */
-	SceneManager* mSceneMgr;
+	ShortStory* mShortStory;
 	/** Le terrain */
 	Terrain *mTerrain;
+	/** La lumiere dy terrain, initialisé dans lumiere, utilisé dans terrain */
+	Light *terrainLight;
 	/** Le truc pour gérer le terrain */
 	TerrainGlobalOptions *mGlobals;
 
@@ -24,7 +27,7 @@ public:
 	 * Constructeur
 	 * @param scenemgr le scène manager créé dans ShortStory
 	 */
-	Scene (SceneManager *scenemgr);
+	Scene (ShortStory *shortStory);
 
 	/** Destructeur */
 	virtual ~Scene ();

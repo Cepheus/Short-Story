@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 			shst.getRoot()->addFrameListener(il);
 
 			// création de la scène
-			scene = new Scene(shst.getSceneManager());
+			scene = new Scene(&shst);
 			scene->createScene();
 
 			// On lance la boucle de rendu, affichage du bouzin

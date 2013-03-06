@@ -43,7 +43,7 @@ void Scene::setTerrain ()
 {
     //initialisation
     mGlobals = OGRE_NEW Ogre::TerrainGlobalOptions();
-    mGlobals->setMaxPixelError(8); //précision avec la quelle le terrain est rendu
+    mGlobals->setMaxPixelError(8); //prÃ©cision avec la quelle le terrain est rendu
 
     //lumere sur le terrain
     mGlobals->setLightMapDirection(terrainLight->getDerivedDirection());
@@ -58,7 +58,7 @@ void Scene::setTerrain ()
     Ogre::Image img;
     img.load("terrain.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-    //Les paramètres géométriques
+    //Les paramÄtres gÃ©omÃ©triques
     Ogre::Terrain::ImportData imp;
     imp.inputImage = &img;
     imp.terrainSize = img.getWidth();
@@ -70,8 +70,8 @@ void Scene::setTerrain ()
     //textures
     imp.layerList.resize(3);
     imp.layerList[0].worldSize = 100; //tail de la texture dans le monde
-    imp.layerList[0].textureNames.push_back("grass_green-01_diffusespecular.dds"); //une texture diffuse, qui contient les couleurs, les motifs du matériau ;
-    imp.layerList[0].textureNames.push_back("grass_green-01_normalheight.dds"); //une texture normale, contenant des informations sur le relief du matériau.
+    imp.layerList[0].textureNames.push_back("grass_green-01_diffusespecular.dds"); //une texture diffuse, qui contient les couleurs, les motifs du matÃ©riau ;
+    imp.layerList[0].textureNames.push_back("grass_green-01_normalheight.dds"); //une texture normale, contenant des informations sur le relief du matÃ©riau.
     imp.layerList[1].worldSize = 30;
     imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
     imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
@@ -114,7 +114,7 @@ void Scene::setTerrain ()
         }
     }
 
-    blendMap1->dirty(); //préciser que les données de la TerrainLayerBlendMap sont obsolètes
+    blendMap1->dirty(); //prÃ©ciser que les donnÃ©es de la TerrainLayerBlendMap sont obsolÄtes
     blendMap1->update(); //mise a jour
     blendMap2->dirty();
     blendMap2->update();

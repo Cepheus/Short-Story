@@ -50,9 +50,9 @@ bool ShortStory::Initialize ()
 
 void ShortStory::initScene ()
 {
-	// oncréée la fenêtre
+	// on crée la fenêtre
 	mWindow = mRoot->initialise(true, "Short Story");
-	// on chargeles ressources pour de vrai
+	// on charge les ressources pour de vrai
 	TextureManager::getSingleton().setDefaultNumMipmaps(5);
 	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 

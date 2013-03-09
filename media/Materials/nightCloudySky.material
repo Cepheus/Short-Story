@@ -1,4 +1,4 @@
-material CloudySky
+material NightCloudySky
 {
 	technique
 	{
@@ -9,8 +9,8 @@ material CloudySky
 
 			texture_unit
 			{
-				texture clouds.jpg
-				scroll_anim 0.05 0
+				texture nightCloudySky.jpg
+				scroll_anim 0.005 0
 			}
 		}
 	}

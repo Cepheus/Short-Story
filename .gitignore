@@ -22,6 +22,7 @@
 *.cbp
 *.depend
 *.layout
+*.cbTemp
 
 # Ogre3D local files
 Ogre.log
@@ -37,3 +38,5 @@ Release
 .settings/*
 ogre.cfg
 *.xml
+*.7z
+*.cfg

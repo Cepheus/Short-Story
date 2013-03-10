@@ -62,7 +62,7 @@ void Scene::setTerrain ()
 	Ogre::Terrain::ImportData imp;
 	imp.inputImage = &img;
 	imp.terrainSize = img.getWidth();
-	imp.worldSize = 12000; //tail du terrain
+	imp.worldSize = 50000; //tail du terrain
 	imp.inputScale = 0; //hauteur du terrain
 	imp.minBatchSize = 33; //lod terrain min
 	imp.maxBatchSize = 65;  //lod terrain max : 65 c'est le maximum sinon 2^n+1
@@ -86,9 +86,9 @@ void Scene::setSky ()
 {
 	//mShortStory->getSceneManager()->setSkyDome(true, "CloudySky", 5, 8);
     Plane plane;
-    plane.d = 3000;
+    plane.d = 10000;
     plane.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;
-    mShortStory->getSceneManager()->setSkyPlane(true, plane, "NightCloudySky", 1500, 50, true, 1.5f, 150, 150);
+    mShortStory->getSceneManager()->setSkyPlane(true, plane, "NightCloudySky", 1500, 10, true, 1.5f, 150, 150);
 }
 
 void Scene::setRain ()
@@ -106,8 +106,9 @@ void Scene::setImmeuble ()
 	SceneNode* immeubleNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("ImmeubleNode");
 	immeubleNode->attachObject(immeuble);
 
-	immeubleNode->setPosition(0., mTerrain->getHeightAtPoint(0., 0.)+200., 0.);
+	immeubleNode->setPosition(0., mTerrain->getHeightAtPoint(0., 0.)+1., 0.);
 	immeubleNode->scale(100., 100., 100.);
+
 }
 
 void Scene::setPersonnage ()
@@ -116,7 +117,7 @@ void Scene::setPersonnage ()
 	SceneNode* personnageNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageNode");
 	personnageNode->attachObject(personnage);
 
-	personnageNode->setPosition(200., mTerrain->getHeightAtPoint(0., 0.)+100., 0.);
+	personnageNode->setPosition(300., mTerrain->getHeightAtPoint(0., 0.)+100., 200.);
 	personnageNode->scale(0.5, 0.5, 0.5);
 }
 

@@ -9,7 +9,7 @@
 /** La distance entre la tête du bonhomme et le sol */
 #define DIST_VERTICAL 100
 /** Détection de collision sur le plan horizontal (carré autour du perso de diagonale 2*DIST_HORIZONTAL) */
-#define DIST_HORIZONTAL 20
+#define DIST_HORIZONTAL 100
 
 using namespace Ogre;
 using namespace OIS;
@@ -33,11 +33,14 @@ using namespace OIS;
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
 {
 private:
-    /** atidtude du personnage*/
-    enum PersonnageStat{IDLE1, IDLE2, IDLE3, WALK, KICK};
+	/** atidtude du personnage*/
+	enum PersonnageStat
+	{
+		IDLE1, IDLE2, IDLE3, WALK, KICK
+	};
 
 	/** La scène contenant les objets à manipuler */
-    Scene *mScene;
+	Scene *mScene;
 	/** Le scene manager, qui crée les objets */
 	SceneManager* mSceneMgr;
 	/** La fenêtre de l'application, créée dans ShortStory */
@@ -51,13 +54,15 @@ private:
 	/** Permet de gérer les inputs du clavier */
 	Keyboard* mKeyboard;
 	// Déplacement
-    PersonnageStat mPersonnageStat;
+	PersonnageStat mPersonnageStat;
 	/** Tant que vrai, le programe s'exécute */
 	bool mContinuer;
 	/** Vrai si espace est enfoncé (mode noclip / ghost = monter verticalement) */
 	bool mgoUp;
-	/** Utiliser pour bouger, contient le vecteur de déplacement de la caméra (par rapport au repère local de la cam) */
+	/** Utiliser pour bouger, contient le vecteur de déplacement */
 	Ogre::Vector3 mMouvement;
+	/** Permet la détection de collisions */
+	Ogre::Vector3 mCollisionVect;
 	/** Vitesse de déplacement, par défaut VITESSE */
 	Real mVitesse;
 	/** Vitesse de rotation, par défaut VROTATION */
@@ -132,8 +137,8 @@ protected:
 	virtual bool keyPressed (const KeyEvent &e);
 	virtual bool keyReleased (const KeyEvent &e);
 
-    // gestion du ninja
-    void deplacementNinja(const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0,0,0));
+	// gestion du ninja
+	void deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0, 0, 0));
 };
 
 #endif // INPUTLISTENER_H

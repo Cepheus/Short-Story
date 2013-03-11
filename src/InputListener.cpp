@@ -272,13 +272,13 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 	//selection de l'etat
 	if (deplacement != Ogre::Vector3(0, 0, 0))
 	{
-		mPersonnageStat = WALK;
+        mPersonnageStat = WALK;
 	}
 	else
 	{
 		if ((mPersonnageStat != IDLE1) && (mPersonnageStat != IDLE2) && (mPersonnageStat != IDLE3))
 		{
-			mPersonnageStat = IDLE3;
+            mPersonnageStat = IDLE3;
 		}
 	}
 
@@ -297,9 +297,15 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 	case IDLE3:
 		mScene->idle3Personnage(evt);
 		break;
-	case KICK:
-		mScene->kickPersonnage(evt);
-		break;
+    case KICK:
+        mScene->kickPersonnage(evt);
+        break;
+    case SIDEKICK:
+        mScene->sideKickPersonnage(evt);
+        break;
+    case DEATH2:
+        mScene->death2Personnage(evt);
+        break;
 	default:
 		mPersonnageStat = IDLE3;
 		break;

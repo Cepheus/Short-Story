@@ -101,6 +101,7 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 	deplacement = mMouvement * mVitesse * evt.timeSinceLastFrame;
+    deplacementNinja(deplacement, evt);
 	mCamera->moveRelative(deplacement);
 	if (mgoUp)
 		mCamera->move(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0));
@@ -178,7 +179,7 @@ bool InputListener::keyPressed (const KeyEvent &e)
 		break;
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 		case OIS::KC_W:
-		mMouvement.z -= 1;
+        mMouvement.z -= 1;
 		break;
 		case OIS::KC_S:
 		mMouvement.z += 1;
@@ -260,4 +261,10 @@ bool InputListener::keyReleased (const KeyEvent &e)
 		break;
 	}
 	return true;
+}
+
+void InputListener::deplacementNinja(Ogre::Vector3 deplacement, const FrameEvent& evt){
+    if(deplacement != Ogre::Vector3(0,0,0)){
+        mscene->walkPersonnage(evt);
+    }
 }

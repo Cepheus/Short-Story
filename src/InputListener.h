@@ -127,6 +127,9 @@ protected:
 	// KeyListener
 	virtual bool keyPressed (const KeyEvent &e);
 	virtual bool keyReleased (const KeyEvent &e);
+
+    // gestion du ninja
+    void deplacementNinja(Ogre::Vector3 deplacement, const FrameEvent& evt);
 };
 
 #endif // INPUTLISTENER_H

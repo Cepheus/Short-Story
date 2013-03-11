@@ -162,7 +162,23 @@ void Scene::setPersonnage ()
     nCharacter->setPosition(300., 0., 500.);
 	nCharacter->scale(0.5, 0.5, 0.5);
 }
+void Scene::walkPersonnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("Walk")->setEnabled(true);
+    personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
+}
 void Scene::setCamera ()
 {
     nCamera = nCharacCamera->createChildSceneNode("CameraNode");

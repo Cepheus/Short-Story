@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 Scene::Scene (ShortStory *shortStory) :
-		mShortStory(shortStory), nTerrain(0), nCamera(0), nCharacter(0), nCharacCamera(0)
+		mShortStory(shortStory), nTerrain(0), nCamera(0), nCharacter(0), nCharacCamera(0), dDistanceCharacCamera(75.)
 {
     nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
 }
@@ -147,7 +147,7 @@ void Scene::setImmeuble ()
 	SceneNode* immeubleNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("ImmeubleNode");
 	immeubleNode->attachObject(immeuble);
 
-	immeubleNode->setPosition(0., 1., 0.);
+	immeubleNode->setPosition(0., 0., 0.);
 	immeubleNode->scale(100., 100., 100.);
 
 }
@@ -159,15 +159,16 @@ void Scene::setPersonnage ()
 	nCharacter = nCharacCamera->createChildSceneNode("CharacterNode");
     nCharacter->attachObject(personnage);
 
-    nCharacter->setPosition(300., 0., 200.);
+    nCharacter->setPosition(300., 0., 500.);
 	nCharacter->scale(0.5, 0.5, 0.5);
 }
 
 void Scene::setCamera ()
 {
-    mShortStory->getCamera()->setPosition(Vector3(300, 500, 1000));
+    nCamera = nCharacCamera->createChildSceneNode("CameraNode");
+    nCamera->attachObject(mShortStory->getCamera());
 
-    nCharacCamera->attachObject(mShortStory->getCamera());
+    nCamera->setPosition(nCharacter->getPosition().x, nCharacter->getPosition().y, nCharacter->getPosition().z+dDistanceCharacCamera);
 }
 
 void Scene::setMeshes ()
@@ -198,4 +199,9 @@ SceneNode* Scene::getCameraNode()
 SceneNode* Scene::getCharacterNode()
 {
     return nCharacter;
+}
+
+Real Scene::getDistanceCharacterCamera()
+{
+    return dDistanceCharacCamera;
 }

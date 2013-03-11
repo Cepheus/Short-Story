@@ -8,12 +8,12 @@
 using namespace Ogre;
 
 /**
- * Contient la scÃ¨ne, avec tous les objets importÃ©s et les mesh crÃ©Ã©s.
+ * Contient la scène, avec tous les objets importés et les mesh créés.
  */
 class Scene
 {
 private:
-	/** Le scene manager, qui crÃ©e les objets */
+	/** Le scene manager, qui crée les objets */
 	ShortStory* mShortStory;
 	/** Le terrain */
     SceneNode* nTerrain;
@@ -25,37 +25,42 @@ private:
 	SceneNode* nCamera;
 	/** Le noeud de l'immeuble */
 	SceneNode* nImmeuble;
+	/** Distance personnage/caméra */
+	Real dDistanceCharacCamera;
 
 public:
 	/**
 	 * Constructeur
-	 * @param scenemgr le scÃ¨ne manager crÃ©Ã© dans ShortStory
+	 * @param scenemgr le scène manager créé dans ShortStory
 	 */
 	Scene (ShortStory *shortStory);
 
 	/** Destructeur */
 	virtual ~Scene ();
 
-	/** CrÃ©Ã© la scÃ¨ne avec tous les meshs blablabla */
+	/** Créé la scène avec tous les meshs blablabla */
 	void createScene ();
 
-    /** RÃ©cupÃ¨re le noeud immeuble */
+    /** Récupère le noeud immeuble */
 	SceneNode* getImmeubleNode();
 
-	/** RÃ©cupÃ¨re le noeud du terrain */
+	/** Récupère le noeud du terrain */
 	SceneNode* getTerrainNode();
 
-	/** RÃ©cupÃ¨re le noeud de la camÃ©ra et du personnage */
+	/** Récupère le noeud de la caméra et du personnage */
 	SceneNode* getCharacterCameraNode();
 
-	/** RÃ©cupÃ¨re le noeud de la camÃ©ra */
+	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode();
 
-	/** RÃ©cupÃ¨re le noeud du personnage */
+	/** Récupère le noeud du personnage */
     SceneNode* getCharacterNode();
 
+    /** Récupère la distance entre le personnage et la caméra */
+    Real getDistanceCharacterCamera();
+
 private:
-	/** Met en place la lumiÃ¨re */
+	/** Met en place la lumière */
 	void setLight ();
 	/** Met en place le terrain */
 	void setTerrain ();
@@ -67,9 +72,9 @@ private:
 	void setImmeuble ();
 	/** Met en place le personnage */
 	void setPersonnage ();
-	/** Met en place les diffÃ©rents meshes */
+	/** Met en place les différents meshes */
 	void setMeshes ();
-	/** Met en place la camÃ©ra */
+	/** Met en place la caméra */
 	void setCamera ();
 };
 

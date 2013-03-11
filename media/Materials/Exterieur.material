@@ -1,4 +1,4 @@
-// Exterieur genrated by blender2ogre 0.5.9
+// Exterieur genrated by blender2ogre 0.5.8
 
 material Exterieur 
 {
@@ -8,8 +8,8 @@ material Exterieur
     {
         pass Exterieur
         {
-            ambient 0.800000011920929 0.040584515780210495 0.01001830119639635 1.0
-            diffuse 0.6400000190734865 0.032467613107973525 0.008014641076544538 1.0
+            ambient 1.0 1.0 1.0 1.0
+            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 

@@ -9,7 +9,7 @@ material NightCloudySky
 
 			texture_unit
 			{
-				texture nightCloudySky.jpg
+				texture ../Textures/nightCloudySky.jpg
 				scroll_anim 0.005 0
 			}
 		}

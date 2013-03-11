@@ -32,7 +32,7 @@ material Exterieur
 
             texture_unit 
             {
-                texture brique.jpg
+                texture ../Textures/brique.jpg
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate

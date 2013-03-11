@@ -1,16 +1,16 @@
-// WhiteWall-nub genrated by blender2ogre 0.5.9
+// Material3 genrated by blender2ogre 0.5.9
 
-material WhiteWall-nub 
+material Material3 
 {
     receive_shadows on 
 
     technique
     {
-        pass WhiteWall-nub
+        pass Material3
         {
-            ambient 0.7873995304107666 0.7873995304107666 0.7873995304107666 1.0
-            diffuse 0.6299196337151471 0.6299196337151471 0.6299196337151471 1.0
-            specular 0.0 0.0 0.0 1.0 12.5
+            ambient 0.749019980430603 0.749019980430603 0.749019980430603 1.0
+            diffuse 0.5992159932734964 0.5992159932734964 0.5992159932734964 1.0
+            specular 0.16500000655651093 0.16500000655651093 0.16500000655651093 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
             alpha_to_coverage off
@@ -23,6 +23,7 @@ material WhiteWall-nub
             light_clip_planes off
             light_scissor off
             lighting on
+            mesh_exporter <bpy_struct, MaterialProperties("")>
             normalise_normals off
             polygon_mode solid
             scene_blend one zero

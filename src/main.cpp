@@ -23,13 +23,13 @@ int main(int argc, char **argv)
 	{
 		if (shst.Initialize()) // le lancement est OK
 		{
-			// ajout des inputs
-			il = new InputListener(shst.getSceneManager(), shst.getWindow(), shst.getCamera());
-			shst.getRoot()->addFrameListener(il);
-
 			// création de la scène
 			scene = new Scene(&shst);
 			scene->createScene();
+
+			// ajout des inputs
+			il = new InputListener(scene, shst.getSceneManager(), shst.getWindow(), shst.getCamera());
+			shst.getRoot()->addFrameListener(il);
 
 			// On lance la boucle de rendu, affichage du bouzin
 			shst.start();

@@ -4,6 +4,13 @@
 #include <Ogre.h>
 #include <OIS.h>
 
+#include "Scene.h"
+
+/** La distance entre la tête du bonhomme et le sol */
+#define DIST_VERTICAL 100
+/** Détection de collision sur le plan horizontal (carré autour du perso de diagonale 2*DIST_HORIZONTAL) */
+#define DIST_HORIZONTAL 20
+
 using namespace Ogre;
 using namespace OIS;
 
@@ -13,11 +20,24 @@ using namespace OIS;
 #define VROTATION 0.2
 
 /**
- * Classe contenant la gestion des inputs (resize window, keyboard, mouse)
+ * Classe contenant la gestion des inputs (resize window, keyboard, mouse).
+ * Liste des inputs:
+ * <ul>
+ * <li>Déplacement ZQSD</li>
+ * <li>Échap pour quitter</li>
+ * <li>shift gauche pour courir (vitesse * 3)</li>
+ * <li>espace pour bouger selon Y (hauteur) en mode no clip</li>
+ * <li>Fin pour switcher entre mode normal et mode noclip</li>
+ * </ul>
  */
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
 {
 private:
+    /** atidtude du personnage*/
+    enum PersonnageStat{IDLE1, IDLE2, IDLE3, WALK, KICK};
+
+	/** La scène contenant les objets à manipuler */
+    Scene *mScene;
 	/** Le scene manager, qui crée les objets */
 	SceneManager* mSceneMgr;
 	/** La fenêtre de l'application, créée dans ShortStory */
@@ -31,6 +51,7 @@ private:
 	/** Permet de gérer les inputs du clavier */
 	Keyboard* mKeyboard;
 	// Déplacement
+    PersonnageStat mPersonnageStat;
 	/** Tant que vrai, le programe s'exécute */
 	bool mContinuer;
 	/** Vrai si espace est enfoncé (mode noclip / ghost = monter verticalement) */
@@ -41,6 +62,8 @@ private:
 	Real mVitesse;
 	/** Vitesse de rotation, par défaut VROTATION */
 	Real mVitesseRotation;
+	/** true si la détection de collisions est activée */
+	bool detectionCollision;
 
 public:
 	/**
@@ -50,7 +73,7 @@ public:
 	 * @param camera la caméra à gérer avec le clavier
 	 * @note faudra surement utiliser le node contentant le perso + la cam au lieu de juste la cam
 	 */
-	InputListener (SceneManager *sceneMgr, RenderWindow *wnd, Camera *camera);
+	InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera);
 
 	/** destructeur */
 	virtual ~InputListener ();
@@ -90,6 +113,8 @@ public:
 protected:
 	/** Initialise la gestion des inputs */
 	void startOIS ();
+	/** Vérifie la hauteur du bonhomme et la collision avec les murs */
+	void checkCollisions ();
 // ci-dessous, l'implémentation des méthodes purement virtuelles permettant de gérer les inputs
 	// FrameListener
 	bool frameRenderingQueued (const FrameEvent& evt);
@@ -106,6 +131,9 @@ protected:
 	// KeyListener
 	virtual bool keyPressed (const KeyEvent &e);
 	virtual bool keyReleased (const KeyEvent &e);
+
+    // gestion du ninja
+    void deplacementNinja(const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0,0,0));
 };
 
 #endif // INPUTLISTENER_H

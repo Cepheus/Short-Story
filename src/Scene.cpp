@@ -35,11 +35,12 @@ void Scene::setTerrain ()
 {
     SceneManager* sceneManager = mShortStory->getSceneManager();
     Plane plan(Vector3::UNIT_Y, 0);
-    MeshManager::getSingleton().createPlane("sol", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plan, 10000, 10000, 1, 1, true, 1, 50, 50, Vector3::UNIT_Z);
+    MeshManager::getSingleton().createPlane("sol", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plan, 5000, 5000, 100, 100, true, 1, 50, 50, Vector3::UNIT_Z);
 	Entity *ent= sceneManager->createEntity("EntiteSol", "sol");
     nTerrain = sceneManager->getRootSceneNode()->createChildSceneNode();
     nTerrain->attachObject(ent);
     ent->setMaterialName("Plane");
+    ent->setCastShadows(true);
 
 
     //**street lamp 1**//
@@ -168,7 +169,7 @@ void Scene::setCamera ()
     nCamera = nCharacCamera->createChildSceneNode("CameraNode");
     nCamera->attachObject(mShortStory->getCamera());
 
-    nCamera->setPosition(nCharacter->getPosition().x, nCharacter->getPosition().y, nCharacter->getPosition().z+dDistanceCharacCamera);
+    //nCamera->setPosition(nCharacter->getPosition().x, nCharacter->getPosition().y, nCharacter->getPosition().z+dDistanceCharacCamera);
 }
 
 void Scene::setMeshes ()

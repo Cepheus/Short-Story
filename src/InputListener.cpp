@@ -76,7 +76,7 @@ void InputListener::checkCollisions ()
 	}
 
 	// détection horizontale
-	for (int i = 0; i < size; i++)
+	/*for (int i = 0; i < size; i++)
 	{
 		if (ray.RaycastFromPoint(camera, horizontals[i], result))
 		{
@@ -88,7 +88,7 @@ void InputListener::checkCollisions ()
 				mCamera->moveRelative(mvRel);
 			}
 		}
-	}
+	}*/
 }
 
 bool InputListener::frameRenderingQueued (const FrameEvent& evt)

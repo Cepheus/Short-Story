@@ -8,12 +8,12 @@
 using namespace Ogre;
 
 /**
- * Contient la scène, avec tous les objets importés et les mesh créés.
+ * Contient la scÃ¨ne, avec tous les objets importÃ©s et les mesh crÃ©Ã©s.
  */
 class Scene
 {
 private:
-	/** Le scene manager, qui crée les objets */
+	/** Le scene manager, qui crÃ©e les objets */
 	ShortStory* mShortStory;
 	/** Le terrain */
     SceneNode* nTerrain;
@@ -25,42 +25,42 @@ private:
 	SceneNode* nCamera;
 	/** Le noeud de l'immeuble */
 	SceneNode* nImmeuble;
-	/** Distance personnage/caméra */
+	/** Distance personnage/camÃ©ra */
 	Real dDistanceCharacCamera;
 
 public:
 	/**
 	 * Constructeur
-	 * @param scenemgr le scène manager créé dans ShortStory
+	 * @param scenemgr le scÃ¨ne manager crÃ©Ã© dans ShortStory
 	 */
 	Scene (ShortStory *shortStory);
 
 	/** Destructeur */
 	virtual ~Scene ();
 
-	/** Créé la scène avec tous les meshs blablabla */
+	/** CrÃ©Ã© la scÃ¨ne avec tous les meshs blablabla */
 	void createScene ();
 
-    /** Récupère le noeud immeuble */
+    /** RÃ©cupÃ¨re le noeud immeuble */
 	SceneNode* getImmeubleNode();
 
-	/** Récupère le noeud du terrain */
+	/** RÃ©cupÃ¨re le noeud du terrain */
 	SceneNode* getTerrainNode();
 
-	/** Récupère le noeud de la caméra et du personnage */
+	/** RÃ©cupÃ¨re le noeud de la camÃ©ra et du personnage */
 	SceneNode* getCharacterCameraNode();
 
-	/** Récupère le noeud de la caméra */
+	/** RÃ©cupÃ¨re le noeud de la camÃ©ra */
 	SceneNode* getCameraNode();
 
-	/** Récupère le noeud du personnage */
+	/** RÃ©cupÃ¨re le noeud du personnage */
     SceneNode* getCharacterNode();
 
-    /** Récupère la distance entre le personnage et la caméra */
+    /** RÃ©cupÃ¨re la distance entre le personnage et la camÃ©ra */
     Real getDistanceCharacterCamera();
 
 private:
-	/** Met en place la lumière */
+	/** Met en place la lumiÃ¨re */
 	void setLight ();
 	/** Met en place le terrain */
 	void setTerrain ();
@@ -72,9 +72,9 @@ private:
 	void setImmeuble ();
 	/** Met en place le personnage */
 	void setPersonnage ();
-	/** Met en place les différents meshes */
+	/** Met en place les diffÃ©rents meshes */
 	void setMeshes ();
-	/** Met en place la caméra */
+	/** Met en place la camÃ©ra */
 	void setCamera ();
 };
 

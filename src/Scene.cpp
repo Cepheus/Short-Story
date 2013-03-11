@@ -1,4 +1,6 @@
 #include "Scene.h"
+#include <OgreProgressiveMesh.h>
+
 
 Scene::Scene (ShortStory *shortStory) :
 		mShortStory(shortStory), mTerrain(0), terrainLight(0), mGlobals(0)
@@ -124,4 +126,17 @@ void Scene::setPersonnage ()
 void Scene::setMeshes ()
 {
 
+    Ogre::MeshPtr voitureMesh = Ogre::MeshManager::getSingleton().load("Sedan02_license_R.mesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+    Ogre::Mesh::LodValueList lodDList;
+	for (int i = 1;i <= 3;i++)
+		lodDList.push_back(500*i);
+    Ogre::ProgressiveMesh::generateLodLevels(voitureMesh.getPointer(),lodDList, Ogre::ProgressiveMesh::VRQ_PROPORTIONAL, 0.75);
+
+
+    Ogre::Entity* entVoiture = mShortStory->getSceneManager()->createEntity("Voiture", "Sedan02_license_R.mesh");
+    entVoiture->setCastShadows(true);
+    Ogre::SceneNode* VoitureNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+    VoitureNode->attachObject(entVoiture);
+    VoitureNode->setPosition(-500,35,-100);
+    VoitureNode->scale(10,10,10);
 }

@@ -76,7 +76,7 @@ public:
     /** Récupère la distance entre le personnage et la caméra */
     Real getDistanceCharacterCamera();
 
-	const SceneNode* getCharacCamera () const
+	SceneNode* getCharacCamera ()
 	{
 		return nCharacCamera;
 	}

@@ -45,7 +45,7 @@ void InputListener::checkCollisions ()
 	// résultat où est stocké la collision
 	Ogre::Vector3 result;
 	// place actuelle du perso
-	Ogre::Vector3 nperso = mScene->getCharacterNode()->getPosition();
+	Ogre::Vector3 nperso = mScene->getCharacCamera()->getPosition();
 	// direction du rayon vertical
 	Ogre::Vector3 vertical(0, -1, 0);
 	// direction des vecteurs horizontaux (4 dans x, -x, z, -z)
@@ -69,28 +69,29 @@ void InputListener::checkCollisions ()
 		Real dist = result.distance(nperso);
 		if (dist != DIST_VERTICAL)
 		{
-			mScene->getCharacterNode()->setPosition(nperso.x, nperso.y - dist + 100, nperso.z);
+			mScene->getCharacCamera()->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
+			printf("Youpi\n");
 		}
 	}
 
 	// détection horizontale
 	/*for (int i = 0; i < size; i++)
-	{
-		if (ray.RaycastFromPoint(nperso, horizontals[i], result))
-		{
-			Real dist = result.distance(nperso);
-			if (dist < DIST_HORIZONTAL)
-			{
-				if (horizontals[i].x != 0)
-					mCollisionVect.x = 0;
-				if (horizontals[i].y != 0)
-					mCollisionVect.y = 0;
-				if (horizontals[i].z != 0)
-					mCollisionVect.z = 0;
-				printf("%d + distance %lf\n", i, dist);
-			}
-		}
-	}*/
+	 {
+	 if (ray.RaycastFromPoint(nperso, horizontals[i], result))
+	 {
+	 Real dist = result.distance(nperso);
+	 if (dist < DIST_HORIZONTAL)
+	 {
+	 if (horizontals[i].x != 0)
+	 mCollisionVect.x = 0;
+	 if (horizontals[i].y != 0)
+	 mCollisionVect.y = 0;
+	 if (horizontals[i].z != 0)
+	 mCollisionVect.z = 0;
+	 printf("%d + distance %lf\n", i, dist);
+	 }
+	 }
+	 }*/
 }
 
 bool InputListener::frameRenderingQueued (const FrameEvent& evt)
@@ -104,8 +105,8 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mCollisionVect.x = 1;
 	mCollisionVect.y = 1;
 	mCollisionVect.z = 1;
-//	if (detectionCollision)
-//		checkCollisions();
+	if (detectionCollision)
+		checkCollisions();
 
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 	deplacement = mMouvement * mCollisionVect * mVitesse * evt.timeSinceLastFrame;
@@ -115,9 +116,9 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mScene->getCharacterCameraNode()->translate(deplacement, SceneNode::TS_LOCAL);
 	//mScene->getCharacterCameraNode()->setOrientation(mScene->getCameraNode()->getOrientation().w, 0, mScene->getCameraNode()->getOrientation().y, 0);
 
-
 	if (mgoUp)
-		mCamera->move(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0));
+		mScene->getCharacterCameraNode()->translate(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0),
+		        SceneNode::TS_LOCAL);
 
 	return mContinuer;
 }
@@ -160,12 +161,15 @@ bool InputListener::mousePressed (const MouseEvent &arg, MouseButtonID id)
 	// Rayon
 	OgreRay ray(mSceneMgr);
 	Ogre::Vector3 result;
-	Ogre::Vector3 direction = mCamera->getDirection();
-	if (ray.RaycastFromPoint(mCamera->getPosition(), direction, result))
+	Ogre::Vector3 position = mScene->getCharacCamera()->getPosition();
+	Ogre::Vector3 direction = Ogre::Vector3::NEGATIVE_UNIT_Y;
+
+	printf("position: %f, %f, %f\n", position.x, position.y, position.z);
+	if (ray.RaycastFromPoint(position, direction, result))
 	{
 		printf("Your mouse is over the position %f,%f,%f\n", result.x, result.y, result.z);
-		Ogre::Vector3 distance = mCamera->getPosition();
-		printf("Distance : %lf\n", distance.distance(result));
+		Ogre::Vector3 distance = position;
+		printf("Distance : %f\n", distance.distance(result));
 	}
 	else
 	{
@@ -182,7 +186,7 @@ bool InputListener::mouseReleased (const MouseEvent &arg, MouseButtonID id)
 
 bool InputListener::keyPressed (const KeyEvent &e)
 {
-    Ogre::Vector3 posCamera,posVoiture;
+	Ogre::Vector3 posCamera, posVoiture;
 	switch (e.key)
 	{
 	case OIS::KC_ESCAPE:
@@ -224,12 +228,12 @@ bool InputListener::keyPressed (const KeyEvent &e)
 	case OIS::KC_END:
 		detectionCollision = !detectionCollision;
 		break;
-    case OIS::KC_J:
-        posCamera = mCamera->getPosition();
-        posVoiture = mSceneMgr->getSceneNode("Voiture")->getPosition();
-        mSceneMgr->getSceneNode("Voiture");
-        std::cout<<"Distance Voiture - Camera : "<<posCamera.distance(posVoiture)<<std::endl;
-        break;
+	case OIS::KC_J:
+		posCamera = mCamera->getPosition();
+		posVoiture = mSceneMgr->getSceneNode("Voiture")->getPosition();
+		mSceneMgr->getSceneNode("Voiture");
+		std::cout << "Distance Voiture - Camera : " << posCamera.distance(posVoiture) << std::endl;
+		break;
 	default:
 		break;
 	}
@@ -285,13 +289,13 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 	//selection de l'etat
 	if (deplacement != Ogre::Vector3(0, 0, 0))
 	{
-        mPersonnageStat = WALK;
+		mPersonnageStat = WALK;
 	}
 	else
 	{
 		if ((mPersonnageStat != IDLE1) && (mPersonnageStat != IDLE2) && (mPersonnageStat != IDLE3))
 		{
-            mPersonnageStat = IDLE3;
+			mPersonnageStat = IDLE3;
 		}
 	}
 
@@ -310,15 +314,15 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 	case IDLE3:
 		mScene->idle3Personnage(evt);
 		break;
-    case KICK:
-        mScene->kickPersonnage(evt);
-        break;
-    case SIDEKICK:
-        mScene->sideKickPersonnage(evt);
-        break;
-    case DEATH2:
-        mScene->death2Personnage(evt);
-        break;
+	case KICK:
+		mScene->kickPersonnage(evt);
+		break;
+	case SIDEKICK:
+		mScene->sideKickPersonnage(evt);
+		break;
+	case DEATH2:
+		mScene->death2Personnage(evt);
+		break;
 	default:
 		mPersonnageStat = IDLE3;
 		break;

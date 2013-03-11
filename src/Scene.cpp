@@ -256,8 +256,8 @@ void Scene::setPersonnage ()
 
 	nCharacter = nCharacCamera->createChildSceneNode("CharacterNode");
 	nCharacter->setPosition(0, -HAUTEUR_PERS, 0);
-	nCharacter->attachObject(personnage);
-	nCharacter->scale(0.75, 0.75, 0.75);
+//	nCharacter->attachObject(personnage);
+//	nCharacter->scale(0.75, 0.75, 0.75);
 }
 
 void Scene::walkPersonnage (const FrameEvent &evt)
@@ -403,7 +403,7 @@ void Scene::setCamera ()
 	//nCamera->setPosition(0, 0, dDistanceCharacCamera);
 
 	nCamera->attachObject(mShortStory->getCamera());
-	mShortStory->getCamera()->setPosition(25, 25, dDistanceCharacCamera);
+	mShortStory->getCamera()->setPosition(25, 15, dDistanceCharacCamera);
 }
 
 void Scene::setMeshes (bool withLod)

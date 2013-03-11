@@ -153,6 +153,15 @@ bool InputListener::mouseMoved (const MouseEvent &e)
 {
 	mScene->getCharacterCameraNode()->yaw(Degree(-mVitesseRotation * e.state.X.rel), SceneNode::TS_LOCAL);
 	mScene->getCameraNode()->pitch(Degree(-mVitesseRotation * e.state.Y.rel));
+	Quaternion orientationCamera = mScene->getCameraNode()->getOrientation();
+	if (detectionCollision)
+	{
+		if (orientationCamera.x > 0.5)
+			orientationCamera.x = 0.5;
+		if (orientationCamera.x < -0.5)
+			orientationCamera.x = -0.5;
+		mScene->getCameraNode()->setOrientation(orientationCamera);
+	}
 	return true;
 }
 

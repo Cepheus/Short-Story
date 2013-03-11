@@ -36,7 +36,7 @@ private:
 	/** atidtude du personnage*/
 	enum PersonnageStat
 	{
-        IDLE1, IDLE2, IDLE3, WALK, KICK, SIDEKICK, DEATH2
+		IDLE1, IDLE2, IDLE3, WALK, KICK, SIDEKICK, DEATH2
 	};
 
 	/** La scène contenant les objets à manipuler */

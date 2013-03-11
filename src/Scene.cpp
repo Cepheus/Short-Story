@@ -28,7 +28,7 @@ void Scene::createScene ()
 
 void Scene::setLight ()
 {
-	mShortStory->getSceneManager()->setAmbientLight(ColourValue(0.5f, 0.5f, 0.5f));
+    mShortStory->getSceneManager()->setAmbientLight(ColourValue(0.3f, 0.3f, 0.3f));
 	Light* ambientLight = mShortStory->getSceneManager()->createLight("MainLight");
 	ambientLight->setPosition(20, 80, 50);
 }
@@ -136,8 +136,8 @@ void Scene::setTerrain ()
     terrainLight = mShortStory->getSceneManager()->createLight("terrainLight");
     terrainLight->setType(Ogre::Light::LT_DIRECTIONAL);
     terrainLight->setDirection(lightdir);
-    terrainLight->setDiffuseColour(Ogre::ColourValue::White);
-    terrainLight->setSpecularColour(Ogre::ColourValue(0.4f, 0.4f, 0.4f));
+    terrainLight->setDiffuseColour(Ogre::ColourValue::Black);
+    terrainLight->setSpecularColour(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 
     //lumere sur le terrain
     mGlobals->setLightMapDirection(terrainLight->getDerivedDirection());

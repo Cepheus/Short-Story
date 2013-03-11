@@ -44,7 +44,7 @@ void Scene::setTerrain ()
 	Entity *ent = sceneManager->createEntity("EntiteSol", "sol");
 	nTerrain = sceneManager->getRootSceneNode()->createChildSceneNode();
 	nTerrain->attachObject(ent);
-	ent->setMaterialName("Plane");
+    ent->setMaterialName("Plane");
 	ent->setCastShadows(true);
 
 	//**street lamp 1**//
@@ -238,11 +238,11 @@ void Scene::setSky ()
 
 void Scene::setRain ()
 {
-	ParticleSystem * rainParticle = mShortStory->getSceneManager()->createParticleSystem("rain", "Rain");
-	SceneNode * rainNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainNode",
-	        Ogre::Vector3(100, 0, 0));
-	rainNode->translate(0, 3000, 0, Node::TS_PARENT);
-	rainNode->attachObject(rainParticle);
+    ParticleSystem * rainParticle = mShortStory->getSceneManager()->createParticleSystem("rain", "Rain");
+    SceneNode * rainNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainNode",
+            Ogre::Vector3(100, 0, 0));
+    rainNode->translate(0, 3000, 0, Node::TS_PARENT);
+    rainNode->attachObject(rainParticle);
 }
 
 void Scene::setImmeuble ()

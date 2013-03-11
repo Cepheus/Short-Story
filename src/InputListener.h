@@ -9,7 +9,7 @@
 /** La distance entre la tête du bonhomme et le sol */
 #define DIST_VERTICAL 100
 /** Détection de collision sur le plan horizontal (carré autour du perso de diagonale 2*DIST_HORIZONTAL) */
-#define DIST_HORIZONTAL 20
+#define DIST_HORIZONTAL 100
 
 using namespace Ogre;
 using namespace OIS;
@@ -52,8 +52,10 @@ private:
 	bool mContinuer;
 	/** Vrai si espace est enfoncé (mode noclip / ghost = monter verticalement) */
 	bool mgoUp;
-	/** Utiliser pour bouger, contient le vecteur de déplacement de la caméra (par rapport au repère local de la cam) */
+	/** Utiliser pour bouger, contient le vecteur de déplacement */
 	Ogre::Vector3 mMouvement;
+	/** Permet la détection de collisions */
+	Ogre::Vector3 mCollisionVect;
 	/** Vitesse de déplacement, par défaut VITESSE */
 	Real mVitesse;
 	/** Vitesse de rotation, par défaut VROTATION */

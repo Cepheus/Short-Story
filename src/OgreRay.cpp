@@ -5,11 +5,10 @@
  * @param[in] sceneMgr	Scene manager
  * @return[NONE]
  */
-OgreRay::OgreRay (Ogre::SceneManager* sceneMgr)
+OgreRay::OgreRay (Ogre::SceneManager* sceneMgr, Ogre::MovableObject *ignore) :
+		toBeIgnored(ignore), toBeTouched(0), touched(false)
 {
 	m_raySceneQuery = sceneMgr->createRayQuery(Ogre::Ray(), Ogre::SceneManager::WORLD_GEOMETRY_TYPE_MASK);
-	if (!m_raySceneQuery)
-		printf("["__FILE__"::%u] Failed to create Ogre::RaySceneQuery instance\n", __LINE__);
 	m_raySceneQuery->setSortByDistance(true);
 }
 
@@ -52,7 +51,7 @@ bool OgreRay::RaycastFromPoint (const Ogre::Vector3& point, const Ogre::Vector3&
 			break;
 
 		// only check this result if its a hit against an entity
-		if (query_result[qr_idx].movable)
+		if (query_result[qr_idx].movable && query_result[qr_idx].movable != toBeIgnored)
 		{
 			const std::string& movableType = query_result[qr_idx].movable->getMovableType();
 			// mesh data to retrieve
@@ -110,7 +109,10 @@ bool OgreRay::RaycastFromPoint (const Ogre::Vector3& point, const Ogre::Vector3&
 			// if we found a new closest raycast for this object, update the
 			// closest_result before moving on to the next object.
 			if (new_closest_found)
+			{
 				closest_result = ray.getPoint(closest_distance);
+				touched = query_result[qr_idx].movable == toBeTouched;
+			}
 		}
 	}
 
@@ -121,6 +123,8 @@ bool OgreRay::RaycastFromPoint (const Ogre::Vector3& point, const Ogre::Vector3&
 		result = closest_result;
 		return true;
 	}
+	else
+		touched = false;
 	// raycast failed
 	return false;
 }

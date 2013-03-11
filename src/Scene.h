@@ -41,6 +41,8 @@ private:
 	Light *terrainLight;
 	/** Le truc pour g�rer le terrain */
 	TerrainGlobalOptions *mGlobals;
+	/** true si le perso est dans l'immeuble, faux sinon */
+	bool inBuilding;
 
 public:
 	/**
@@ -94,6 +96,16 @@ public:
 			dDistanceCharacCamera = distanceCharacCamera;
 			mShortStory->getCamera()->setPosition(FAR_PERS_X, FAR_PERS_Y, dDistanceCharacCamera);
 		}
+	}
+
+	bool isInBuilding () const
+	{
+		return inBuilding;
+	}
+
+	void setInBuilding (bool inBuilding)
+	{
+		this->inBuilding = inBuilding;
 	}
 
 private:

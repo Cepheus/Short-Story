@@ -29,11 +29,32 @@
 class OgreRay
 {
 private:
+	Ogre::MovableObject *toBeIgnored;
+	const Ogre::MovableObject *toBeTouched;
 	Ogre::RaySceneQuery* m_raySceneQuery; //!< Ray query
+	bool touched;
 
 public:
-	OgreRay (Ogre::SceneManager* sceneMgr);
+	OgreRay (Ogre::SceneManager* sceneMgr, Ogre::MovableObject *ignore);
 	bool RaycastFromPoint (const Ogre::Vector3& point, const Ogre::Vector3& normal, Ogre::Vector3& result);
+
+	/**
+	 * @return true si l'objet donné dans setTobeTouched() est l'objet touché
+	 */
+	bool isTouched () const
+	{
+		return touched;
+	}
+
+	const Ogre::MovableObject* getToBeTouched () const
+	{
+		return toBeTouched;
+	}
+
+	void setToBeTouched (const Ogre::MovableObject* toBeTouched)
+	{
+		this->toBeTouched = toBeTouched;
+	}
 
 private:
 	static void GetMeshInformation (const Ogre::MeshPtr mesh, size_t &vertex_count, Ogre::Vector3*& vertices,

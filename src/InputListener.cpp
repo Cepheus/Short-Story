@@ -41,7 +41,9 @@ void InputListener::checkCollisions ()
 {
 	const int size = 4;
 	// Rayon perso pour tester les collisions
-	OgreRay ray(mSceneMgr);
+	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
+	if (mScene->getImmeubleNode())
+		ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
 	// résultat où est stocké la collision
 	Ogre::Vector3 result;
 	// place actuelle du perso
@@ -70,8 +72,8 @@ void InputListener::checkCollisions ()
 		if (dist != DIST_VERTICAL)
 		{
 			mScene->getCharacCamera()->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
-			printf("Youpi\n");
 		}
+		mScene->setInBuilding(ray.isTouched());
 	}
 
 	// détection horizontale
@@ -182,7 +184,7 @@ bool InputListener::mouseMoved (const MouseEvent &e)
 bool InputListener::mousePressed (const MouseEvent &arg, MouseButtonID id)
 {
 	// Rayon
-	OgreRay ray(mSceneMgr);
+	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
 	Ogre::Vector3 result;
 	Ogre::Vector3 position = mScene->getCharacCamera()->getPosition();
 	Ogre::Vector3 direction = Ogre::Vector3::NEGATIVE_UNIT_Y;

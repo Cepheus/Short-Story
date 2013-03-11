@@ -410,7 +410,7 @@ void Scene::setMeshes ()
     entVoiture->setCastShadows(true);
     Ogre::SceneNode* VoitureNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Voiture");
     VoitureNode->attachObject(entVoiture);
-    VoitureNode->setPosition(-500,35,-100);
+    VoitureNode->setPosition(-500,43,-100);
     VoitureNode->scale(10,10,10);
 }
 

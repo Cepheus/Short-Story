@@ -40,6 +40,87 @@ void Scene::setTerrain ()
     nTerrain = sceneManager->getRootSceneNode()->createChildSceneNode();
     nTerrain->attachObject(ent);
     ent->setMaterialName("Plane");
+
+
+    //**street lamp 1**//
+    Entity* streetLamp1 = mShortStory->getSceneManager()->createEntity("streetLamp1", "streetLamp.mesh");
+    streetLamp1->setCastShadows(true);
+
+    //node
+    SceneNode* streetLamp1Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("streetLamp1Node");
+    streetLamp1Node->attachObject(streetLamp1);
+    streetLamp1Node->setPosition(600., 0., 200.);
+    streetLamp1Node->scale(2, 2, 2);
+
+    //light 1
+    Ogre::Light* streetLamp1B1 = mShortStory->getSceneManager()->createLight("streetLamp1B1");
+    streetLamp1B1->setType(Ogre::Light::LT_SPOTLIGHT);
+    streetLamp1B1->setDirection(0, -1, 0);
+    streetLamp1B1->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+    streetLamp1B1->setPosition(streetLamp1Node->getPosition()+Ogre::Vector3( 60, 500, 60));
+    streetLamp1B1->setAttenuation(700,0.5,0,0);
+    streetLamp1B1->setDiffuseColour(1., 1, 0);
+    streetLamp1B1->setSpecularColour(1., 1, 0);
+
+    //light 2
+    Ogre::Light* streetLamp1B2 = mShortStory->getSceneManager()->createLight("streetLamp1B2");
+    streetLamp1B2->setType(Ogre::Light::LT_SPOTLIGHT);
+    streetLamp1B2->setDirection(0, -1, 0);
+    streetLamp1B2->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+    streetLamp1B2->setPosition(streetLamp1Node->getPosition()+Ogre::Vector3( -60, 500, 60));
+    streetLamp1B2->setAttenuation(700,0.5,0,0);
+    streetLamp1B2->setDiffuseColour(1., 1, 0);
+    streetLamp1B2->setSpecularColour(1., 1, 0);
+
+    //light 3
+    Ogre::Light* streetLamp1B3 = mShortStory->getSceneManager()->createLight("streetLamp1B3");
+    streetLamp1B3->setType(Ogre::Light::LT_SPOTLIGHT);
+    streetLamp1B3->setDirection(0, -1, 0);
+    streetLamp1B3->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+    streetLamp1B3->setPosition(streetLamp1Node->getPosition()+Ogre::Vector3( -60, 500, -60));
+    streetLamp1B3->setAttenuation(700,0.5,0,0);
+    streetLamp1B3->setDiffuseColour(1., 1, 0);
+    streetLamp1B3->setSpecularColour(1., 1, 0);
+
+    //**street lamp**//
+    Entity* streetLamp2 = mShortStory->getSceneManager()->createEntity("streetLamp2", "streetLamp.mesh");
+    streetLamp2->setCastShadows(true);
+
+    //node
+    SceneNode* streetLamp2Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("streetLamp2Node");
+    streetLamp2Node->attachObject(streetLamp2);
+    streetLamp2Node->setPosition(0., 0., 200.);
+    streetLamp2Node->scale(2, 2, 2);
+
+    //light 1
+    Ogre::Light* streetLamp2B1 = mShortStory->getSceneManager()->createLight("streetLamp2B1");
+    streetLamp2B1->setType(Ogre::Light::LT_SPOTLIGHT);
+    streetLamp2B1->setDirection(0, -1, 0);
+    streetLamp2B1->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+    streetLamp2B1->setPosition(streetLamp2Node->getPosition()+Ogre::Vector3( 60, 500, 60));
+    streetLamp2B1->setAttenuation(700,0.5,0,0);
+    streetLamp2B1->setDiffuseColour(1., 1, 0);
+    streetLamp2B1->setSpecularColour(1., 1, 0);
+
+    //light 2
+    Ogre::Light* streetLamp2B2 = mShortStory->getSceneManager()->createLight("streetLamp2B2");
+    streetLamp2B2->setType(Ogre::Light::LT_SPOTLIGHT);
+    streetLamp2B2->setDirection(0, -1, 0);
+    streetLamp2B2->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+    streetLamp2B2->setPosition(streetLamp2Node->getPosition()+Ogre::Vector3( -60, 500, 60));
+    streetLamp2B2->setAttenuation(700,0.5,0,0);
+    streetLamp2B2->setDiffuseColour(1., 1, 0);
+    streetLamp2B2->setSpecularColour(1., 1, 0);
+
+    //light 3
+    Ogre::Light* streetLamp3B3 = mShortStory->getSceneManager()->createLight("streetLamp2B3");
+    streetLamp3B3->setType(Ogre::Light::LT_SPOTLIGHT);
+    streetLamp3B3->setDirection(0, -1, 0);
+    streetLamp3B3->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+    streetLamp3B3->setPosition(streetLamp2Node->getPosition()+Ogre::Vector3( -60, 500, -60));
+    streetLamp3B3->setAttenuation(700,0.5,0,0);
+    streetLamp3B3->setDiffuseColour(1., 1, 0);
+    streetLamp3B3->setSpecularColour(1., 1, 0);
 }
 
 void Scene::setSky ()

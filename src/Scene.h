@@ -5,6 +5,9 @@
 #include "ShortStory.h"
 #include <Terrain/OgreTerrain.h>
 
+/** La distance entre la tête du bonhomme et le sol */
+#define HAUTEUR_PERS 120
+
 using namespace Ogre;
 
 /**
@@ -30,9 +33,9 @@ private:
 
     /** Le terrain heightmap */
     Terrain *mTerrain;
-    /** La lumiere dy terrain, initialis� dans lumiere, utilis� dans terrain */
+    /** La lumiere dy terrain, initialis� dans lumiere, utilis� dans terrain */
     Light *terrainLight;
-    /** Le truc pour g�rer le terrain */
+    /** Le truc pour g�rer le terrain */
     TerrainGlobalOptions *mGlobals;
 
 public:
@@ -73,6 +76,11 @@ public:
     /** Récupère la distance entre le personnage et la caméra */
     Real getDistanceCharacterCamera();
 
+	const SceneNode* getCharacCamera () const
+	{
+		return nCharacCamera;
+	}
+
 private:
 	/** Met en place la lumière */
 	void setLight ();
@@ -87,7 +95,7 @@ private:
 	/** Met en place le personnage */
 	void setPersonnage ();
 	/** Met en place les différents meshes */
-	void setMeshes ();
+	void setMeshes (bool withLod);
 	/** Met en place la caméra */
 	void setCamera ();
 };

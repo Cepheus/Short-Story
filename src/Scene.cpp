@@ -1,17 +1,17 @@
 #include "Scene.h"
 #include <OgreProgressiveMesh.h>
 
-
 Scene::Scene (ShortStory *shortStory) :
-		mShortStory(shortStory), nTerrain(0), nCamera(0), nCharacter(0), nCharacCamera(0), dDistanceCharacCamera(75.)
+		mShortStory(shortStory), nTerrain(0), nCamera(0), nCharacter(0), nCharacCamera(0), dDistanceCharacCamera(100)
 {
-    nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
+	nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
+	nCharacCamera->setPosition(300., HAUTEUR_PERS, 500.);
 }
 
 Scene::~Scene ()
 {
-    OGRE_DELETE mTerrain;
-    OGRE_DELETE mGlobals;
+	OGRE_DELETE mTerrain;
+	OGRE_DELETE mGlobals;
 }
 
 void Scene::createScene ()
@@ -23,214 +23,211 @@ void Scene::createScene ()
 	setImmeuble();
 	setPersonnage();
 	setCamera();
-	setMeshes();
+	setMeshes(false);
 }
 
 void Scene::setLight ()
 {
-    mShortStory->getSceneManager()->setAmbientLight(ColourValue(0.2f, 0.2f, 0.2f));
+	mShortStory->getSceneManager()->setAmbientLight(ColourValue(0.3f, 0.3f, 0.3f));
 	Light* ambientLight = mShortStory->getSceneManager()->createLight("MainLight");
 	ambientLight->setPosition(20, 80, 50);
 }
 
 void Scene::setTerrain ()
 {
-    //sol palpable
-    SceneManager* sceneManager = mShortStory->getSceneManager();
-    Plane plan(Vector3::UNIT_Y, 0);
-    MeshManager::getSingleton().createPlane("sol", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plan, 5000, 5000, 100, 100, true, 1, 50, 50, Vector3::UNIT_Z);
-	Entity *ent= sceneManager->createEntity("EntiteSol", "sol");
-    nTerrain = sceneManager->getRootSceneNode()->createChildSceneNode();
-    nTerrain->attachObject(ent);
-    ent->setMaterialName("Plane");
-    ent->setCastShadows(false);
+	//sol palpable
+	SceneManager* sceneManager = mShortStory->getSceneManager();
+	Plane plan(Vector3::UNIT_Y, 0);
+	MeshManager::getSingleton().createPlane("sol", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plan, 5000, 5000,
+	        100, 100, true, 1, 50, 50, Vector3::UNIT_Z);
+	Entity *ent = sceneManager->createEntity("EntiteSol", "sol");
+	nTerrain = sceneManager->getRootSceneNode()->createChildSceneNode();
+	nTerrain->attachObject(ent);
+	ent->setMaterialName("Plane");
+	ent->setCastShadows(true);
 
-    //** LAMP **//
-    Real Range = 2000;
-    Real atenument = 1;
-    Real linear = 4.5/Range;
-    Real quadratic = 75.0f/(Range*Range);
+	//**street lamp 1**//
+	Entity* streetLamp1 = mShortStory->getSceneManager()->createEntity("streetLamp1", "streetLamp.mesh");
+	streetLamp1->setCastShadows(true);
 
-    //**street lamp 1**//
-    Entity* streetLamp1 = mShortStory->getSceneManager()->createEntity("streetLamp1", "streetLamp.mesh");
-    streetLamp1->setCastShadows(true);
+	//node
+	SceneNode* streetLamp1Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode(
+	        "streetLamp1Node");
+	streetLamp1Node->attachObject(streetLamp1);
+	streetLamp1Node->setPosition(600., 0., 200.);
+	streetLamp1Node->scale(2, 2, 2);
 
-    //node
-    SceneNode* streetLamp1Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("streetLamp1Node");
-    streetLamp1Node->attachObject(streetLamp1);
-    streetLamp1Node->setPosition(-600., 0., 0.);
-    streetLamp1Node->scale(2, 2, 2);
+	//light 1
+	Ogre::Light* streetLamp1B1 = mShortStory->getSceneManager()->createLight("streetLamp1B1");
+	streetLamp1B1->setType(Ogre::Light::LT_SPOTLIGHT);
+	streetLamp1B1->setDirection(0, -1, 0);
+	streetLamp1B1->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	streetLamp1B1->setPosition(streetLamp1Node->getPosition() + Ogre::Vector3(60, 500, 60));
+	streetLamp1B1->setAttenuation(700, 0.5, 0, 0);
+	streetLamp1B1->setDiffuseColour(1., 1, 0);
+	streetLamp1B1->setSpecularColour(1., 1, 0);
 
-    //light 1   
-    Ogre::Light* streetLamp1B1 = mShortStory->getSceneManager()->createLight("streetLamp1B1");
-    streetLamp1B1->setType(Ogre::Light::LT_POINT);
-    //streetLamp1B1->setDirection(0, -1, 0);
-    //streetLamp1B1->setSpotlightRange(Degree(30), Degree(60), 0.5);
-    streetLamp1B1->setPosition(streetLamp1Node->getPosition()+Ogre::Vector3( 30, 200, 15));
-    streetLamp1B1->setAttenuation(Range, atenument, linear, quadratic);
-    streetLamp1B1->setDiffuseColour(Ogre::ColourValue::White);
-    streetLamp1B1->setSpecularColour(0.8,0.8,0.3);
+	//light 2
+	Ogre::Light* streetLamp1B2 = mShortStory->getSceneManager()->createLight("streetLamp1B2");
+	streetLamp1B2->setType(Ogre::Light::LT_SPOTLIGHT);
+	streetLamp1B2->setDirection(0, -1, 0);
+	streetLamp1B2->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	streetLamp1B2->setPosition(streetLamp1Node->getPosition() + Ogre::Vector3(-60, 500, 60));
+	streetLamp1B2->setAttenuation(700, 0.5, 0, 0);
+	streetLamp1B2->setDiffuseColour(1., 1, 0);
+	streetLamp1B2->setSpecularColour(1., 1, 0);
 
-    //light 2
-    Ogre::Light* streetLamp1B2 = mShortStory->getSceneManager()->createLight("streetLamp1B2");
-    streetLamp1B2->setType(Ogre::Light::LT_POINT);
-    //streetLamp1B2->setDirection(0, -1, 0);
-    //streetLamp1B2->setSpotlightRange(Degree(30), Degree(60), 0.5);
-    streetLamp1B2->setPosition(streetLamp1Node->getPosition()+Ogre::Vector3( -30, 200, 15));
-    streetLamp1B2->setAttenuation(Range, atenument, linear, quadratic);
-    streetLamp1B2->setDiffuseColour(Ogre::ColourValue::White);
-    streetLamp1B2->setSpecularColour(0.8,0.8,0.3);
+	//light 3
+	Ogre::Light* streetLamp1B3 = mShortStory->getSceneManager()->createLight("streetLamp1B3");
+	streetLamp1B3->setType(Ogre::Light::LT_SPOTLIGHT);
+	streetLamp1B3->setDirection(0, -1, 0);
+	streetLamp1B3->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	streetLamp1B3->setPosition(streetLamp1Node->getPosition() + Ogre::Vector3(-60, 500, -60));
+	streetLamp1B3->setAttenuation(700, 0.5, 0, 0);
+	streetLamp1B3->setDiffuseColour(1., 1, 0);
+	streetLamp1B3->setSpecularColour(1., 1, 0);
 
-    //light 3
-    Ogre::Light* streetLamp1B3 = mShortStory->getSceneManager()->createLight("streetLamp1B3");
-    streetLamp1B3->setType(Ogre::Light::LT_POINT);
-    //streetLamp1B3->setDirection(0, -1, 0);
-    //streetLamp1B3->setSpotlightRange(Degree(30), Degree(60), 0.5);
-    streetLamp1B3->setPosition(streetLamp1Node->getPosition()+Ogre::Vector3( 0, 500, -30));
-    streetLamp1B3->setAttenuation(Range, atenument, linear, quadratic);
-    streetLamp1B3->setDiffuseColour(Ogre::ColourValue::White);
-    streetLamp1B3->setSpecularColour(0.8,0.8,0.3);
+	//**street lamp**//
+	Entity* streetLamp2 = mShortStory->getSceneManager()->createEntity("streetLamp2", "streetLamp.mesh");
+	streetLamp2->setCastShadows(true);
 
-    //**street lamp 2**//
-    Entity* streetLamp2 = mShortStory->getSceneManager()->createEntity("streetLamp2", "streetLamp.mesh");
-    streetLamp2->setCastShadows(true);
+	//node
+	SceneNode* streetLamp2Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode(
+	        "streetLamp2Node");
+	streetLamp2Node->attachObject(streetLamp2);
+	streetLamp2Node->setPosition(0., 0., 200.);
+	streetLamp2Node->scale(2, 2, 2);
 
-    //node
-    SceneNode* streetLamp2Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("streetLamp2Node");
-    streetLamp2Node->attachObject(streetLamp2);
-    streetLamp2Node->setPosition(600., 0., 400.);
-    streetLamp2Node->scale(2, 2, 2);
+	//light 1
+	Ogre::Light* streetLamp2B1 = mShortStory->getSceneManager()->createLight("streetLamp2B1");
+	streetLamp2B1->setType(Ogre::Light::LT_SPOTLIGHT);
+	streetLamp2B1->setDirection(0, -1, 0);
+	streetLamp2B1->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	streetLamp2B1->setPosition(streetLamp2Node->getPosition() + Ogre::Vector3(60, 500, 60));
+	streetLamp2B1->setAttenuation(700, 0.5, 0, 0);
+	streetLamp2B1->setDiffuseColour(1., 1, 0);
+	streetLamp2B1->setSpecularColour(1., 1, 0);
 
-    //light 1
-    Ogre::Light* streetLamp2B1 = mShortStory->getSceneManager()->createLight("streetLamp2B1");
-    streetLamp2B1->setType(Ogre::Light::LT_POINT);
-    //streetLamp2B1->setDirection(0, -1, 0);
-    //streetLamp2B1->setSpotlightRange(Degree(30), Degree(60), 0.5);
-    streetLamp2B1->setPosition(streetLamp2Node->getPosition()+Ogre::Vector3( 30, 200, 15));
-    streetLamp2B1->setAttenuation(Range, atenument, linear, quadratic);
-    streetLamp2B1->setDiffuseColour(Ogre::ColourValue::White);
-    streetLamp2B1->setSpecularColour(0.8,0.8,0.3);
+	//light 2
+	Ogre::Light* streetLamp2B2 = mShortStory->getSceneManager()->createLight("streetLamp2B2");
+	streetLamp2B2->setType(Ogre::Light::LT_SPOTLIGHT);
+	streetLamp2B2->setDirection(0, -1, 0);
+	streetLamp2B2->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	streetLamp2B2->setPosition(streetLamp2Node->getPosition() + Ogre::Vector3(-60, 500, 60));
+	streetLamp2B2->setAttenuation(700, 0.5, 0, 0);
+	streetLamp2B2->setDiffuseColour(1., 1, 0);
+	streetLamp2B2->setSpecularColour(1., 1, 0);
 
-    //light 2
-    Ogre::Light* streetLamp2B2 = mShortStory->getSceneManager()->createLight("streetLamp2B2");
-    streetLamp2B2->setType(Ogre::Light::LT_POINT);
-    //streetLamp2B2->setDirection(0, -1, 0);
-    //streetLamp2B2->setSpotlightRange(Degree(30), Degree(60), 0.5);
-    streetLamp2B2->setPosition(streetLamp2Node->getPosition()+Ogre::Vector3( -30, 200, 15));
-    streetLamp2B2->setAttenuation(Range, atenument, linear, quadratic);
-    streetLamp2B2->setDiffuseColour(Ogre::ColourValue::White);
-    streetLamp2B2->setSpecularColour(0.8,0.8,0.3);
+	//light 3
+	Ogre::Light* streetLamp3B3 = mShortStory->getSceneManager()->createLight("streetLamp2B3");
+	streetLamp3B3->setType(Ogre::Light::LT_SPOTLIGHT);
+	streetLamp3B3->setDirection(0, -1, 0);
+	streetLamp3B3->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	streetLamp3B3->setPosition(streetLamp2Node->getPosition() + Ogre::Vector3(-60, 500, -60));
+	streetLamp3B3->setAttenuation(700, 0.5, 0, 0);
+	streetLamp3B3->setDiffuseColour(1., 1, 0);
+	streetLamp3B3->setSpecularColour(1., 1, 0);
 
-    //light 3
-    Ogre::Light* streetLamp3B3 = mShortStory->getSceneManager()->createLight("streetLamp2B3");
-    streetLamp3B3->setType(Ogre::Light::LT_POINT);
-    //streetLamp3B3->setDirection(0, -1, 0);
-    //streetLamp3B3->setSpotlightRange(Degree(30), Degree(60), 0.5);
-    streetLamp3B3->setPosition(streetLamp2Node->getPosition()+Ogre::Vector3( 0, 200, -30));
-    streetLamp3B3->setAttenuation(Range, atenument, linear, quadratic);
-    streetLamp3B3->setDiffuseColour(Ogre::ColourValue::White);
-    streetLamp3B3->setSpecularColour(0.8,0.8,0.3);
+	//terrain exterieur non palpable
 
-    //terrain exterieur non palpable
+	//initialisation
+	mGlobals = OGRE_NEW Ogre::TerrainGlobalOptions();
+	mGlobals->setMaxPixelError(8); //précision avec la quelle le terrain est rendu
 
-    //initialisation
-    mGlobals = OGRE_NEW Ogre::TerrainGlobalOptions();
-    mGlobals->setMaxPixelError(8); //précision avec la quelle le terrain est rendu
+	//lumiere du terrain
+	Ogre::Vector3 lightdir(0.55f, -0.3f, 0.75f);
+	terrainLight = mShortStory->getSceneManager()->createLight("terrainLight");
+	terrainLight->setType(Ogre::Light::LT_DIRECTIONAL);
+	terrainLight->setDirection(lightdir);
+	terrainLight->setDiffuseColour(Ogre::ColourValue::Black);
+	terrainLight->setSpecularColour(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
 
-    //lumiere du terrain
-    Ogre::Vector3 lightdir(0.55f, -0.3f, 0.75f);
-    terrainLight = mShortStory->getSceneManager()->createLight("terrainLight");
-    terrainLight->setType(Ogre::Light::LT_DIRECTIONAL);
-    terrainLight->setDirection(lightdir);
-    terrainLight->setDiffuseColour(Ogre::ColourValue::Black);
-    terrainLight->setSpecularColour(Ogre::ColourValue(0.5f, 0.5f, 0.5f));
+	//lumere sur le terrain
+	mGlobals->setLightMapDirection(terrainLight->getDerivedDirection());
+	mGlobals->setCompositeMapDistance(3000);
+	mGlobals->setCompositeMapAmbient(mShortStory->getSceneManager()->getAmbientLight());
+	mGlobals->setCompositeMapDiffuse(terrainLight->getDiffuseColour());
 
-    //lumere sur le terrain
-    mGlobals->setLightMapDirection(terrainLight->getDerivedDirection());
-    mGlobals->setCompositeMapDistance(3000);
-    mGlobals->setCompositeMapAmbient(mShortStory->getSceneManager()->getAmbientLight());
-    mGlobals->setCompositeMapDiffuse(terrainLight->getDiffuseColour());
+	//definition du terrain
+	mTerrain = OGRE_NEW Ogre::Terrain(mShortStory->getSceneManager());
 
-    //definition du terrain
-    mTerrain = OGRE_NEW Ogre::Terrain(mShortStory->getSceneManager());
+	// bump mapping : image
+	Ogre::Image img;
+	img.load("heightmap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-    // bump mapping : image
-    Ogre::Image img;
-    img.load("heightmap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	//Les paramčtres géométriques
+	Ogre::Terrain::ImportData imp;
+	imp.inputImage = &img;
+	imp.terrainSize = img.getWidth();
+	imp.worldSize = 12000; //tail du terrain
+	imp.inputScale = imp.worldSize * 1 / 10; //hauteur du terrain
+	imp.minBatchSize = 33; //lod terrain min
+	imp.maxBatchSize = 65; //lod terrain max : 65 c'est le maximum sinon 2^n+1
 
-    //Les paramčtres géométriques
-    Ogre::Terrain::ImportData imp;
-    imp.inputImage = &img;
-    imp.terrainSize = img.getWidth();
-    imp.worldSize = 12000; //tail du terrain
-    imp.inputScale = imp.worldSize*1/10; //hauteur du terrain
-    imp.minBatchSize = 33; //lod terrain min
-    imp.maxBatchSize = 65; //lod terrain max : 65 c'est le maximum sinon 2^n+1
+	//textures
+	imp.layerList.resize(3);
+	imp.layerList[0].worldSize = 100; //tail de la texture dans le monde
+	imp.layerList[0].textureNames.push_back("grass_green-01_diffusespecular.dds"); //une texture diffuse, qui contient les couleurs, les motifs du matériau ;
+	imp.layerList[0].textureNames.push_back("grass_green-01_normalheight.dds"); //une texture normale, contenant des informations sur le relief du matériau.
+	imp.layerList[1].worldSize = 300;
+	imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
+	imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
+	imp.layerList[2].worldSize = 300;
+	imp.layerList[2].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");
+	imp.layerList[2].textureNames.push_back("dirt_grayrocky_normalheight.dds");
 
-    //textures
-    imp.layerList.resize(3);
-    imp.layerList[0].worldSize = 100; //tail de la texture dans le monde
-    imp.layerList[0].textureNames.push_back("grass_green-01_diffusespecular.dds"); //une texture diffuse, qui contient les couleurs, les motifs du matériau ;
-    imp.layerList[0].textureNames.push_back("grass_green-01_normalheight.dds"); //une texture normale, contenant des informations sur le relief du matériau.
-    imp.layerList[1].worldSize = 300;
-    imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
-    imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
-    imp.layerList[2].worldSize = 300;
-    imp.layerList[2].textureNames.push_back("dirt_grayrocky_diffusespecular.dds");
-    imp.layerList[2].textureNames.push_back("dirt_grayrocky_normalheight.dds");
+	//charge le terrain dans la scene
+	mTerrain->prepare(imp);
+	mTerrain->load();
 
-    //charge le terrain dans la scene
-    mTerrain->prepare(imp);
-    mTerrain->load();
+	//gestion des differant niveau de textures
+	Ogre::TerrainLayerBlendMap* blendMap1 = mTerrain->getLayerBlendMap(1);
+	Ogre::TerrainLayerBlendMap* blendMap2 = mTerrain->getLayerBlendMap(2);
 
-    //gestion des differant niveau de textures
-    Ogre::TerrainLayerBlendMap* blendMap1 = mTerrain->getLayerBlendMap(1);
-    Ogre::TerrainLayerBlendMap* blendMap2 = mTerrain->getLayerBlendMap(2);
+	float* pBlend1 = blendMap1->getBlendPointer();
+	float* pBlend2 = blendMap2->getBlendPointer();
 
-    float* pBlend1 = blendMap1->getBlendPointer();
-    float* pBlend2 = blendMap2->getBlendPointer();
+	Ogre::Real minHeight1 = imp.inputScale * 5 / 500;
+	Ogre::Real fadeDist1 = imp.inputScale * 600 / 1000;
+	Ogre::Real minHeight2 = imp.inputScale * 200 / 1000;
+	Ogre::Real fadeDist2 = imp.inputScale * 800 / 1000;
 
-    Ogre::Real minHeight1 = imp.inputScale*5/500;
-    Ogre::Real fadeDist1 = imp.inputScale*600/1000;
-    Ogre::Real minHeight2 = imp.inputScale*200/1000;
-    Ogre::Real fadeDist2 = imp.inputScale*800/1000;
+	for (Ogre::uint16 y = 0; y < mTerrain->getLayerBlendMapSize(); ++y)
+	{
+		for (Ogre::uint16 x = 0; x < mTerrain->getLayerBlendMapSize(); ++x)
+		{
+			Ogre::Real terrainX, terrainY, transparence;
 
-    for (Ogre::uint16 y = 0; y < mTerrain->getLayerBlendMapSize(); ++y)
-    {
-        for (Ogre::uint16 x = 0; x < mTerrain->getLayerBlendMapSize(); ++x)
-        {
-            Ogre::Real terrainX, terrainY, transparence;
+			blendMap1->convertImageToTerrainSpace(x, y, &terrainX, &terrainY);
+			Ogre::Real height = mTerrain->getHeightAtTerrainPosition(terrainX, terrainY);
 
-            blendMap1->convertImageToTerrainSpace(x, y, &terrainX, &terrainY);
-            Ogre::Real height = mTerrain->getHeightAtTerrainPosition(terrainX, terrainY);
+			transparence = (height - minHeight1) / fadeDist1;
+			transparence = Ogre::Math::Clamp(transparence, (Ogre::Real) 0, (Ogre::Real) 1);
+			*pBlend1++ = transparence * 255;
 
-            transparence = (height - minHeight1) / fadeDist1;
-            transparence = Ogre::Math::Clamp(transparence, (Ogre::Real)0, (Ogre::Real)1);
-            *pBlend1++ = transparence * 255;
+			transparence = (height - minHeight2) / fadeDist2;
+			transparence = Ogre::Math::Clamp(transparence, (Ogre::Real) 0, (Ogre::Real) 1);
+			*pBlend2++ = transparence * 255;
+		}
+	}
 
-            transparence = (height - minHeight2) / fadeDist2;
-            transparence = Ogre::Math::Clamp(transparence, (Ogre::Real)0, (Ogre::Real)1);
-            *pBlend2++ = transparence * 255;
-        }
-    }
+	blendMap1->dirty(); //préciser que les données de la TerrainLayerBlendMap sont obsolčtes
+	blendMap1->update(); //mise a jour
+	blendMap2->dirty();
+	blendMap2->update();
 
-    blendMap1->dirty(); //préciser que les données de la TerrainLayerBlendMap sont obsolčtes
-    blendMap1->update(); //mise a jour
-    blendMap2->dirty();
-    blendMap2->update();
-
-    //fait de la place en memoire
-    mTerrain->freeTemporaryResources();
-        mTerrain->setPosition(Ogre::Vector3(600, -100,0));
+	//fait de la place en memoire
+	mTerrain->freeTemporaryResources();
+	mTerrain->setPosition(Ogre::Vector3(600, -100, 0));
 }
 
 void Scene::setSky ()
 {
 	//mShortStory->getSceneManager()->setSkyDome(true, "CloudySky", 5, 8);
-    Plane plane;
-    plane.d = 10000;
-    plane.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;
-    mShortStory->getSceneManager()->setSkyPlane(true, plane, "NightCloudySky", 1500, 10, true, 1.5f, 150, 150);
+	Plane plane;
+	plane.d = 10000;
+	plane.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;
+	mShortStory->getSceneManager()->setSkyPlane(true, plane, "NightCloudySky", 1500, 10, true, 1.5f, 150, 150);
 }
 
 void Scene::setRain ()
@@ -255,197 +252,208 @@ void Scene::setImmeuble ()
 
 void Scene::setPersonnage ()
 {
-    Entity* personnage = mShortStory->getSceneManager()->createEntity("Personnage", "ninja.mesh");
+	Entity* personnage = mShortStory->getSceneManager()->createEntity("Personnage", "ninja.mesh");
 
 	nCharacter = nCharacCamera->createChildSceneNode("CharacterNode");
-    nCharacter->attachObject(personnage);
-
-    nCharacter->setPosition(300., 0., 500.);
-	nCharacter->scale(0.5, 0.5, 0.5);
+	nCharacter->setPosition(0, -HAUTEUR_PERS, 0);
+	nCharacter->attachObject(personnage);
+	nCharacter->scale(0.75, 0.75, 0.75);
 }
 
-void Scene::walkPersonnage(const FrameEvent &evt){
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+void Scene::walkPersonnage (const FrameEvent &evt)
+{
+	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-    AnimationState *mAnimState;
-    AnimationStateSet *set = personnage->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
+	AnimationState *mAnimState;
+	AnimationStateSet *set = personnage->getAllAnimationStates();
+	AnimationStateIterator it = set->getAnimationStateIterator();
 
-    //load animation
-    while(it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
+	//load animation
+	while (it.hasMoreElements())
+	{
+		mAnimState = it.getNext();
+		mAnimState->setEnabled(false);
+	}
 
-    personnage->getAnimationState("Walk")->setEnabled(true);
-    personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
+	personnage->getAnimationState("Walk")->setEnabled(true);
+	personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
 }
 
-void Scene::idle1Personnage(const FrameEvent &evt){
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+void Scene::idle1Personnage (const FrameEvent &evt)
+{
+	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-    AnimationState *mAnimState;
-    AnimationStateSet *set = personnage->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
+	AnimationState *mAnimState;
+	AnimationStateSet *set = personnage->getAllAnimationStates();
+	AnimationStateIterator it = set->getAnimationStateIterator();
 
-    //load animation
-    while(it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
+	//load animation
+	while (it.hasMoreElements())
+	{
+		mAnimState = it.getNext();
+		mAnimState->setEnabled(false);
+	}
 
-    personnage->getAnimationState("Idle1")->setEnabled(true);
-    personnage->getAnimationState("Idle1")->addTime(evt.timeSinceLastFrame);
+	personnage->getAnimationState("Idle1")->setEnabled(true);
+	personnage->getAnimationState("Idle1")->addTime(evt.timeSinceLastFrame);
 }
 
-void Scene::idle2Personnage(const FrameEvent &evt){
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+void Scene::idle2Personnage (const FrameEvent &evt)
+{
+	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-    AnimationState *mAnimState;
-    AnimationStateSet *set = personnage->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
+	AnimationState *mAnimState;
+	AnimationStateSet *set = personnage->getAllAnimationStates();
+	AnimationStateIterator it = set->getAnimationStateIterator();
 
-    //load animation
-    while(it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
+	//load animation
+	while (it.hasMoreElements())
+	{
+		mAnimState = it.getNext();
+		mAnimState->setEnabled(false);
+	}
 
-    personnage->getAnimationState("Idle2")->setEnabled(true);
-    personnage->getAnimationState("Idle2")->addTime(evt.timeSinceLastFrame);
+	personnage->getAnimationState("Idle2")->setEnabled(true);
+	personnage->getAnimationState("Idle2")->addTime(evt.timeSinceLastFrame);
 }
 
-void Scene::idle3Personnage(const FrameEvent &evt){
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+void Scene::idle3Personnage (const FrameEvent &evt)
+{
+	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-    AnimationState *mAnimState;
-    AnimationStateSet *set = personnage->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
+	AnimationState *mAnimState;
+	AnimationStateSet *set = personnage->getAllAnimationStates();
+	AnimationStateIterator it = set->getAnimationStateIterator();
 
-    //load animation
-    while(it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
+	//load animation
+	while (it.hasMoreElements())
+	{
+		mAnimState = it.getNext();
+		mAnimState->setEnabled(false);
+	}
 
-    personnage->getAnimationState("Idle3")->setEnabled(true);
-    personnage->getAnimationState("Idle3")->addTime(evt.timeSinceLastFrame);
+	personnage->getAnimationState("Idle3")->setEnabled(true);
+	personnage->getAnimationState("Idle3")->addTime(evt.timeSinceLastFrame);
 }
 
-void Scene::kickPersonnage(const FrameEvent &evt){
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+void Scene::kickPersonnage (const FrameEvent &evt)
+{
+	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-    AnimationState *mAnimState;
-    AnimationStateSet *set = personnage->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
+	AnimationState *mAnimState;
+	AnimationStateSet *set = personnage->getAllAnimationStates();
+	AnimationStateIterator it = set->getAnimationStateIterator();
 
-    //load animation
-    while(it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
+	//load animation
+	while (it.hasMoreElements())
+	{
+		mAnimState = it.getNext();
+		mAnimState->setEnabled(false);
+	}
 
-    personnage->getAnimationState("Kick")->setEnabled(true);
-    personnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
+	personnage->getAnimationState("Kick")->setEnabled(true);
+	personnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
 }
 
-void Scene::sideKickPersonnage(const FrameEvent &evt){
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+void Scene::sideKickPersonnage (const FrameEvent &evt)
+{
+	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-    AnimationState *mAnimState;
-    AnimationStateSet *set = personnage->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
+	AnimationState *mAnimState;
+	AnimationStateSet *set = personnage->getAllAnimationStates();
+	AnimationStateIterator it = set->getAnimationStateIterator();
 
-    //load animation
-    while(it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
+	//load animation
+	while (it.hasMoreElements())
+	{
+		mAnimState = it.getNext();
+		mAnimState->setEnabled(false);
+	}
 
-    personnage->getAnimationState("SideKick")->setEnabled(true);
-    personnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
+	personnage->getAnimationState("SideKick")->setEnabled(true);
+	personnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
 }
 
-void Scene::death2Personnage(const FrameEvent &evt){
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+void Scene::death2Personnage (const FrameEvent &evt)
+{
+	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-    if(!personnage->getAnimationState("Death2")->hasEnded()){
-        AnimationState *mAnimState;
-        AnimationStateSet *set = personnage->getAllAnimationStates();
-        AnimationStateIterator it = set->getAnimationStateIterator();
+	if (!personnage->getAnimationState("Death2")->hasEnded())
+	{
+		AnimationState *mAnimState;
+		AnimationStateSet *set = personnage->getAllAnimationStates();
+		AnimationStateIterator it = set->getAnimationStateIterator();
 
-        //load animation
-        while(it.hasMoreElements())
-        {
-            mAnimState = it.getNext();
-            mAnimState->setEnabled(false);
-        }
+		//load animation
+		while (it.hasMoreElements())
+		{
+			mAnimState = it.getNext();
+			mAnimState->setEnabled(false);
+		}
 
-        personnage->getAnimationState("Death2")->setLoop(false);
-        personnage->getAnimationState("Death2")->setEnabled(true);
-        personnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
-    }
+		personnage->getAnimationState("Death2")->setLoop(false);
+		personnage->getAnimationState("Death2")->setEnabled(true);
+		personnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
+	}
 }
 
 void Scene::setCamera ()
 {
-    nCamera = nCharacCamera->createChildSceneNode("CameraNode");
-    nCamera->attachObject(mShortStory->getCamera());
+	nCamera = nCharacCamera->createChildSceneNode("CameraNode");
+	//nCamera->setPosition(0, 0, dDistanceCharacCamera);
 
-    //nCamera->setPosition(nCharacter->getPosition().x, nCharacter->getPosition().y, nCharacter->getPosition().z+dDistanceCharacCamera);
+	nCamera->attachObject(mShortStory->getCamera());
+	mShortStory->getCamera()->setPosition(25, 25, dDistanceCharacCamera);
 }
 
-void Scene::setMeshes ()
+void Scene::setMeshes (bool withLod)
 {
+	if (withLod)
+	{
+		Ogre::MeshPtr voitureMesh = Ogre::MeshManager::getSingleton().load("Sedan02_license_R.mesh",
+		        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+		Ogre::Mesh::LodValueList lodDList;
+		lodDList.push_back(700);
+		lodDList.push_back(1000);
+		lodDList.push_back(1500);
+		Ogre::ProgressiveMesh::generateLodLevels(voitureMesh.getPointer(), lodDList,
+		        Ogre::ProgressiveMesh::VRQ_PROPORTIONAL, 0.3);
+	}
 
-    Ogre::MeshPtr voitureMesh = Ogre::MeshManager::getSingleton().load("Sedan02_license_R.mesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-    Ogre::Mesh::LodValueList lodDList;
-    lodDList.push_back(700);
-	lodDList.push_back(1000);
-    lodDList.push_back(1500);
-    Ogre::ProgressiveMesh::generateLodLevels(voitureMesh.getPointer(),lodDList, Ogre::ProgressiveMesh::VRQ_PROPORTIONAL, 0.3);
-
-
-    Ogre::Entity* entVoiture = mShortStory->getSceneManager()->createEntity("Voiture", "Sedan02_license_R.mesh");
-    entVoiture->setCastShadows(true);
-    Ogre::SceneNode* VoitureNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Voiture");
-    VoitureNode->attachObject(entVoiture);
-    VoitureNode->setPosition(-500,43,-100);
-    VoitureNode->scale(10,10,10);
+	Ogre::Entity* entVoiture = mShortStory->getSceneManager()->createEntity("Voiture", "Sedan02_license_R.mesh");
+	entVoiture->setCastShadows(true);
+	Ogre::SceneNode* VoitureNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Voiture");
+	VoitureNode->attachObject(entVoiture);
+	VoitureNode->setPosition(-500, 43, -100);
+	VoitureNode->scale(10, 10, 10);
 }
 
-SceneNode* Scene::getImmeubleNode()
+SceneNode* Scene::getImmeubleNode ()
 {
-    return nImmeuble;
+	return nImmeuble;
 }
 
-SceneNode* Scene::getTerrainNode()
+SceneNode* Scene::getTerrainNode ()
 {
-    return nTerrain;
+	return nTerrain;
 }
 
-SceneNode* Scene::getCharacterCameraNode()
+SceneNode* Scene::getCharacterCameraNode ()
 {
-    return nCharacCamera;
+	return nCharacCamera;
 }
 
-SceneNode* Scene::getCameraNode()
+SceneNode* Scene::getCameraNode ()
 {
-    return nCamera;
+	return nCamera;
 }
 
-SceneNode* Scene::getCharacterNode()
+SceneNode* Scene::getCharacterNode ()
 {
-    return nCharacter;
+	return nCharacter;
 }
 
-Real Scene::getDistanceCharacterCamera()
+Real Scene::getDistanceCharacterCamera ()
 {
-    return dDistanceCharacCamera;
+	return dDistanceCharacCamera;
 }

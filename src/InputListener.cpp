@@ -44,8 +44,8 @@ void InputListener::checkCollisions ()
 	OgreRay ray(mSceneMgr);
 	// résultat où est stocké la collision
 	Ogre::Vector3 result;
-	// place actuelle de la camera
-	Ogre::Vector3 camera = mCamera->getPosition();
+	// place actuelle du perso
+	Ogre::Vector3 nperso = mScene->getCharacterNode()->getPosition();
 	// direction du rayon vertical
 	Ogre::Vector3 vertical(0, -1, 0);
 	// direction des vecteurs horizontaux (4 dans x, -x, z, -z)
@@ -54,42 +54,43 @@ void InputListener::checkCollisions ()
 	// initialisation des horizontaux
 	for (int i = 0; i < size; i++)
 		horizontals[i] = Ogre::Vector3::ZERO;
-	// -x
-	horizontals[0].x = -1;
 	// x
-	horizontals[1].x = 1;
-	// -z
-	horizontals[2].z = -1;
+	horizontals[0] = Ogre::Vector3::UNIT_X;
+	// -x
+	horizontals[1] = Ogre::Vector3::NEGATIVE_UNIT_X;
 	// z
-	horizontals[3].z = 1;
+	horizontals[2] = Ogre::Vector3::UNIT_Z;
+	// -z
+	horizontals[3] = Ogre::Vector3::NEGATIVE_UNIT_Z;
 
 	// détection verticale
-	if (ray.RaycastFromPoint(camera, vertical, result))
+	if (ray.RaycastFromPoint(nperso, vertical, result))
 	{
-		Real dist = result.distance(camera);
+		Real dist = result.distance(nperso);
 		if (dist != DIST_VERTICAL)
 		{
-			mCamera->setPosition(camera.x, camera.y - dist + 100, camera.z);
+			mScene->getCharacterNode()->setPosition(nperso.x, nperso.y - dist + 100, nperso.z);
 		}
 	}
 
 	// détection horizontale
-	for (int i = 0; i < size; i++)
+	/*for (int i = 0; i < size; i++)
 	{
-		if (ray.RaycastFromPoint(camera, horizontals[i], result))
+		if (ray.RaycastFromPoint(nperso, horizontals[i], result))
 		{
-			Real dist = result.distance(camera);
+			Real dist = result.distance(nperso);
 			if (dist < DIST_HORIZONTAL)
 			{
-				if (horizontals[i].x)
-					mMouvement.x = 0;
-				if (horizontals[i].y)
-					mMouvement.y = 0;
-				if (horizontals[i].z)
-					mMouvement.z = 0;
+				if (horizontals[i].x != 0)
+					mCollisionVect.x = 0;
+				if (horizontals[i].y != 0)
+					mCollisionVect.y = 0;
+				if (horizontals[i].z != 0)
+					mCollisionVect.z = 0;
+				printf("%d + distance %lf\n", i, dist);
 			}
 		}
-	}
+	}*/
 }
 
 bool InputListener::frameRenderingQueued (const FrameEvent& evt)
@@ -100,18 +101,23 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mKeyboard->capture();
 	mMouse->capture();
 
+	mCollisionVect.x = 1;
+	mCollisionVect.y = 1;
+	mCollisionVect.z = 1;
+//	if (detectionCollision)
+//		checkCollisions();
+
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
-	deplacement = mMouvement * mVitesse * evt.timeSinceLastFrame;
+	deplacement = mMouvement * mCollisionVect * mVitesse * evt.timeSinceLastFrame;
 
 	deplacementNinja(evt, deplacement);
 
-	mCamera->moveRelative(deplacement);
+	mScene->getCharacterCameraNode()->translate(deplacement, SceneNode::TS_LOCAL);
+	//mScene->getCharacterCameraNode()->setOrientation(mScene->getCameraNode()->getOrientation().w, 0, mScene->getCameraNode()->getOrientation().y, 0);
+
 
 	if (mgoUp)
 		mCamera->move(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0));
-
-	if (detectionCollision)
-		checkCollisions();
 
 	return mContinuer;
 }
@@ -144,8 +150,8 @@ void InputListener::windowClosed (RenderWindow* wnd)
 
 bool InputListener::mouseMoved (const MouseEvent &e)
 {
-	mCamera->yaw(Degree(-mVitesseRotation * e.state.X.rel));
-	mCamera->pitch(Degree(-mVitesseRotation * e.state.Y.rel));
+	mScene->getCharacterCameraNode()->yaw(Degree(-mVitesseRotation * e.state.X.rel), SceneNode::TS_LOCAL);
+	mScene->getCameraNode()->pitch(Degree(-mVitesseRotation * e.state.Y.rel));
 	return true;
 }
 

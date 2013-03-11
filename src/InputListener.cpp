@@ -174,6 +174,7 @@ bool InputListener::mouseReleased (const MouseEvent &arg, MouseButtonID id)
 
 bool InputListener::keyPressed (const KeyEvent &e)
 {
+    Ogre::Vector3 posCamera,posVoiture;
 	switch (e.key)
 	{
 	case OIS::KC_ESCAPE:
@@ -215,6 +216,12 @@ bool InputListener::keyPressed (const KeyEvent &e)
 	case OIS::KC_END:
 		detectionCollision = !detectionCollision;
 		break;
+    case OIS::KC_J:
+        posCamera = mCamera->getPosition();
+        posVoiture = mSceneMgr->getSceneNode("Voiture")->getPosition();
+        mSceneMgr->getSceneNode("Voiture");
+        std::cout<<"Distance Voiture - Camera : "<<posCamera.distance(posVoiture)<<std::endl;
+        break;
 	default:
 		break;
 	}

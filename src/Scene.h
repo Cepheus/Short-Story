@@ -16,11 +16,15 @@ private:
 	/** Le scene manager, qui crée les objets */
 	ShortStory* mShortStory;
 	/** Le terrain */
-	Terrain *mTerrain;
-	/** La lumiere dy terrain, initialisé dans lumiere, utilisé dans terrain */
-	Light *terrainLight;
-	/** Le truc pour gérer le terrain */
-	TerrainGlobalOptions *mGlobals;
+    SceneNode* nTerrain;
+    /** Le noeuf personnage/camera */
+    SceneNode* nCharacCamera;
+    /** Le noeud personnage */
+	SceneNode* nCharacter;
+    /** Le noeud camera */
+	SceneNode* nCamera;
+	/** Le noeud de l'immeuble */
+	SceneNode* nImmeuble;
 
 public:
 	/**
@@ -34,6 +38,21 @@ public:
 
 	/** Créé la scène avec tous les meshs blablabla */
 	void createScene ();
+
+    /** Récupère le noeud immeuble */
+	SceneNode* getImmeubleNode();
+
+	/** Récupère le noeud du terrain */
+	SceneNode* getTerrainNode();
+
+	/** Récupère le noeud de la caméra et du personnage */
+	SceneNode* getCharacterCameraNode();
+
+	/** Récupère le noeud de la caméra */
+	SceneNode* getCameraNode();
+
+	/** Récupère le noeud du personnage */
+    SceneNode* getCharacterNode();
 
 private:
 	/** Met en place la lumière */
@@ -50,6 +69,8 @@ private:
 	void setPersonnage ();
 	/** Met en place les différents meshes */
 	void setMeshes ();
+	/** Met en place la caméra */
+	void setCamera ();
 };
 
 #endif // SCENE_H

@@ -11,7 +11,7 @@ material Droplet
 
 			texture_unit
 			{
-				texture basic_droplet.png
+				texture ../Textures/basic_droplet.png
 			}
 		}
 	}

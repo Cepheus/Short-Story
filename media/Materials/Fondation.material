@@ -32,7 +32,7 @@ material Fondation
 
             texture_unit 
             {
-                texture bois.jpg
+                texture ../Textures/bois.jpg
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate

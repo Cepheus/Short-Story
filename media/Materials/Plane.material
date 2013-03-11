@@ -1,0 +1,19 @@
+material Plane 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Sol
+        {
+
+            texture_unit 
+            {
+                texture ../Textures/ground.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
+        }
+    }
+}

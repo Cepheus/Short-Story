@@ -4,6 +4,13 @@
 #include <Ogre.h>
 #include <OIS.h>
 
+#include "Scene.h"
+
+/** La distance entre la tête du bonhomme et le sol */
+#define DIST_VERTICAL 100
+/** Détection de collision sur le plan horizontal (carré autour du perso de diagonale 2*DIST_HORIZONTAL) */
+#define DIST_HORIZONTAL 20
+
 using namespace Ogre;
 using namespace OIS;
 
@@ -26,6 +33,8 @@ using namespace OIS;
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
 {
 private:
+	/** La scène contenant les objets à manipuler */
+	Scene *mscene;
 	/** Le scene manager, qui crée les objets */
 	SceneManager* mSceneMgr;
 	/** La fenêtre de l'application, créée dans ShortStory */
@@ -60,7 +69,7 @@ public:
 	 * @param camera la caméra à gérer avec le clavier
 	 * @note faudra surement utiliser le node contentant le perso + la cam au lieu de juste la cam
 	 */
-	InputListener (SceneManager *sceneMgr, RenderWindow *wnd, Camera *camera);
+	InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera);
 
 	/** destructeur */
 	virtual ~InputListener ();

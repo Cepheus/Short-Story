@@ -1,11 +1,10 @@
 #include "InputListener.h"
 #include "OgreRay.h"
 #include <sstream>
-#include <cmath>
 
-InputListener::InputListener (SceneManager *sceneMgr, RenderWindow *wnd, Camera *camera) :
-		mSceneMgr(sceneMgr), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mVitesse(VITESSE), mVitesseRotation(
-		        VROTATION), detectionCollision(true)
+InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
+		mscene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mVitesse(
+		        VITESSE), mVitesseRotation(VROTATION), detectionCollision(true)
 {
 	mMouvement = Ogre::Vector3::ZERO;
 	startOIS();
@@ -40,21 +39,54 @@ void InputListener::startOIS ()
 
 void InputListener::checkCollisions ()
 {
+	const int size = 4;
 	// Rayon perso pour tester les collisions
 	OgreRay ray(mSceneMgr);
 	// résultat où est stocké la collision
 	Ogre::Vector3 result;
+	// mouvement relatif a effectuer pour éviter la collision
+	Ogre::Vector3 mvRel;
 	// place actuelle de la camera
 	Ogre::Vector3 camera = mCamera->getPosition();
 	// direction du rayon vertical
-	Ogre::Vector3 vert(0, -1, 0);
+	Ogre::Vector3 vertical(0, -1, 0);
+	// direction des vecteurs horizontaux (4 dans x, -x, z, -z)
+	Ogre::Vector3 horizontals[4];
 
-	if (ray.RaycastFromPoint(camera, vert, result))
+	// initialisation des horizontaux
+	for (int i = 0; i < size; i++)
+		horizontals[i] = Ogre::Vector3::ZERO;
+	// -x
+	horizontals[0].x = -1;
+	// x
+	horizontals[1].x = 1;
+	// -z
+	horizontals[2].z = -1;
+	// z
+	horizontals[3].z = 1;
+
+	// détection verticale
+	if (ray.RaycastFromPoint(camera, vertical, result))
 	{
-		Real dist = sqrt(pow(camera.x - result.x, 2) + pow(camera.y - result.y, 2) + pow(camera.z - result.z, 2));
-		if (dist != 100)
+		Real dist = result.distance(camera);
+		if (dist != DIST_HORIZONTAL)
 		{
 			mCamera->setPosition(camera.x, camera.y - dist + 100, camera.z);
+		}
+	}
+
+	// détection horizontale
+	for (int i = 0; i < size; i++)
+	{
+		if (ray.RaycastFromPoint(camera, horizontals[i], result))
+		{
+			Real dist = result.distance(camera);
+			if (dist < DIST_VERTICAL)
+			{
+				mvRel = Ogre::Vector3::ZERO;
+				mvRel -= horizontals[i] * dist;
+				mCamera->moveRelative(mvRel);
+			}
 		}
 	}
 }
@@ -122,8 +154,7 @@ bool InputListener::mousePressed (const MouseEvent &arg, MouseButtonID id)
 	{
 		printf("Your mouse is over the position %f,%f,%f\n", result.x, result.y, result.z);
 		Ogre::Vector3 distance = mCamera->getPosition();
-		printf("Distance : %lf\n",
-		        sqrt(pow(distance.x - result.x, 2) + pow(distance.y - result.y, 2) + pow(distance.z - result.z, 2)));
+		printf("Distance : %lf\n", distance.distance(result));
 	}
 	else
 	{

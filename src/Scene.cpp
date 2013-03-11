@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 Scene::Scene (ShortStory *shortStory) :
-		mShortStory(shortStory), nTerrain(0), nCamera(0), nCharacter(0), nCharacCamera(0)
+        mShortStory(shortStory), nTerrain(0), nCamera(0), mPersonnageNode(0), nCharacCamera(0)
 {
     nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
 }
@@ -156,11 +156,33 @@ void Scene::setPersonnage ()
 {
     Entity* personnage = mShortStory->getSceneManager()->createEntity("Personnage", "ninja.mesh");
 
-	nCharacter = nCharacCamera->createChildSceneNode("CharacterNode");
-    nCharacter->attachObject(personnage);
+    mPersonnageNode = nCharacCamera->createChildSceneNode("PersonnageNode");
+    mPersonnageNode->attachObject(personnage);
 
-    nCharacter->setPosition(300., 0., 200.);
-	nCharacter->scale(0.5, 0.5, 0.5);
+    mPersonnageNode->setPosition(300., 0., 200.);
+    mPersonnageNode->scale(0.5, 0.5, 0.5);
+}
+
+void Scene::walkPersonnage(){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("Walk")->setEnabled(true);
+    personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
+
+    //deplace le personnage
+    Vector3 NinjaLoc = mPersonnageNode->getPosition();
+    mPersonnageNode->setPosition(NinjaLoc.x,NinjaLoc.y,NinjaLoc.z-1);
 }
 
 void Scene::setCamera ()
@@ -197,5 +219,5 @@ SceneNode* Scene::getCameraNode()
 
 SceneNode* Scene::getCharacterNode()
 {
-    return nCharacter;
+    return mPersonnageNode;
 }

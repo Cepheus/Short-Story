@@ -24,7 +24,7 @@ void Scene::createScene ()
 	setImmeuble();
 	setPersonnage();
 	setCamera();
-	setMeshes(false);
+	setMeshes(true);
 }
 
 void Scene::setLight ()
@@ -252,7 +252,7 @@ void Scene::setImmeuble ()
 	nImmeuble->attachObject(immeuble);
 
 	nImmeuble->setPosition(0., 0., 0.);
-	nImmeuble->scale(100., 100., 100.);
+	nImmeuble->scale(120., 100., 100.);
 
 }
 

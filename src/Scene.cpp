@@ -410,7 +410,7 @@ void Scene::setCamera ()
 	//nCamera->setPosition(0, 0, dDistanceCharacCamera);
 
 	nCamera->attachObject(mShortStory->getCamera());
-	mShortStory->getCamera()->setPosition(25, 15, dDistanceCharacCamera);
+	mShortStory->getCamera()->setPosition(FAR_PERS_X, FAR_PERS_Y, dDistanceCharacCamera);
 }
 
 void Scene::setMeshes (bool withLod)
@@ -458,9 +458,4 @@ SceneNode* Scene::getCameraNode ()
 SceneNode* Scene::getCharacterNode ()
 {
 	return nCharacter;
-}
-
-Real Scene::getDistanceCharacterCamera ()
-{
-	return dDistanceCharacCamera;
 }

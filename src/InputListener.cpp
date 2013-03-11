@@ -3,9 +3,9 @@
 #include <sstream>
 
 InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
-		mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mMouvement(
-		        Ogre::Vector3::ZERO), mCollisionVect(1, 1, 1), mVitesse(VITESSE), mVitesseRotation(VROTATION), detectionCollision(
-		        true)
+		mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mgoDown(
+		        false), mMouvement(Ogre::Vector3::ZERO), mCollisionVect(1, 1, 1), mVitesse(VITESSE), mVitesseRotation(
+		        VROTATION), detectionCollision(true)
 {
 	startOIS();
 }
@@ -116,9 +116,15 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mScene->getCharacterCameraNode()->translate(deplacement, SceneNode::TS_LOCAL);
 	//mScene->getCharacterCameraNode()->setOrientation(mScene->getCameraNode()->getOrientation().w, 0, mScene->getCameraNode()->getOrientation().y, 0);
 
-	if (mgoUp)
-		mScene->getCharacterCameraNode()->translate(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0),
-		        SceneNode::TS_LOCAL);
+	if (!detectionCollision)
+	{
+		if (mgoUp)
+			mScene->getCharacterCameraNode()->translate(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0),
+			        SceneNode::TS_LOCAL);
+		if (mgoDown)
+			mScene->getCharacterCameraNode()->translate(Ogre::Vector3(0, -mVitesse * evt.timeSinceLastFrame, 0),
+			        SceneNode::TS_LOCAL);
+	}
 
 	return mContinuer;
 }
@@ -151,9 +157,13 @@ void InputListener::windowClosed (RenderWindow* wnd)
 
 bool InputListener::mouseMoved (const MouseEvent &e)
 {
+	Real zoom;
+	Quaternion orientationCamera;
+
 	mScene->getCharacterCameraNode()->yaw(Degree(-mVitesseRotation * e.state.X.rel), SceneNode::TS_LOCAL);
 	mScene->getCameraNode()->pitch(Degree(-mVitesseRotation * e.state.Y.rel));
-	Quaternion orientationCamera = mScene->getCameraNode()->getOrientation();
+
+	orientationCamera = mScene->getCameraNode()->getOrientation();
 	if (detectionCollision)
 	{
 		if (orientationCamera.x > 0.5)
@@ -162,6 +172,10 @@ bool InputListener::mouseMoved (const MouseEvent &e)
 			orientationCamera.x = -0.5;
 		mScene->getCameraNode()->setOrientation(orientationCamera);
 	}
+
+	if ((zoom = e.state.Z.rel) != 0)
+		mScene->setDistanceCharacCamera(mScene->getDistanceCharacCamera() - zoom / 10);
+
 	return true;
 }
 
@@ -234,6 +248,9 @@ bool InputListener::keyPressed (const KeyEvent &e)
 	case OIS::KC_SPACE:
 		mgoUp = true;
 		break;
+	case OIS::KC_LCONTROL:
+		mgoDown = true;
+		break;
 	case OIS::KC_END:
 		detectionCollision = !detectionCollision;
 		break;
@@ -286,6 +303,9 @@ bool InputListener::keyReleased (const KeyEvent &e)
 		break;
 	case OIS::KC_SPACE:
 		mgoUp = false;
+		break;
+	case OIS::KC_LCONTROL:
+		mgoDown = false;
 		break;
 	default:
 		break;

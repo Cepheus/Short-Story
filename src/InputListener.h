@@ -26,8 +26,10 @@ using namespace OIS;
  * <li>Déplacement ZQSD</li>
  * <li>Échap pour quitter</li>
  * <li>shift gauche pour courir (vitesse * 3)</li>
- * <li>espace pour bouger selon Y (hauteur) en mode no clip</li>
+ * <li>espace pour monter selon Y (hauteur) en mode no clip</li>
+ * <li>left control pour descendre selon Y (hauteur) en mode no clip</li>
  * <li>Fin pour switcher entre mode normal et mode noclip</li>
+ * <li>Mouse scroll up / down pour zoomer ou dézoomer</li>
  * </ul>
  */
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
@@ -59,6 +61,8 @@ private:
 	bool mContinuer;
 	/** Vrai si espace est enfoncé (mode noclip / ghost = monter verticalement) */
 	bool mgoUp;
+	/** Vrai si CTRL GAUCHE est enfoncé (mode noclip / ghost = descendre verticalement) */
+	bool mgoDown;
 	/** Utiliser pour bouger, contient le vecteur de déplacement */
 	Ogre::Vector3 mMouvement;
 	/** Permet la détection de collisions */

@@ -20,7 +20,7 @@ private:
     /** Le noeuf personnage/camera */
     SceneNode* nCharacCamera;
     /** Le noeud personnage */
-	SceneNode* mPersonnageNode;
+	SceneNode* nCharacter;
     /** Le noeud camera */
 	SceneNode* nCamera;
 	/** Le noeud de l'immeuble */
@@ -49,8 +49,6 @@ public:
 
 	/** Récupère le noeud de la caméra et du personnage */
 	SceneNode* getCharacterCameraNode();
-    /** deplacement du personnage */
-    void walkPersonnage();
 
 	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode();

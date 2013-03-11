@@ -3,7 +3,7 @@
 #include <sstream>
 
 InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
-        mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mVitesse(
+		mscene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mVitesse(
 		        VITESSE), mVitesseRotation(VROTATION), detectionCollision(true)
 {
 	mMouvement = Ogre::Vector3::ZERO;
@@ -178,7 +178,6 @@ bool InputListener::keyPressed (const KeyEvent &e)
 		break;
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 		case OIS::KC_W:
-        mScene->walkPersonnage();
 		mMouvement.z -= 1;
 		break;
 		case OIS::KC_S:

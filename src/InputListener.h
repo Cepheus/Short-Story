@@ -34,7 +34,7 @@ class InputListener: public FrameListener, public WindowEventListener, public Ke
 {
 private:
 	/** La scène contenant les objets à manipuler */
-    Scene *mScene;
+	Scene *mscene;
 	/** Le scene manager, qui crée les objets */
 	SceneManager* mSceneMgr;
 	/** La fenêtre de l'application, créée dans ShortStory */

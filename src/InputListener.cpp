@@ -16,6 +16,11 @@ InputListener::~InputListener ()
 	windowClosed(mWindow);
 }
 
+bool DisplayOrientation(Quaternion o)
+{
+    std::cout<<"w="<<o.w<<" x="<<o.x<<" y="<<o.y<<" z="<<o.z<<std::endl;
+}
+
 void InputListener::startOIS ()
 {
 	LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
@@ -152,6 +157,12 @@ bool InputListener::mouseMoved (const MouseEvent &e)
 {
 	mScene->getCharacterCameraNode()->yaw(Degree(-mVitesseRotation * e.state.X.rel), SceneNode::TS_LOCAL);
 	mScene->getCameraNode()->pitch(Degree(-mVitesseRotation * e.state.Y.rel));
+	Quaternion orientationCamera = mScene->getCameraNode()->getOrientation();
+	if(orientationCamera.x>0.5)
+        orientationCamera.x = 0.5;
+    if(orientationCamera.x<-0.5)
+        orientationCamera.x = -0.5;
+    mScene->getCameraNode()->setOrientation(orientationCamera);
 	return true;
 }
 
@@ -229,6 +240,9 @@ bool InputListener::keyPressed (const KeyEvent &e)
         posVoiture = mSceneMgr->getSceneNode("Voiture")->getPosition();
         mSceneMgr->getSceneNode("Voiture");
         std::cout<<"Distance Voiture - Camera : "<<posCamera.distance(posVoiture)<<std::endl;
+        break;
+    case OIS::KC_K:
+        DisplayOrientation(mScene->getCameraNode()->getOrientation());
         break;
 	default:
 		break;

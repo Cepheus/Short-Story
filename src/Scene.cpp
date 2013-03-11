@@ -163,6 +163,7 @@ void Scene::setPersonnage ()
     nCharacter->setPosition(300., 0., 500.);
 	nCharacter->scale(0.5, 0.5, 0.5);
 }
+
 void Scene::walkPersonnage(const FrameEvent &evt){
     Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
@@ -180,6 +181,79 @@ void Scene::walkPersonnage(const FrameEvent &evt){
     personnage->getAnimationState("Walk")->setEnabled(true);
     personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
 }
+
+void Scene::idle1Personnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("Idle1")->setEnabled(true);
+    personnage->getAnimationState("Idle1")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::idle2Personnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("Idle2")->setEnabled(true);
+    personnage->getAnimationState("Idle2")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::idle3Personnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("Idle3")->setEnabled(true);
+    personnage->getAnimationState("Idle3")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::kickPersonnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("Kick")->setEnabled(true);
+    personnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
+}
+
 void Scene::setCamera ()
 {
     nCamera = nCharacCamera->createChildSceneNode("CameraNode");

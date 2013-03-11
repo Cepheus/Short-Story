@@ -50,6 +50,10 @@ public:
 	/** Récupère le noeud de la caméra et du personnage */
 	SceneNode* getCharacterCameraNode();
     void walkPersonnage(const FrameEvent& evt);
+    void idle1Personnage(const FrameEvent &evt);
+    void idle2Personnage(const FrameEvent &evt);
+    void idle3Personnage(const FrameEvent &evt);
+    void kickPersonnage(const FrameEvent &evt);
 
 	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode();

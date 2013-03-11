@@ -3,7 +3,7 @@
 #include <sstream>
 
 InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
-		mscene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mMouvement(
+		mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mMouvement(
 		        Ogre::Vector3::ZERO), mCollisionVect(1, 1, 1), mVitesse(VITESSE), mVitesseRotation(VROTATION), detectionCollision(
 		        true)
 {
@@ -102,8 +102,11 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 	deplacement = mMouvement * mVitesse * evt.timeSinceLastFrame;
-	deplacementNinja(deplacement, evt);
+
+	deplacementNinja(evt, deplacement);
+
 	mCamera->moveRelative(deplacement);
+
 	if (mgoUp)
 		mCamera->move(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0));
 
@@ -264,10 +267,41 @@ bool InputListener::keyReleased (const KeyEvent &e)
 	return true;
 }
 
-void InputListener::deplacementNinja (Ogre::Vector3 deplacement, const FrameEvent& evt)
+void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement)
 {
+	//selection de l'etat
 	if (deplacement != Ogre::Vector3(0, 0, 0))
 	{
-		mscene->walkPersonnage(evt);
+		mPersonnageStat = WALK;
+	}
+	else
+	{
+		if ((mPersonnageStat != IDLE1) && (mPersonnageStat != IDLE2) && (mPersonnageStat != IDLE3))
+		{
+			mPersonnageStat = IDLE3;
+		}
+	}
+
+	//application du mouvement
+	switch (mPersonnageStat)
+	{
+	case WALK:
+		mScene->walkPersonnage(evt);
+		break;
+	case IDLE1:
+		mScene->idle1Personnage(evt);
+		break;
+	case IDLE2:
+		mScene->idle2Personnage(evt);
+		break;
+	case IDLE3:
+		mScene->idle3Personnage(evt);
+		break;
+	case KICK:
+		mScene->kickPersonnage(evt);
+		break;
+	default:
+		mPersonnageStat = IDLE3;
+		break;
 	}
 }

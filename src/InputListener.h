@@ -33,8 +33,14 @@ using namespace OIS;
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
 {
 private:
+	/** atidtude du personnage*/
+	enum PersonnageStat
+	{
+		IDLE1, IDLE2, IDLE3, WALK, KICK
+	};
+
 	/** La scène contenant les objets à manipuler */
-	Scene *mscene;
+	Scene *mScene;
 	/** Le scene manager, qui crée les objets */
 	SceneManager* mSceneMgr;
 	/** La fenêtre de l'application, créée dans ShortStory */
@@ -48,6 +54,7 @@ private:
 	/** Permet de gérer les inputs du clavier */
 	Keyboard* mKeyboard;
 	// Déplacement
+	PersonnageStat mPersonnageStat;
 	/** Tant que vrai, le programe s'exécute */
 	bool mContinuer;
 	/** Vrai si espace est enfoncé (mode noclip / ghost = monter verticalement) */
@@ -130,8 +137,8 @@ protected:
 	virtual bool keyPressed (const KeyEvent &e);
 	virtual bool keyReleased (const KeyEvent &e);
 
-    // gestion du ninja
-    void deplacementNinja(Ogre::Vector3 deplacement, const FrameEvent& evt);
+	// gestion du ninja
+	void deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0, 0, 0));
 };
 
 #endif // INPUTLISTENER_H

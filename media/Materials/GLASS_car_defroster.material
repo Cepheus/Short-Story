@@ -1,0 +1,35 @@
+// GLASS car defroster genrated by blender2ogre 0.5.9
+
+material GLASS_car_defroster 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass GLASS car defroster
+        {
+            ambient 0.0 0.4374988079071045 0.5 0.20000000298023224
+            diffuse 0.0 0.4374988079071045 0.5 0.20000000298023224
+            specular 2.0 2.0 2.0 0.20000000298023224 100.0
+            emissive 0.0 0.0 0.0 0.20000000298023224
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

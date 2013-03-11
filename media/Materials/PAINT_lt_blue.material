@@ -1,0 +1,35 @@
+// PAINT lt blue genrated by blender2ogre 0.5.9
+
+material PAINT_lt_blue 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass PAINT lt blue
+        {
+            ambient 0.40706855058670044 0.6623560786247253 1.0 1.0
+            diffuse 0.3256548453219956 0.52988487079568 0.800000011920929 1.0
+            specular 0.9998999834060669 0.9998999834060669 1.0 1.0 87.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

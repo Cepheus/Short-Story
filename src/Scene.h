@@ -54,6 +54,8 @@ public:
     void idle2Personnage(const FrameEvent &evt);
     void idle3Personnage(const FrameEvent &evt);
     void kickPersonnage(const FrameEvent &evt);
+    void sideKickPersonnage(const FrameEvent &evt);
+    void death2Personnage(const FrameEvent &evt);
 
 	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode();

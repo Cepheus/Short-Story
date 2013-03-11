@@ -3,11 +3,10 @@
 #include <sstream>
 
 InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
-        mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mVitesse(
-		        VITESSE), mVitesseRotation(VROTATION), detectionCollision(true)
+		mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mMouvement(
+		        Ogre::Vector3::ZERO), mCollisionVect(1, 1, 1), mVitesse(VITESSE), mVitesseRotation(VROTATION), detectionCollision(
+		        true)
 {
-	mMouvement = Ogre::Vector3::ZERO;
-    mPersonnageStat = IDLE3;
 	startOIS();
 }
 
@@ -45,8 +44,6 @@ void InputListener::checkCollisions ()
 	OgreRay ray(mSceneMgr);
 	// résultat où est stocké la collision
 	Ogre::Vector3 result;
-	// mouvement relatif a effectuer pour éviter la collision
-	Ogre::Vector3 mvRel;
 	// place actuelle de la camera
 	Ogre::Vector3 camera = mCamera->getPosition();
 	// direction du rayon vertical
@@ -70,26 +67,29 @@ void InputListener::checkCollisions ()
 	if (ray.RaycastFromPoint(camera, vertical, result))
 	{
 		Real dist = result.distance(camera);
-		if (dist != DIST_HORIZONTAL)
+		if (dist != DIST_VERTICAL)
 		{
 			mCamera->setPosition(camera.x, camera.y - dist + 100, camera.z);
 		}
 	}
 
 	// détection horizontale
-	/*for (int i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		if (ray.RaycastFromPoint(camera, horizontals[i], result))
 		{
 			Real dist = result.distance(camera);
-			if (dist < DIST_VERTICAL)
+			if (dist < DIST_HORIZONTAL)
 			{
-				mvRel = Ogre::Vector3::ZERO;
-				mvRel -= horizontals[i] * dist;
-				mCamera->moveRelative(mvRel);
+				if (horizontals[i].x)
+					mMouvement.x = 0;
+				if (horizontals[i].y)
+					mMouvement.y = 0;
+				if (horizontals[i].z)
+					mMouvement.z = 0;
 			}
 		}
-	}*/
+	}
 }
 
 bool InputListener::frameRenderingQueued (const FrameEvent& evt)
@@ -102,7 +102,9 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 	deplacement = mMouvement * mVitesse * evt.timeSinceLastFrame;
-    deplacementNinja(evt, deplacement);
+
+	deplacementNinja(evt, deplacement);
+
 	mCamera->moveRelative(deplacement);
 
 	if (mgoUp)
@@ -182,33 +184,33 @@ bool InputListener::keyPressed (const KeyEvent &e)
 		break;
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 		case OIS::KC_W:
-        mMouvement.z -= 1;
+		mMouvement.z = -1;
 		break;
 		case OIS::KC_S:
-		mMouvement.z += 1;
+		mMouvement.z = 1;
 		break;
 		case OIS::KC_A:
-		mMouvement.x -= 1;
+		mMouvement.x = -1;
 		break;
 		case OIS::KC_D:
-		mMouvement.x += 1;
+		mMouvement.x = 1;
 		break;
 #else
 	case OIS::KC_Z:
-		mMouvement.z -= 1;
+		mMouvement.z = -1;
 		break;
 	case OIS::KC_S:
-		mMouvement.z += 1;
+		mMouvement.z = 1;
 		break;
 	case OIS::KC_Q:
-		mMouvement.x -= 1;
+		mMouvement.x = -1;
 		break;
 	case OIS::KC_D:
-		mMouvement.x += 1;
+		mMouvement.x = 1;
 		break;
 #endif
 	case OIS::KC_LSHIFT:
-		mVitesse *= 3;
+		mVitesse = 3 * VITESSE;
 		break;
 	case OIS::KC_SPACE:
 		mgoUp = true;
@@ -235,33 +237,33 @@ bool InputListener::keyReleased (const KeyEvent &e)
 	{
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 	case OIS::KC_W:
-	mMouvement.z += 1;
+	mMouvement.z = 0;
 	break;
 	case OIS::KC_S:
-	mMouvement.z -= 1;
+	mMouvement.z = 0;
 	break;
 	case OIS::KC_A:
-	mMouvement.x += 1;
+	mMouvement.x = 0;
 	break;
 	case OIS::KC_D:
-	mMouvement.x -= 1;
+	mMouvement.x = 0;
 	break;
 #else
 	case OIS::KC_Z:
-		mMouvement.z += 1;
+		mMouvement.z = 0;
 		break;
 	case OIS::KC_S:
-		mMouvement.z -= 1;
+		mMouvement.z = 0;
 		break;
 	case OIS::KC_Q:
-		mMouvement.x += 1;
+		mMouvement.x = 0;
 		break;
 	case OIS::KC_D:
-		mMouvement.x -= 1;
+		mMouvement.x = 0;
 		break;
 #endif
 	case OIS::KC_LSHIFT:
-		mVitesse /= 3;
+		mVitesse = VITESSE;
 		break;
 	case OIS::KC_SPACE:
 		mgoUp = false;
@@ -272,38 +274,47 @@ bool InputListener::keyReleased (const KeyEvent &e)
 	return true;
 }
 
-void InputListener::deplacementNinja(const FrameEvent& evt, Ogre::Vector3 deplacement){
-    //selection de l'etat
-    if(deplacement != Ogre::Vector3(0,0,0)){
+void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement)
+{
+	//selection de l'etat
+	if (deplacement != Ogre::Vector3(0, 0, 0))
+	{
         mPersonnageStat = WALK;
-    }
-    else{
-        if( ( mPersonnageStat != IDLE1) &&
-            ( mPersonnageStat != IDLE2) &&
-            ( mPersonnageStat != IDLE3) ){
+	}
+	else
+	{
+		if ((mPersonnageStat != IDLE1) && (mPersonnageStat != IDLE2) && (mPersonnageStat != IDLE3))
+		{
             mPersonnageStat = IDLE3;
-        }
-    }
+		}
+	}
 
-    //application du mouvement
-    switch (mPersonnageStat) {
-    case WALK:
-        mScene->walkPersonnage(evt);
-        break;
-    case IDLE1:
-        mScene->idle1Personnage(evt);
-        break;
-    case IDLE2:
-        mScene->idle2Personnage(evt);
-        break;
-    case IDLE3:
-        mScene->idle3Personnage(evt);
-        break;
+	//application du mouvement
+	switch (mPersonnageStat)
+	{
+	case WALK:
+		mScene->walkPersonnage(evt);
+		break;
+	case IDLE1:
+		mScene->idle1Personnage(evt);
+		break;
+	case IDLE2:
+		mScene->idle2Personnage(evt);
+		break;
+	case IDLE3:
+		mScene->idle3Personnage(evt);
+		break;
     case KICK:
         mScene->kickPersonnage(evt);
         break;
-    default:
-        mPersonnageStat = IDLE3;
+    case SIDEKICK:
+        mScene->sideKickPersonnage(evt);
         break;
-    }
+    case DEATH2:
+        mScene->death2Personnage(evt);
+        break;
+	default:
+		mPersonnageStat = IDLE3;
+		break;
+	}
 }

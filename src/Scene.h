@@ -30,9 +30,9 @@ private:
 
     /** Le terrain heightmap */
     Terrain *mTerrain;
-    /** La lumiere dy terrain, initialisé dans lumiere, utilisé dans terrain */
+    /** La lumiere dy terrain, initialisï¿½ dans lumiere, utilisï¿½ dans terrain */
     Light *terrainLight;
-    /** Le truc pour gérer le terrain */
+    /** Le truc pour gï¿½rer le terrain */
     TerrainGlobalOptions *mGlobals;
 
 public:
@@ -72,6 +72,11 @@ public:
 
     /** RÃ©cupÃ¨re la distance entre le personnage et la camÃ©ra */
     Real getDistanceCharacterCamera();
+
+	const SceneNode* getCharacCamera () const
+	{
+		return nCharacCamera;
+	}
 
 private:
 	/** Met en place la lumiÃ¨re */

@@ -54,14 +54,14 @@ void InputListener::checkCollisions ()
 	// initialisation des horizontaux
 	for (int i = 0; i < size; i++)
 		horizontals[i] = Ogre::Vector3::ZERO;
-	// -x
-	horizontals[0].x = -1;
 	// x
-	horizontals[1].x = 1;
-	// -z
-	horizontals[2].z = -1;
+	horizontals[0] = Ogre::Vector3::UNIT_X;
+	// -x
+	horizontals[1] = Ogre::Vector3::NEGATIVE_UNIT_X;
 	// z
-	horizontals[3].z = 1;
+	horizontals[2] = Ogre::Vector3::UNIT_Z;
+	// -z
+	horizontals[3] = Ogre::Vector3::NEGATIVE_UNIT_Z;
 
 	// détection verticale
 	if (ray.RaycastFromPoint(camera, vertical, result))
@@ -81,12 +81,13 @@ void InputListener::checkCollisions ()
 			Real dist = result.distance(camera);
 			if (dist < DIST_HORIZONTAL)
 			{
-				if (horizontals[i].x)
-					mMouvement.x = 0;
-				if (horizontals[i].y)
-					mMouvement.y = 0;
-				if (horizontals[i].z)
-					mMouvement.z = 0;
+				if (horizontals[i].x != 0)
+					mCollisionVect.x = 0;
+				if (horizontals[i].y != 0)
+					mCollisionVect.y = 0;
+				if (horizontals[i].z != 0)
+					mCollisionVect.z = 0;
+				printf("%d + distance %lf\n", i, dist);
 			}
 		}
 	}
@@ -100,8 +101,14 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mKeyboard->capture();
 	mMouse->capture();
 
+	mCollisionVect.x = 1;
+	mCollisionVect.y = 1;
+	mCollisionVect.z = 1;
+	if (detectionCollision)
+		checkCollisions();
+
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
-	deplacement = mMouvement * mVitesse * evt.timeSinceLastFrame;
+	deplacement = mMouvement * mCollisionVect * mVitesse * evt.timeSinceLastFrame;
 
 	deplacementNinja(evt, deplacement);
 
@@ -109,9 +116,6 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 
 	if (mgoUp)
 		mCamera->move(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0));
-
-	if (detectionCollision)
-		checkCollisions();
 
 	return mContinuer;
 }

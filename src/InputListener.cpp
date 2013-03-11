@@ -180,6 +180,7 @@ bool InputListener::mouseReleased (const MouseEvent &arg, MouseButtonID id)
 
 bool InputListener::keyPressed (const KeyEvent &e)
 {
+    Ogre::Vector3 posCamera,posVoiture;
 	switch (e.key)
 	{
 	case OIS::KC_ESCAPE:
@@ -221,6 +222,12 @@ bool InputListener::keyPressed (const KeyEvent &e)
 	case OIS::KC_END:
 		detectionCollision = !detectionCollision;
 		break;
+    case OIS::KC_J:
+        posCamera = mCamera->getPosition();
+        posVoiture = mSceneMgr->getSceneNode("Voiture")->getPosition();
+        mSceneMgr->getSceneNode("Voiture");
+        std::cout<<"Distance Voiture - Camera : "<<posCamera.distance(posVoiture)<<std::endl;
+        break;
 	default:
 		break;
 	}
@@ -276,13 +283,13 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 	//selection de l'etat
 	if (deplacement != Ogre::Vector3(0, 0, 0))
 	{
-		mPersonnageStat = WALK;
+        mPersonnageStat = WALK;
 	}
 	else
 	{
 		if ((mPersonnageStat != IDLE1) && (mPersonnageStat != IDLE2) && (mPersonnageStat != IDLE3))
 		{
-			mPersonnageStat = IDLE3;
+            mPersonnageStat = IDLE3;
 		}
 	}
 
@@ -301,9 +308,15 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 	case IDLE3:
 		mScene->idle3Personnage(evt);
 		break;
-	case KICK:
-		mScene->kickPersonnage(evt);
-		break;
+    case KICK:
+        mScene->kickPersonnage(evt);
+        break;
+    case SIDEKICK:
+        mScene->sideKickPersonnage(evt);
+        break;
+    case DEATH2:
+        mScene->death2Personnage(evt);
+        break;
 	default:
 		mPersonnageStat = IDLE3;
 		break;

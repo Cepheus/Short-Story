@@ -1,4 +1,6 @@
 #include "Scene.h"
+#include <OgreProgressiveMesh.h>
+
 
 Scene::Scene (ShortStory *shortStory) :
 		mShortStory(shortStory), nTerrain(0), nCamera(0), nCharacter(0), nCharacCamera(0), dDistanceCharacCamera(75.)
@@ -254,6 +256,45 @@ void Scene::kickPersonnage(const FrameEvent &evt){
     personnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
 }
 
+void Scene::sideKickPersonnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("SideKick")->setEnabled(true);
+    personnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::death2Personnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    if(!personnage->getAnimationState("Death2")->hasEnded()){
+        AnimationState *mAnimState;
+        AnimationStateSet *set = personnage->getAllAnimationStates();
+        AnimationStateIterator it = set->getAnimationStateIterator();
+
+        //load animation
+        while(it.hasMoreElements())
+        {
+            mAnimState = it.getNext();
+            mAnimState->setEnabled(false);
+        }
+
+        personnage->getAnimationState("Death2")->setLoop(false);
+        personnage->getAnimationState("Death2")->setEnabled(true);
+        personnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
+    }
+}
+
 void Scene::setCamera ()
 {
     nCamera = nCharacCamera->createChildSceneNode("CameraNode");
@@ -265,6 +306,20 @@ void Scene::setCamera ()
 void Scene::setMeshes ()
 {
 
+    Ogre::MeshPtr voitureMesh = Ogre::MeshManager::getSingleton().load("Sedan02_license_R.mesh", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+    Ogre::Mesh::LodValueList lodDList;
+    lodDList.push_back(700);
+	lodDList.push_back(1000);
+    lodDList.push_back(1500);
+    Ogre::ProgressiveMesh::generateLodLevels(voitureMesh.getPointer(),lodDList, Ogre::ProgressiveMesh::VRQ_PROPORTIONAL, 0.3);
+
+
+    Ogre::Entity* entVoiture = mShortStory->getSceneManager()->createEntity("Voiture", "Sedan02_license_R.mesh");
+    entVoiture->setCastShadows(true);
+    Ogre::SceneNode* VoitureNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Voiture");
+    VoitureNode->attachObject(entVoiture);
+    VoitureNode->setPosition(-500,35,-100);
+    VoitureNode->scale(10,10,10);
 }
 
 SceneNode* Scene::getImmeubleNode()

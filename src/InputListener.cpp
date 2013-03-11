@@ -5,7 +5,7 @@
 
 InputListener::InputListener (SceneManager *sceneMgr, RenderWindow *wnd, Camera *camera) :
 		mSceneMgr(sceneMgr), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mVitesse(VITESSE), mVitesseRotation(
-		        VROTATION)
+		        VROTATION), detectionCollision(true)
 {
 	mMouvement = Ogre::Vector3::ZERO;
 	startOIS();
@@ -38,6 +38,27 @@ void InputListener::startOIS ()
 	mKeyboard->setEventCallback(this);
 }
 
+void InputListener::checkCollisions ()
+{
+	// Rayon perso pour tester les collisions
+	OgreRay ray(mSceneMgr);
+	// résultat où est stocké la collision
+	Ogre::Vector3 result;
+	// place actuelle de la camera
+	Ogre::Vector3 camera = mCamera->getPosition();
+	// direction du rayon vertical
+	Ogre::Vector3 vert(0, -1, 0);
+
+	if (ray.RaycastFromPoint(camera, vert, result))
+	{
+		Real dist = sqrt(pow(camera.x - result.x, 2) + pow(camera.y - result.y, 2) + pow(camera.z - result.z, 2));
+		if (dist != 100)
+		{
+			mCamera->setPosition(camera.x, camera.y - dist + 100, camera.z);
+		}
+	}
+}
+
 bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 {
 	if (mWindow->isClosed())
@@ -51,6 +72,9 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mCamera->moveRelative(deplacement);
 	if (mgoUp)
 		mCamera->move(Ogre::Vector3(0, mVitesse * evt.timeSinceLastFrame, 0));
+
+	if (detectionCollision)
+		checkCollisions();
 
 	return mContinuer;
 }
@@ -121,23 +145,41 @@ bool InputListener::keyPressed (const KeyEvent &e)
 	case OIS::KC_ESCAPE:
 		mContinuer = false;
 		break;
-	case OIS::KC_W:
+#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+		case OIS::KC_W:
+		mMouvement.z -= 1;
+		break;
+		case OIS::KC_S:
+		mMouvement.z += 1;
+		break;
+		case OIS::KC_A:
+		mMouvement.x -= 1;
+		break;
+		case OIS::KC_D:
+		mMouvement.x += 1;
+		break;
+#else
+	case OIS::KC_Z:
 		mMouvement.z -= 1;
 		break;
 	case OIS::KC_S:
 		mMouvement.z += 1;
 		break;
-	case OIS::KC_A:
+	case OIS::KC_Q:
 		mMouvement.x -= 1;
 		break;
 	case OIS::KC_D:
 		mMouvement.x += 1;
 		break;
+#endif
 	case OIS::KC_LSHIFT:
 		mVitesse *= 3;
 		break;
 	case OIS::KC_SPACE:
 		mgoUp = true;
+		break;
+	case OIS::KC_END:
+		detectionCollision = !detectionCollision;
 		break;
 	default:
 		break;
@@ -150,18 +192,33 @@ bool InputListener::keyReleased (const KeyEvent &e)
 {
 	switch (e.key)
 	{
+#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 	case OIS::KC_W:
+	mMouvement.z += 1;
+	break;
+	case OIS::KC_S:
+	mMouvement.z -= 1;
+	break;
+	case OIS::KC_A:
+	mMouvement.x += 1;
+	break;
+	case OIS::KC_D:
+	mMouvement.x -= 1;
+	break;
+#else
+	case OIS::KC_Z:
 		mMouvement.z += 1;
 		break;
 	case OIS::KC_S:
 		mMouvement.z -= 1;
 		break;
-	case OIS::KC_A:
+	case OIS::KC_Q:
 		mMouvement.x += 1;
 		break;
 	case OIS::KC_D:
 		mMouvement.x -= 1;
 		break;
+#endif
 	case OIS::KC_LSHIFT:
 		mVitesse /= 3;
 		break;

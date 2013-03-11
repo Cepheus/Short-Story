@@ -6,7 +6,8 @@ material Plane
     {
         pass Sol
         {
-
+			lighting on
+			
             texture_unit 
             {
                 texture ../Textures/ground.jpg

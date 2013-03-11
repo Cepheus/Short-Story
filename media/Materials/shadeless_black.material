@@ -1,0 +1,35 @@
+// shadeless black genrated by blender2ogre 0.5.9
+
+material shadeless_black 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass shadeless black
+        {
+            ambient 9.999999747378752e-05 9.998999303206801e-05 9.998999303206801e-05 1.0
+            diffuse 7.999999917112288e-05 7.999199561762801e-05 7.999199561762801e-05 1.0
+            specular 1.199879670138344 1.199879670138344 1.2000000476837158 1.0 50.0
+            emissive 9.999999747378752e-05 9.998999303206801e-05 9.998999303206801e-05 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

@@ -1,16 +1,16 @@
-// Exterieur genrated by blender2ogre 0.5.8
+// CAR interior beige genrated by blender2ogre 0.5.9
 
-material Exterieur 
+material CAR_interior_beige 
 {
     receive_shadows on 
 
     technique
     {
-        pass Exterieur
+        pass CAR interior beige
         {
-            ambient 1.0 1.0 1.0 1.0
-            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
+            ambient 0.800000011920929 0.655428409576416 0.48000001907348633 1.0
+            diffuse 0.6400000190734865 0.5243427354744483 0.3840000209808352 1.0
+            specular 0.5 0.5 0.5 1.0 25.0
             emissive 0.0 0.0 0.0 1.0
 
             alpha_to_coverage off
@@ -30,13 +30,6 @@ material Exterieur
             shading gouraud
             transparent_sorting on
 
-            texture_unit 
-            {
-                texture ../Textures/brique.jpg
-                tex_address_mode wrap
-                scale 1.0 1.0
-                colour_op modulate
-            }
         }
     }
 }

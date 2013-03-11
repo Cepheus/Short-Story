@@ -1,16 +1,16 @@
-// Exterieur genrated by blender2ogre 0.5.8
+// PLASTIC black vent genrated by blender2ogre 0.5.9
 
-material Exterieur 
+material PLASTIC_black_vent 
 {
     receive_shadows on 
 
     technique
     {
-        pass Exterieur
+        pass PLASTIC black vent
         {
-            ambient 1.0 1.0 1.0 1.0
-            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
+            ambient 0.20000000298023224 0.1999800056219101 0.1999800056219101 1.0
+            diffuse 0.16000000476837162 0.15998400688147552 0.15998400688147552 1.0
+            specular 0.4999498128890991 0.4999498128890991 0.5 1.0 18.75
             emissive 0.0 0.0 0.0 1.0
 
             alpha_to_coverage off
@@ -30,13 +30,6 @@ material Exterieur
             shading gouraud
             transparent_sorting on
 
-            texture_unit 
-            {
-                texture ../Textures/brique.jpg
-                tex_address_mode wrap
-                scale 1.0 1.0
-                colour_op modulate
-            }
         }
     }
 }

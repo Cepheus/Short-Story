@@ -1,17 +1,17 @@
-// Exterieur genrated by blender2ogre 0.5.8
+// GLASS headlights genrated by blender2ogre 0.5.9
 
-material Exterieur 
+material GLASS_headlights 
 {
-    receive_shadows on 
+    receive_shadows off 
 
     technique
     {
-        pass Exterieur
+        pass GLASS headlights
         {
-            ambient 1.0 1.0 1.0 1.0
-            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
+            ambient 0.8999999761581421 0.987484872341156 1.0 0.10000000149011612
+            diffuse 0.44999998807907104 0.493742436170578 0.5 0.10000000149011612
+            specular 1.0 1.0 1.0 0.10000000149011612 62.5
+            emissive 0.22499999403953552 0.246871218085289 0.25 0.10000000149011612
 
             alpha_to_coverage off
             colour_write on
@@ -30,13 +30,6 @@ material Exterieur
             shading gouraud
             transparent_sorting on
 
-            texture_unit 
-            {
-                texture ../Textures/brique.jpg
-                tex_address_mode wrap
-                scale 1.0 1.0
-                colour_op modulate
-            }
         }
     }
 }

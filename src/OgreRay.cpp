@@ -375,7 +375,7 @@ void OgreRay::GetMeshInformation (const Ogre::ManualObject* manual, size_t& vert
         size_t& index_count, unsigned long*& indices, const Ogre::Vector3& position, const Ogre::Quaternion& orient,
         const Ogre::Vector3& scale)
 {
-	std::vector < Ogre::Vector3 > returnVertices;
+	std::vector<Ogre::Vector3> returnVertices;
 	std::vector<unsigned long> returnIndices;
 	unsigned long thisSectionStart = 0;
 	for (unsigned int i = 0, size = manual->getNumSections(); i < size; ++i)
@@ -383,7 +383,7 @@ void OgreRay::GetMeshInformation (const Ogre::ManualObject* manual, size_t& vert
 		Ogre::ManualObject::ManualObjectSection* section = manual->getSection(i);
 		Ogre::RenderOperation* renderOp = section->getRenderOperation();
 
-		std::vector < Ogre::Vector3 > pushVertices;
+		std::vector<Ogre::Vector3> pushVertices;
 		//Collect the vertices
 		{
 			const Ogre::VertexElement* vertexElement = renderOp->vertexData->vertexDeclaration->findElementBySemantic(

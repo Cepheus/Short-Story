@@ -1,17 +1,17 @@
-// clay genrated by blender2ogre 0.5.9
+// GLASS brake light2 genrated by blender2ogre 0.5.9
 
-material clay 
+material GLASS_brake_light2 
 {
     receive_shadows on 
 
     technique
     {
-        pass clay
+        pass GLASS brake light2
         {
-            ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
-            diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
-            specular 0.0 0.0 0.0 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
+            ambient 1.0 0.0 0.0 0.5
+            diffuse 1.0 0.0 0.0 0.5
+            specular 2.0 2.0 2.0 0.5 62.5
+            emissive 0.0 0.0 0.0 0.5
 
             alpha_to_coverage off
             colour_write on

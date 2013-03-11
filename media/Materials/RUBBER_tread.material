@@ -1,16 +1,16 @@
-// WhiteWall-nub genrated by blender2ogre 0.5.9
+// RUBBER tread genrated by blender2ogre 0.5.9
 
-material WhiteWall-nub 
+material RUBBER_tread 
 {
     receive_shadows on 
 
     technique
     {
-        pass WhiteWall-nub
+        pass RUBBER tread
         {
-            ambient 0.7873995304107666 0.7873995304107666 0.7873995304107666 1.0
-            diffuse 0.6299196337151471 0.6299196337151471 0.6299196337151471 1.0
-            specular 0.0 0.0 0.0 1.0 12.5
+            ambient 0.19692492485046387 0.1969052255153656 0.1969052255153656 1.0
+            diffuse 0.17170720351516877 0.17169002682845225 0.17169002682845225 1.0
+            specular 0.1258992999792099 0.1258992999792099 0.1258992999792099 1.0 3.75
             emissive 0.0 0.0 0.0 1.0
 
             alpha_to_coverage off
@@ -30,6 +30,13 @@ material WhiteWall-nub
             shading gouraud
             transparent_sorting on
 
+            texture_unit 
+            {
+                texture tread02.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
         }
     }
 }

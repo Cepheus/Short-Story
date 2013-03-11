@@ -1,17 +1,17 @@
-// Exterieur genrated by blender2ogre 0.5.8
+// GLASS turn signals genrated by blender2ogre 0.5.9
 
-material Exterieur 
+material GLASS_turn_signals 
 {
     receive_shadows on 
 
     technique
     {
-        pass Exterieur
+        pass GLASS turn signals
         {
-            ambient 1.0 1.0 1.0 1.0
-            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
+            ambient 1.0 0.5 0.0 0.5
+            diffuse 1.0 0.5 0.0 0.5
+            specular 2.0 1.399999976158142 0.7999999523162842 0.5 62.5
+            emissive 0.0 0.0 0.0 0.5
 
             alpha_to_coverage off
             colour_write on
@@ -30,13 +30,6 @@ material Exterieur
             shading gouraud
             transparent_sorting on
 
-            texture_unit 
-            {
-                texture ../Textures/brique.jpg
-                tex_address_mode wrap
-                scale 1.0 1.0
-                colour_op modulate
-            }
         }
     }
 }

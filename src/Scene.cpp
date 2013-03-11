@@ -154,12 +154,12 @@ void Scene::setImmeuble ()
 
 void Scene::setPersonnage ()
 {
-	Entity* personnage = mShortStory->getSceneManager()->createEntity("Personnage", "Personnage.mesh");
+    Entity* personnage = mShortStory->getSceneManager()->createEntity("Personnage", "ninja.mesh");
 
 	nCharacter = nCharacCamera->createChildSceneNode("CharacterNode");
     nCharacter->attachObject(personnage);
 
-	nCharacter->setPosition(300., 100., 200.);
+    nCharacter->setPosition(300., 0., 200.);
 	nCharacter->scale(0.5, 0.5, 0.5);
 }
 

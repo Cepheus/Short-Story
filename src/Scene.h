@@ -5,6 +5,9 @@
 #include "ShortStory.h"
 #include <Terrain/OgreTerrain.h>
 
+/** La distance entre la tête du bonhomme et le sol */
+#define HAUTEUR_PERS 120
+
 using namespace Ogre;
 
 /**

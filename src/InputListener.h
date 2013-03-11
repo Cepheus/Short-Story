@@ -7,7 +7,7 @@
 #include "Scene.h"
 
 /** La distance entre la tête du bonhomme et le sol */
-#define DIST_VERTICAL 100
+#define DIST_VERTICAL HAUTEUR_PERS
 /** Détection de collision sur le plan horizontal (carré autour du perso de diagonale 2*DIST_HORIZONTAL) */
 #define DIST_HORIZONTAL 40
 

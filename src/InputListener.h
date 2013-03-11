@@ -15,7 +15,7 @@ using namespace Ogre;
 using namespace OIS;
 
 /** Valeur par défaut de la vitesse de déplacement */
-#define VITESSE 100
+#define VITESSE 150
 /** Valeur par défaut de la vitesse de rotation */
 #define VROTATION 0.2
 
@@ -30,6 +30,7 @@ using namespace OIS;
  * <li>left control pour descendre selon Y (hauteur) en mode no clip</li>
  * <li>Fin pour switcher entre mode normal et mode noclip</li>
  * <li>Mouse scroll up / down pour zoomer ou dézoomer</li>
+ * <li>P permet de basculer en mode FPS / Third Person</li>
  * </ul>
  */
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
@@ -73,6 +74,8 @@ private:
 	Real mVitesseRotation;
 	/** true si la détection de collisions est activée */
 	bool detectionCollision;
+	/** vrai si on voit à la première personne, sinon, on est à la 3° */
+	bool isFPS;
 
 public:
 	/**

@@ -5,7 +5,7 @@
 InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
 		mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mgoDown(
 		        false), mMouvement(Ogre::Vector3::ZERO), mCollisionVect(1, 1, 1), mVitesse(VITESSE), mVitesseRotation(
-		        VROTATION), detectionCollision(true)
+		        VROTATION), detectionCollision(true), isFPS(false)
 {
 	startOIS();
 }
@@ -39,31 +39,49 @@ void InputListener::startOIS ()
 
 void InputListener::checkCollisions ()
 {
-	const int size = 4;
+	const int size = 8, moveOffset = 40, detectOffset = 2;;
 	// Rayon perso pour tester les collisions
 	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
 	if (mScene->getImmeubleNode())
 		ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
+	// le nœud à bouger
+	SceneNode *toMove = mScene->getCharacCamera();
 	// résultat où est stocké la collision
 	Ogre::Vector3 result;
 	// place actuelle du perso
-	Ogre::Vector3 nperso = mScene->getCharacCamera()->getPosition();
+	Ogre::Vector3 nperso = toMove->getPosition();
 	// direction du rayon vertical
 	Ogre::Vector3 vertical(0, -1, 0);
 	// direction des vecteurs horizontaux (4 dans x, -x, z, -z)
-	Ogre::Vector3 horizontals[4];
+	Quaternion quaternions[size];
+	// tmp vector pour les côtés
+	Ogre::Vector3 tmp;
 
 	// initialisation des horizontaux
 	for (int i = 0; i < size; i++)
-		horizontals[i] = Ogre::Vector3::ZERO;
+		quaternions[i] = Quaternion::IDENTITY;
 	// x
-	horizontals[0] = Ogre::Vector3::UNIT_X;
+	quaternions[0].x = 1;
 	// -x
-	horizontals[1] = Ogre::Vector3::NEGATIVE_UNIT_X;
+	quaternions[1].x = -1;
 	// z
-	horizontals[2] = Ogre::Vector3::UNIT_Z;
+	quaternions[2].z = 1;
 	// -z
-	horizontals[3] = Ogre::Vector3::NEGATIVE_UNIT_Z;
+	quaternions[3].z = -1;
+	// x, z
+	quaternions[4].x = 1;
+	quaternions[4].z = 1;
+	// -x, z
+	quaternions[5].x = -1;
+	quaternions[5].z = 1;
+	// x, -z
+	quaternions[6].x = 1;
+	quaternions[6].z = -1;
+	// -x, -z
+	quaternions[7].x = -1;
+	quaternions[7].z = -1;
+	for (int i = 0; i < size; i++)
+		quaternions[i] = toMove->convertLocalToWorldOrientation(quaternions[i]);
 
 	// détection verticale
 	if (ray.RaycastFromPoint(nperso, vertical, result))
@@ -71,29 +89,87 @@ void InputListener::checkCollisions ()
 		Real dist = result.distance(nperso);
 		if (dist != DIST_VERTICAL)
 		{
-			mScene->getCharacCamera()->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
+			toMove->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
 		}
 		mScene->setInBuilding(ray.isTouched());
 	}
 
 	// détection horizontale
-	/*for (int i = 0; i < size; i++)
-	 {
-	 if (ray.RaycastFromPoint(nperso, horizontals[i], result))
-	 {
-	 Real dist = result.distance(nperso);
-	 if (dist < DIST_HORIZONTAL)
-	 {
-	 if (horizontals[i].x != 0)
-	 mCollisionVect.x = 0;
-	 if (horizontals[i].y != 0)
-	 mCollisionVect.y = 0;
-	 if (horizontals[i].z != 0)
-	 mCollisionVect.z = 0;
-	 printf("%d + distance %lf\n", i, dist);
-	 }
-	 }
-	 }*/
+	for (int i = 0; i < size; i++)
+	{
+		tmp.x = quaternions[i].x;
+		tmp.y = quaternions[i].y;
+		tmp.z = quaternions[i].z;
+
+		if (ray.RaycastFromPoint(nperso, tmp, result))
+		{
+			Real dist = result.distance(nperso);
+			if (dist < DIST_HORIZONTAL)
+			{
+				switch (i)
+				{
+				case 0:
+					if (mMouvement.x == 1)
+					{
+						mMouvement.x = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
+					}
+					break;
+				case 1:
+					if (mMouvement.x == -1)
+					{
+						mMouvement.x = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
+					}
+					break;
+				case 2:
+					if (mMouvement.z == 1)
+					{
+						mMouvement.z = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
+					}
+					break;
+				case 3:
+					if (mMouvement.z == -1)
+					{
+						mMouvement.z = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
+					}
+					break;
+				case 4:
+					if (mMouvement.x == 1)
+						mMouvement.x = 0;
+					if (mMouvement.z == 1)
+						mMouvement.z = 0;
+					break;
+				case 5:
+					if (mMouvement.x == -1)
+						mMouvement.x = 0;
+					if (mMouvement.z == 1)
+						mMouvement.z = 0;
+					break;
+				case 6:
+					if (mMouvement.x == 1)
+						mMouvement.x = 0;
+					if (mMouvement.z == -1)
+						mMouvement.z = 0;
+					break;
+				case 7:
+					if (mMouvement.x == -1)
+						mMouvement.x = 0;
+					if (mMouvement.z == -1)
+						mMouvement.z = 0;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
 }
 
 bool InputListener::frameRenderingQueued (const FrameEvent& evt)
@@ -116,7 +192,6 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	deplacementNinja(evt, deplacement);
 
 	mScene->getCharacterCameraNode()->translate(deplacement, SceneNode::TS_LOCAL);
-	//mScene->getCharacterCameraNode()->setOrientation(mScene->getCameraNode()->getOrientation().w, 0, mScene->getCameraNode()->getOrientation().y, 0);
 
 	if (!detectionCollision)
 	{
@@ -255,6 +330,13 @@ bool InputListener::keyPressed (const KeyEvent &e)
 		break;
 	case OIS::KC_END:
 		detectionCollision = !detectionCollision;
+		break;
+	case OIS::KC_P:
+		isFPS = !isFPS;
+		if (isFPS)
+			mScene->setFPS();
+		else
+			mScene->setThirdPerson();
 		break;
 	case OIS::KC_J:
 		posCamera = mCamera->getPosition();

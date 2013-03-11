@@ -6,7 +6,7 @@
 #include <Terrain/OgreTerrain.h>
 
 /** La distance entre la tête du bonhomme et le sol */
-#define HAUTEUR_PERS 120
+#define HAUTEUR_PERS 110
 /** distance de la caméra au perso en X */
 #define FAR_PERS_X 25
 /** distance de la caméra au perso en Y */
@@ -96,6 +96,17 @@ public:
 			dDistanceCharacCamera = distanceCharacCamera;
 			mShortStory->getCamera()->setPosition(FAR_PERS_X, FAR_PERS_Y, dDistanceCharacCamera);
 		}
+	}
+
+	void setFPS ()
+	{
+		// on se met devant le mesh pour éviter de le voir de l'intérieur, sinon faudrait le suppr
+		mShortStory->getCamera()->setPosition(-5, 12, -12);
+	}
+
+	void setThirdPerson ()
+	{
+		mShortStory->getCamera()->setPosition(FAR_PERS_X, FAR_PERS_Y, dDistanceCharacCamera);
 	}
 
 	bool isInBuilding () const

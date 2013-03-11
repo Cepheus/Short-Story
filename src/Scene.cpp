@@ -254,6 +254,24 @@ void Scene::kickPersonnage(const FrameEvent &evt){
     personnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
 }
 
+void Scene::sideKickPersonnage(const FrameEvent &evt){
+    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while(it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
+    personnage->getAnimationState("SideKick")->setEnabled(true);
+    personnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
+}
+
 void Scene::setCamera ()
 {
     nCamera = nCharacCamera->createChildSceneNode("CameraNode");

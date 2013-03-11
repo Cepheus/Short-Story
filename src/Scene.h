@@ -28,6 +28,13 @@ private:
 	/** Distance personnage/camÃ©ra */
 	Real dDistanceCharacCamera;
 
+    /** Le terrain heightmap */
+    Terrain *mTerrain;
+    /** La lumiere dy terrain, initialisé dans lumiere, utilisé dans terrain */
+    Light *terrainLight;
+    /** Le truc pour gérer le terrain */
+    TerrainGlobalOptions *mGlobals;
+
 public:
 	/**
 	 * Constructeur

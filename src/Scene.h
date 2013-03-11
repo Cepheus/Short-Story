@@ -87,7 +87,7 @@ private:
 	/** Met en place le personnage */
 	void setPersonnage ();
 	/** Met en place les différents meshes */
-	void setMeshes ();
+	void setMeshes (bool withLod);
 	/** Met en place la caméra */
 	void setCamera ();
 };

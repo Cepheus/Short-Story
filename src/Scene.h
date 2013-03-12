@@ -37,9 +37,9 @@ private:
 
 	/** Le terrain heightmap */
 	Terrain *mTerrain;
-	/** La lumiere dy terrain, initialis� dans lumiere, utilis� dans terrain */
+    /** La lumiere dy terrain, initialisé dans lumiere, utilisé dans terrain */
 	Light *terrainLight;
-	/** Le truc pour g�rer le terrain */
+    /** Le truc pour gérer le terrain */
 	TerrainGlobalOptions *mGlobals;
 	/** true si le perso est dans l'immeuble, faux sinon */
 	bool inBuilding;

@@ -39,11 +39,12 @@ void Scene::setTerrain ()
 	//sol palpable
 	SceneManager* sceneManager = mShortStory->getSceneManager();
 	Plane plan(Vector3::UNIT_Y, 0);
-	MeshManager::getSingleton().createPlane("sol", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plan, 5000, 5000,
+    MeshManager::getSingleton().createPlane("sol", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plan, 3000, 3000,
 	        100, 100, true, 1, 50, 50, Vector3::UNIT_Z);
 	Entity *ent = sceneManager->createEntity("EntiteSol", "sol");
 	nTerrain = sceneManager->getRootSceneNode()->createChildSceneNode();
 	nTerrain->attachObject(ent);
+    nTerrain->setPosition(-500,0,500);
     ent->setMaterialName("Plane");
 	ent->setCastShadows(true);
 
@@ -224,7 +225,7 @@ void Scene::setTerrain ()
 
 	//fait de la place en memoire
 	mTerrain->freeTemporaryResources();
-	mTerrain->setPosition(Ogre::Vector3(600, -100, 0));
+    mTerrain->setPosition(Ogre::Vector3(600, -30, 0));
 }
 
 void Scene::setSky ()
@@ -238,11 +239,26 @@ void Scene::setSky ()
 
 void Scene::setRain ()
 {
-    ParticleSystem * rainParticle = mShortStory->getSceneManager()->createParticleSystem("rain", "Rain");
-    SceneNode * rainNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainNode",
+    //gauche
+    ParticleSystem * rainParticleGauche = mShortStory->getSceneManager()->createParticleSystem("rainGauche", "Rain");
+    SceneNode * rainGaucheNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainGaucheNode",
             Ogre::Vector3(100, 0, 0));
-    rainNode->translate(0, 3000, 0, Node::TS_PARENT);
-    rainNode->attachObject(rainParticle);
+    rainGaucheNode->translate(-270, 3200, -500, Node::TS_PARENT);
+    rainGaucheNode->attachObject(rainParticleGauche);
+
+    //devant
+    ParticleSystem * rainParticleDevant = mShortStory->getSceneManager()->createParticleSystem("rainDevant", "Rain");
+    SceneNode * rainDevantNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainDevantNode",
+            Ogre::Vector3(100, 0, 0));
+    rainDevantNode->translate(500, 3200, 500, Node::TS_PARENT);
+    rainDevantNode->attachObject(rainParticleDevant);
+
+    //devant a gauche
+    ParticleSystem * rainParticleDevantGauche = mShortStory->getSceneManager()->createParticleSystem("rainDevantGauche", "Rain");
+    SceneNode * rainDevantGaucheNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainDevantGaucheNode",
+            Ogre::Vector3(100, 0, 0));
+    rainDevantGaucheNode->translate(-270, 3200, 500, Node::TS_PARENT);
+    rainDevantGaucheNode->attachObject(rainParticleDevantGauche);
 }
 
 void Scene::setImmeuble ()
@@ -281,8 +297,16 @@ void Scene::walkPersonnage (const FrameEvent &evt)
 		mAnimState->setEnabled(false);
 	}
 
-	personnage->getAnimationState("Walk")->setEnabled(true);
-	personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
+//    if(inBuilding){//infiltration dans le batiment
+//        personnage->getAnimationState("Stealth")->setEnabled(true);
+//        personnage->getAnimationState("Stealth")->addTime(evt.timeSinceLastFrame);
+//    }
+//    else
+//    {
+        personnage->getAnimationState("Walk")->setEnabled(true);
+        personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
+//    }
+
 }
 
 void Scene::idle1Personnage (const FrameEvent &evt)

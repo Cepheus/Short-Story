@@ -1,8 +1,8 @@
 particle_system Rain
 {
     material        Droplet
-    particle_width  10
-    particle_height 10
+    particle_width  5
+    particle_height 7
     quota           50000
 
     // Make common direction straight down (faster than self oriented)
@@ -19,8 +19,8 @@ particle_system Rain
         velocity    	400
         colour_range_start  0.3 1 1
         colour_range_end    0.7 1 1
-        width           2000
-        height          2000
+        width           1000
+        height          1000
         depth           0
     }
 

@@ -1,0 +1,29 @@
+material Trees {
+  transparency_casts_shadows on
+  receive_shadows on
+  
+  technique {
+  
+    pass {
+        ambient 1.0 1.0 1.0 1
+        diffuse 1.0 1.0 1.0 1
+        depth_check on
+        depth_write off
+        depth_func less_equal
+        depth_bias 0.4
+        scene_blend src_alpha one_minus_src_alpha
+        
+        texture_unit {
+          texture_alias 0
+          texture ../Textures/Trees.png
+        }
+      }
+    }
+    
+    technique {
+      pass {
+      diffuse 0.0 1.0 0.0
+      depth_check off
+    }
+  }
+}

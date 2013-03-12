@@ -19,8 +19,8 @@ particle_system Rain
         velocity    	400
         colour_range_start  0.3 1 1
         colour_range_end    0.7 1 1
-        width           2000
-        height          2000
+        width           1000
+        height          1000
         depth           0
     }
 

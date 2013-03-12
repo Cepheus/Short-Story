@@ -91,7 +91,7 @@ void InputListener::checkCollisions ()
 		{
 			toMove->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
 		}
-		mScene->setInBuilding(ray.isTouched());
+        mScene->setInBuilding(ray.isTouched());
 	}
 
 	// détection horizontale

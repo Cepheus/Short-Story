@@ -1,4 +1,4 @@
-particle_system nuage
+particle_system verresecurite
 {
 	material Particles/Special.001
 	particle_width 7

@@ -162,7 +162,7 @@ void Scene::setTerrain ()
 	Ogre::Image img;
 	img.load("heightmap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-	//Les paramčtres géométriques
+    //Les paramčtres géométriques
 	Ogre::Terrain::ImportData imp;
 	imp.inputImage = &img;
 	imp.terrainSize = img.getWidth();
@@ -196,7 +196,7 @@ void Scene::setTerrain ()
 
 	Ogre::Real minHeight1 = imp.inputScale * 5 / 500;
 	Ogre::Real fadeDist1 = imp.inputScale * 600 / 1000;
-	Ogre::Real minHeight2 = imp.inputScale * 200 / 1000;
+    Ogre::Real minHeight2 = imp.inputScale * 200 / 1000;
 	Ogre::Real fadeDist2 = imp.inputScale * 800 / 1000;
 
 	for (Ogre::uint16 y = 0; y < mTerrain->getLayerBlendMapSize(); ++y)
@@ -218,7 +218,7 @@ void Scene::setTerrain ()
 		}
 	}
 
-	blendMap1->dirty(); //préciser que les données de la TerrainLayerBlendMap sont obsolčtes
+    blendMap1->dirty(); //préciser que les données de la TerrainLayerBlendMap sont obsolčtes
 	blendMap1->update(); //mise a jour
 	blendMap2->dirty();
 	blendMap2->update();

@@ -1,4 +1,4 @@
-material verresecurite 
+material Plane 
 {
     receive_shadows on 
 
@@ -18,3 +18,4 @@ material verresecurite
         }
     }
 }
+                                                      

@@ -39,11 +39,11 @@ void InputListener::startOIS ()
 
 void InputListener::checkCollisions ()
 {
-	const int size = 8, moveOffset = 40, detectOffset = 2;;
+	const int size = 8, moveOffset = 40, detectOffset = 2;
+	;
 	// Rayon perso pour tester les collisions
 	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
-	if (mScene->getImmeubleNode())
-		ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
+	ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
 	// le nœud à bouger
 	SceneNode *toMove = mScene->getCharacCamera();
 	// résultat où est stocké la collision
@@ -91,7 +91,7 @@ void InputListener::checkCollisions ()
 		{
 			toMove->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
 		}
-        mScene->setInBuilding(ray.isTouched());
+		mScene->setInBuilding(ray.isTouched());
 	}
 
 	// détection horizontale
@@ -142,27 +142,60 @@ void InputListener::checkCollisions ()
 					break;
 				case 4:
 					if (mMouvement.x == 1)
+					{
 						mMouvement.x = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
+					}
 					if (mMouvement.z == 1)
+					{
 						mMouvement.z = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
+					}
 					break;
 				case 5:
 					if (mMouvement.x == -1)
+					{
 						mMouvement.x = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
+					}
 					if (mMouvement.z == 1)
+					{
 						mMouvement.z = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
+					}
 					break;
 				case 6:
 					if (mMouvement.x == 1)
+					{
 						mMouvement.x = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
+					}
 					if (mMouvement.z == -1)
+					{
 						mMouvement.z = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
+					}
 					break;
 				case 7:
 					if (mMouvement.x == -1)
+					{
 						mMouvement.x = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
+					}
 					if (mMouvement.z == -1)
+					{
 						mMouvement.z = 0;
+						if (dist < DIST_HORIZONTAL - detectOffset)
+							toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
+						printf("essai\n");
+					}
 					break;
 				default:
 					break;

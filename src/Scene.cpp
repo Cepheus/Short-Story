@@ -226,6 +226,98 @@ void Scene::setTerrain ()
 	//fait de la place en memoire
 	mTerrain->freeTemporaryResources();
     mTerrain->setPosition(Ogre::Vector3(600, -30, 0));
+
+    //Forets
+//    Ogre::FloatRect TextureCoordinates[]={
+//        Ogre::FloatRect(113.0/5000.0,121.0/5000.0,851.0/5000.0,1073.0/
+//        5000.0),
+//        Ogre::FloatRect(1021.0/5000.0,114.0/5000.0,3386.0/5000.0,1984.0/
+//        5000.0),
+//        Ogre::FloatRect(3825.0/5000.0,1049.0/5000.0,4871.0/
+//        5000.0,3588.0/5000.0),
+//        Ogre::FloatRect(1739.0/5000.0,2418.0/5000.0,2796.0/
+//        5000.0,4774.0/5000.0),
+//        Ogre::FloatRect(221.0/5000.0,2723.0/5000.0,1464.0/
+//        5000.0,3795.0/5000.0),
+//        Ogre::FloatRect(505.0/5000.0,4391.0/5000.0,805.0/
+//        5000.0,4662.0/5000.0),
+//        Ogre::FloatRect(339.0/5000.0,2085.0/5000.0,482.0/
+//        5000.0,2216.0/5000.0),
+//        Ogre::FloatRect(2803.0/5000.0,3355.0/5000.0,3891.0/
+//        5000.0,4912.0/5000.0)
+//    };
+
+//    Ogre::BillboardSet *Trees = mShortStory->getSceneManager()->createBillboardSet("Trees");
+//    Trees->setTextureCoords(TextureCoordinates, 8);
+//    Trees->setMaterialName("Trees");
+//    Trees->setCastShadows(true);
+//    Trees->setSortingEnabled(true);
+//    Trees->setBillboardType(Ogre::BBT_ORIENTED_COMMON);
+
+//    double x = 0.0;
+//    double y = 0.0;
+//    double z = 0.0;
+//    double TreeWidth;
+//    double TreeHeight;
+//    int TextureIndex;
+//    for (int i = 0; i < 10; i++) {
+//        for (int j = 0; j < 10; j++) {
+//            x = i * 5;
+//            y = j * 5;
+//            z = 0;
+//            TextureIndex = (i + j) / 10;
+//            TreeWidth = (i + j + 10) / 10;
+//            TreeHeight = (i + j + 10) / 5;
+//            Ogre::Vector3 TreePosition(x/10, y/10, z);
+//            Ogre::Billboard* Tree = Trees->createBillboard(TreePosition);
+//            Tree->setDimensions(TreeWidth, TreeHeight);
+//            Tree->setTexcoordIndex(TextureIndex);
+//        }
+//    }
+
+//    SceneNode* TreesNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("TreesNode");
+//    TreesNode->attachObject(Trees);
+//    TreesNode->setPosition(-1000,0,200);
+//    TreesNode->rotate(Quaternion(Degree(-90), Vector3::UNIT_X));
+//    TreesNode->scale(100,100,100);
+
+    //Arbres
+    Ogre::FloatRect TextureCoordinates[]={
+        Ogre::FloatRect(113.0/5000.0,121.0/5000.0,851.0/5000.0,1073.0/
+        5000.0),
+        Ogre::FloatRect(1021.0/5000.0,114.0/5000.0,3386.0/5000.0,1984.0/
+        5000.0),
+        Ogre::FloatRect(3825.0/5000.0,1049.0/5000.0,4871.0/
+        5000.0,3588.0/5000.0),
+        Ogre::FloatRect(1739.0/5000.0,2418.0/5000.0,2796.0/
+        5000.0,4774.0/5000.0),
+        Ogre::FloatRect(221.0/5000.0,2723.0/5000.0,1464.0/
+        5000.0,3795.0/5000.0),
+        Ogre::FloatRect(505.0/5000.0,4391.0/5000.0,805.0/
+        5000.0,4662.0/5000.0),
+        Ogre::FloatRect(339.0/5000.0,2085.0/5000.0,482.0/
+        5000.0,2216.0/5000.0),
+        Ogre::FloatRect(2803.0/5000.0,3355.0/5000.0,3891.0/
+        5000.0,4912.0/5000.0)
+    };
+
+    Ogre::BillboardSet *Trees = mShortStory->getSceneManager()->createBillboardSet("Tree");
+    Trees->setTextureCoords(TextureCoordinates, 8);
+    Trees->setMaterialName("Trees");
+    Trees->setCastShadows(true);
+    Trees->setSortingEnabled(true);
+    Trees->setBillboardType(Ogre::BBT_ORIENTED_COMMON);
+
+    Ogre::Vector3 TreePosition(0, 0, 0);
+    Ogre::Billboard* Tree = Trees->createBillboard(TreePosition);
+    Tree->setTexcoordIndex(1);
+
+
+    SceneNode* TreesNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("TreeNode");
+    TreesNode->attachObject(Trees);
+    TreesNode->setPosition(-1030,230,-270);
+    TreesNode->rotate(Quaternion(Degree(-90), Vector3::UNIT_X));
+    TreesNode->scale(5,5,5);
 }
 
 void Scene::setSky ()

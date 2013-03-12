@@ -372,6 +372,18 @@ void Scene::setPersonnage ()
 	nCharacter->setPosition(0, -HAUTEUR_PERS, 0);
 	nCharacter->attachObject(personnage);
 	nCharacter->scale(0.75, 0.75, 0.75);
+
+    AnimationState *mAnimState;
+    AnimationStateSet *set = personnage->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while (it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
 }
 
 void Scene::walkPersonnage (const FrameEvent &evt)
@@ -405,17 +417,6 @@ void Scene::idle1Personnage (const FrameEvent &evt)
 {
 	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-	AnimationState *mAnimState;
-	AnimationStateSet *set = personnage->getAllAnimationStates();
-	AnimationStateIterator it = set->getAnimationStateIterator();
-
-	//load animation
-	while (it.hasMoreElements())
-	{
-		mAnimState = it.getNext();
-		mAnimState->setEnabled(false);
-	}
-
 	personnage->getAnimationState("Idle1")->setEnabled(true);
 	personnage->getAnimationState("Idle1")->addTime(evt.timeSinceLastFrame);
 }
@@ -424,17 +425,6 @@ void Scene::idle2Personnage (const FrameEvent &evt)
 {
 	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-	AnimationState *mAnimState;
-	AnimationStateSet *set = personnage->getAllAnimationStates();
-	AnimationStateIterator it = set->getAnimationStateIterator();
-
-	//load animation
-	while (it.hasMoreElements())
-	{
-		mAnimState = it.getNext();
-		mAnimState->setEnabled(false);
-	}
-
 	personnage->getAnimationState("Idle2")->setEnabled(true);
 	personnage->getAnimationState("Idle2")->addTime(evt.timeSinceLastFrame);
 }
@@ -442,17 +432,6 @@ void Scene::idle2Personnage (const FrameEvent &evt)
 void Scene::idle3Personnage (const FrameEvent &evt)
 {
 	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	AnimationState *mAnimState;
-	AnimationStateSet *set = personnage->getAllAnimationStates();
-	AnimationStateIterator it = set->getAnimationStateIterator();
-
-	//load animation
-	while (it.hasMoreElements())
-	{
-		mAnimState = it.getNext();
-		mAnimState->setEnabled(false);
-	}
 
 	personnage->getAnimationState("Idle3")->setEnabled(true);
 	personnage->getAnimationState("Idle3")->addTime(evt.timeSinceLastFrame);
@@ -481,17 +460,6 @@ void Scene::sideKickPersonnage (const FrameEvent &evt)
 {
 	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
-	AnimationState *mAnimState;
-	AnimationStateSet *set = personnage->getAllAnimationStates();
-	AnimationStateIterator it = set->getAnimationStateIterator();
-
-	//load animation
-	while (it.hasMoreElements())
-	{
-		mAnimState = it.getNext();
-		mAnimState->setEnabled(false);
-	}
-
 	personnage->getAnimationState("SideKick")->setEnabled(true);
 	personnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
 }
@@ -502,17 +470,6 @@ void Scene::death2Personnage (const FrameEvent &evt)
 
 	if (!personnage->getAnimationState("Death2")->hasEnded())
 	{
-		AnimationState *mAnimState;
-		AnimationStateSet *set = personnage->getAllAnimationStates();
-		AnimationStateIterator it = set->getAnimationStateIterator();
-
-		//load animation
-		while (it.hasMoreElements())
-		{
-			mAnimState = it.getNext();
-			mAnimState->setEnabled(false);
-		}
-
 		personnage->getAnimationState("Death2")->setLoop(false);
 		personnage->getAnimationState("Death2")->setEnabled(true);
 		personnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);

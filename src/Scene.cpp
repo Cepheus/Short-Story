@@ -547,7 +547,7 @@ void Scene::setMeshes (bool withLod)
 	Ogre::SceneNode* VoitureNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Voiture");
 	VoitureNode->attachObject(entVoiture);
 	VoitureNode->setPosition(-500, 43, -100);
-	VoitureNode->scale(20, 20, 20);
+	VoitureNode->scale(10, 10, 10);
 }
 
 SceneNode* Scene::getImmeubleNode ()

@@ -65,6 +65,8 @@ private:
 	// Déplacement
     PersonnageStats mPersonnageStat;
     RobotStats mRobotStat;
+    /** Le personnage est il dans l'immeuble ?*/
+    bool mIsInBuilding;
 
 	/** Tant que vrai, le programe s'exécute */
 	bool mContinuer;

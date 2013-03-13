@@ -333,26 +333,30 @@ void Scene::setSky ()
 
 void Scene::setRain ()
 {
+    //plue sur la camera
+    ParticleSystem * characterRain = mShortStory->getSceneManager()->createParticleSystem("CharacterRain", "Rain/Personnage");
+    SceneNode * characterRainNode = nCharacCamera->createChildSceneNode("CharacterRainNode");
+    characterRainNode->setPosition(0,200,0);
+    characterRainNode->attachObject(characterRain);
+    characterRain->setVisible(true); //visible par defaut
+
+    //pluis exterieur
+    SceneNode * rainGeneralNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainGeneralNode",Ogre::Vector3(0, 0, 0));
+
     //gauche
     ParticleSystem * rainParticleGauche = mShortStory->getSceneManager()->createParticleSystem("rainGauche", "Rain");
-    SceneNode * rainGaucheNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainGaucheNode",
-            Ogre::Vector3(100, 0, 0));
-    rainGaucheNode->translate(-270, 3200, -500, Node::TS_PARENT);
+    SceneNode * rainGaucheNode = rainGeneralNode->createChildSceneNode("rainGaucheNode",
+            Ogre::Vector3(100, 3200, -100));
     rainGaucheNode->attachObject(rainParticleGauche);
+    rainParticleGauche->setVisible(false); //masqué par defaut
 
     //devant
     ParticleSystem * rainParticleDevant = mShortStory->getSceneManager()->createParticleSystem("rainDevant", "Rain");
-    SceneNode * rainDevantNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainDevantNode",
-            Ogre::Vector3(100, 0, 0));
-    rainDevantNode->translate(500, 3200, 500, Node::TS_PARENT);
+    SceneNode * rainDevantNode = rainGeneralNode->createChildSceneNode("rainDevantNode",
+            Ogre::Vector3(0, 3200, -90));
+    rainDevantNode->rotate(Ogre::Vector3(0,1,0), Degree(90));
     rainDevantNode->attachObject(rainParticleDevant);
-
-    //devant a gauche
-    ParticleSystem * rainParticleDevantGauche = mShortStory->getSceneManager()->createParticleSystem("rainDevantGauche", "Rain");
-    SceneNode * rainDevantGaucheNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("rainDevantGaucheNode",
-            Ogre::Vector3(100, 0, 0));
-    rainDevantGaucheNode->translate(-270, 3200, 500, Node::TS_PARENT);
-    rainDevantGaucheNode->attachObject(rainParticleDevantGauche);
+    rainDevantNode->setVisible(false); //masqué par defaut
 }
 
 void Scene::setImmeuble ()
@@ -363,7 +367,6 @@ void Scene::setImmeuble ()
 
 	nImmeuble->setPosition(0., 0., 0.);
 	nImmeuble->scale(120., 100., 100.);
-
 }
 
 void Scene::setPersonnage ()

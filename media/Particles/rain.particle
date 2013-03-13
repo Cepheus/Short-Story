@@ -19,9 +19,44 @@ particle_system Rain
         velocity    	400
         colour_range_start  0.3 1 1
         colour_range_end    0.7 1 1
-        width           1000
-        height          1000
+        width           500
+        height          1500
         depth           0
+    }
+
+    // Gravity
+    affector LinearForce
+    {
+        force_vector    0 -250 0 
+	plane_normal 	-0.25 1 0
+        force_application add
+    }
+}
+
+particle_system Rain/Personnage
+{
+    material        Droplet
+    particle_width  5
+    particle_height 7
+    quota           5000
+
+    // Make common direction straight down (faster than self oriented)
+    billboard_type  oriented_common
+    common_direction -0.25 -1 0
+    
+    // Area emitter
+    emitter Box
+    {
+        angle           0
+        emission_rate   2400
+        time_to_live    2
+        direction       -0.25 -1 0
+        velocity    	400
+        colour_range_start  0.3 1 1
+        colour_range_end    0.7 1 1
+        width           500
+        height          500
+        depth           500
     }
 
     // Gravity

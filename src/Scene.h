@@ -120,18 +120,6 @@ public:
      */
     void initTrajetRobot();
 
-    /**
-     * @brief pour effacer les pointeurs
-     */
-    template< typename T >
-    struct delete_pointer_element
-    {
-        void operator()( T element ) const
-        {
-            delete element;
-        }
-    };
-
 	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode ();
 

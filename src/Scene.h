@@ -44,6 +44,16 @@ private:
 	/** true si le perso est dans l'immeuble, faux sinon */
 	bool inBuilding;
 
+    /**
+     * @brief mPathRobot, trajet du robot
+     */
+    std::vector<Ogre::Vector3> mPathRobot;
+
+    /**
+     * @brief pointPassageRobot, avancement du robot sur la trajectoire
+     */
+    size_t pointPassageRobot;
+
 public:
 	/**
 	 * Constructeur
@@ -65,6 +75,8 @@ public:
 
 	/** Récupère le noeud de la caméra et du personnage */
 	SceneNode* getCharacterCameraNode ();
+
+    /** animations du personnage */
 	void walkPersonnage (const FrameEvent& evt);
 	void idle1Personnage (const FrameEvent &evt);
 	void idle2Personnage (const FrameEvent &evt);
@@ -73,23 +85,58 @@ public:
 	void sideKickPersonnage (const FrameEvent &evt);
 	void death2Personnage (const FrameEvent &evt);
 
+    /** animations du robot */
+    /**
+     * @brief walkRobot
+     * @param evt
+     */
+    void walkRobot (const FrameEvent &evt);
+    /**
+     * @brief idleRobot
+     * @param evt
+     */
+    void idleRobot (const FrameEvent &evt);
+    /**
+     * @brief shootRobot
+     * @param evt
+     */
+    void shootRobot (const FrameEvent &evt);
+    /**
+     * @brief slumpRobot
+     * @param evt
+     */
+    void slumpRobot (const FrameEvent &evt);
+
+    /**
+     * @brief deplacementRobotArbre2Porte
+     * @param evt
+     * @return true si l'action est finit
+     * @brief delace le robot de l'arbre à la port
+     */
+    bool deplacementRobotArbre2Porte();
+
+    /**
+     * @brief initTrajetRobot
+     */
+    void initTrajetRobot();
+
 	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode ();
 
 	/** Récupère le noeud du personnage */
 	SceneNode* getCharacterNode ();
 
-	SceneNode* getCharacCamera ()
+    inline SceneNode* getCharacCamera ()
 	{
 		return nCharacCamera;
 	}
 
-	Real getDistanceCharacCamera () const
+    inline Real getDistanceCharacCamera () const
 	{
 		return dDistanceCharacCamera;
 	}
 
-	void setDistanceCharacCamera (Real distanceCharacCamera)
+    inline void setDistanceCharacCamera (Real distanceCharacCamera)
 	{
 		if (distanceCharacCamera > 25 && distanceCharacCamera < 300)
 		{
@@ -98,23 +145,23 @@ public:
 		}
 	}
 
-	void setFPS ()
+    inline void setFPS ()
 	{
 		// on se met devant le mesh pour éviter de le voir de l'intérieur, sinon faudrait le suppr
 		mShortStory->getCamera()->setPosition(-5, 12, -12);
 	}
 
-	void setThirdPerson ()
+    inline void setThirdPerson ()
 	{
 		mShortStory->getCamera()->setPosition(FAR_PERS_X, FAR_PERS_Y, dDistanceCharacCamera);
 	}
 
-	bool isInBuilding () const
+    inline bool isInBuilding () const
 	{
 		return inBuilding;
 	}
 
-	void setInBuilding (bool inBuilding)
+    inline void setInBuilding (bool inBuilding)
 	{
 		this->inBuilding = inBuilding;
 	}
@@ -132,6 +179,8 @@ private:
 	void setImmeuble ();
 	/** Met en place le personnage */
 	void setPersonnage ();
+    /** Met en place le robot */
+    void setRobot();
 	/** Met en place les différents meshes */
 	void setMeshes (bool withLod);
 	/** Met en place la caméra */

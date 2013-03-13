@@ -223,6 +223,7 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	deplacement = mMouvement * mCollisionVect * mVitesse * evt.timeSinceLastFrame;
 
 	deplacementNinja(evt, deplacement);
+    deplacementRobot(evt);
 
 	mScene->getCharacterCameraNode()->translate(deplacement, SceneNode::TS_LOCAL);
 
@@ -432,45 +433,84 @@ bool InputListener::keyReleased (const KeyEvent &e)
 
 void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement)
 {
-	//selection de l'etat
-	if (deplacement != Ogre::Vector3(0, 0, 0))
-	{
-		mPersonnageStat = WALK;
-	}
-	else
-	{
-		if ((mPersonnageStat != IDLE1) && (mPersonnageStat != IDLE2) && (mPersonnageStat != IDLE3))
-		{
-			mPersonnageStat = IDLE3;
-		}
-	}
+    //selection de l'etat
+    if (deplacement != Ogre::Vector3(0, 0, 0))
+    {
+        mPersonnageStat =pWALK;
+    }
+    else
+    {
+        if ((mPersonnageStat != pIDLE1) && (mPersonnageStat != pIDLE2) && (mPersonnageStat != pIDLE3))
+        {
+            mPersonnageStat = pIDLE3;
+        }
+    }
 
-	//application du mouvement
-	switch (mPersonnageStat)
-	{
-	case WALK:
-		mScene->walkPersonnage(evt);
-		break;
-	case IDLE1:
-		mScene->idle1Personnage(evt);
-		break;
-	case IDLE2:
-		mScene->idle2Personnage(evt);
-		break;
-	case IDLE3:
-		mScene->idle3Personnage(evt);
-		break;
-	case KICK:
-		mScene->kickPersonnage(evt);
-		break;
-	case SIDEKICK:
-		mScene->sideKickPersonnage(evt);
-		break;
-	case DEATH2:
-		mScene->death2Personnage(evt);
-		break;
-	default:
-		mPersonnageStat = IDLE3;
-		break;
-	}
+    //application du mouvement
+    switch (mPersonnageStat)
+    {
+    case pWALK:
+        mScene->walkPersonnage(evt);
+        break;
+    case pIDLE1:
+        mScene->idle1Personnage(evt);
+        break;
+    case pIDLE2:
+        mScene->idle2Personnage(evt);
+        break;
+    case pIDLE3:
+        mScene->idle3Personnage(evt);
+        break;
+    case pKICK:
+        mScene->kickPersonnage(evt);
+        break;
+    case pSIDEKICK:
+        mScene->sideKickPersonnage(evt);
+        break;
+    case pDEATH2:
+        mScene->death2Personnage(evt);
+        break;
+    default:
+        mPersonnageStat = pIDLE3;
+        break;
+    }
+}
+
+void InputListener::deplacementRobot(const FrameEvent& evt)
+{
+    Entity * robot = mSceneMgr->getEntity("Robot");
+    Node * robotNode = robot->getParentNode(); //SceneNode * robotNode = mSceneMgr->getSceneNode("RobotNode");
+
+    //Entity * personnage = mSceneMgr->getEntity("Personnage");
+    Node * personneNode = mSceneMgr->getSceneNode("PersonnageCameraNode");
+
+    //selection de l'etat
+    if(!mScene->deplacementRobotArbre2Porte())
+    {
+        mRobotStat = rWALK;
+    }
+    else
+    {
+        mRobotStat = rIDLE;
+    }
+
+    //application du mouvement
+    switch (mRobotStat)
+    {
+    case rWALK:
+        mScene->walkRobot(evt);
+        break;
+    case rIDLE:
+        mScene->idleRobot(evt);
+        break;
+    case rSLUMP:
+        mScene->slumpRobot(evt);
+        break;
+    case rSHOOT:
+        mScene->shootRobot(evt);
+        break;
+    default:
+        mRobotStat = rIDLE;
+        break;
+    }
 }

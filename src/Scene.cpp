@@ -13,6 +13,7 @@ Scene::~Scene ()
 {
 	OGRE_DELETE mTerrain;
 	OGRE_DELETE mGlobals;
+    while(!mPathRobot.empty()) delete mPathRobot.back(), mPathRobot.pop_back();
 }
 
 void Scene::createScene ()
@@ -23,8 +24,10 @@ void Scene::createScene ()
 	setRain();
 	setImmeuble();
 	setPersonnage();
+    setRobot();
 	setCamera();
 	setMeshes(true);
+    initTrajetRobot();// a la fin, toujours
 }
 
 void Scene::setLight ()
@@ -99,7 +102,7 @@ void Scene::setTerrain ()
 	streetLamp2->setCastShadows(true);
 
 	//node
-	SceneNode* streetLamp2Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode(
+    SceneNode* streetLamp2Node = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode(
 	        "streetLamp2Node");
 	streetLamp2Node->attachObject(streetLamp2);
 	streetLamp2Node->setPosition(600., 0., 400.);
@@ -312,7 +315,6 @@ void Scene::setTerrain ()
     Ogre::Billboard* Tree = Trees->createBillboard(TreePosition);
     Tree->setTexcoordIndex(1);
 
-
     SceneNode* TreesNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("TreeNode");
     TreesNode->attachObject(Trees);
     TreesNode->setPosition(-1030,230,-270);
@@ -373,6 +375,7 @@ void Scene::setPersonnage ()
 	nCharacter->attachObject(personnage);
 	nCharacter->scale(0.75, 0.75, 0.75);
 
+    //iterateurs d'animation
     AnimationState *mAnimState;
     AnimationStateSet *set = personnage->getAllAnimationStates();
     AnimationStateIterator it = set->getAnimationStateIterator();
@@ -476,6 +479,113 @@ void Scene::death2Personnage (const FrameEvent &evt)
 	}
 }
 
+void Scene::setRobot(){
+    Entity* robot = mShortStory->getSceneManager()->createEntity("Robot", "robot.mesh");
+
+    SceneNode* robotNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("RobotNode");
+    robotNode->setPosition(-100, 0, 500);
+    robotNode->attachObject(robot);
+    robotNode->scale(1, 1, 1);
+
+    //iterateurs d'animation
+    AnimationState *mAnimState;
+    AnimationStateSet *set = robot->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while (it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+}
+
+void Scene::walkRobot (const FrameEvent &evt)
+{
+    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
+
+    robot->getAnimationState("Walk")->setEnabled(true);
+    robot->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::idleRobot (const FrameEvent &evt)
+{
+    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
+
+    robot->getAnimationState("Idle")->setEnabled(true);
+    robot->getAnimationState("Idle")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::shootRobot (const FrameEvent &evt)
+{
+    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
+
+    robot->getAnimationState("Shoot")->setEnabled(true);
+    robot->getAnimationState("Shoot")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::slumpRobot (const FrameEvent &evt)
+{
+    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
+
+    robot->getAnimationState("Slump")->setEnabled(true);
+    robot->getAnimationState("Slump")->addTime(evt.timeSinceLastFrame);
+}
+
+void Scene::initTrajetRobot(){
+
+    Ogre::Vector3 offset(300,0,300);
+
+    //point de depart
+    Node * treeNode = mShortStory->getSceneManager()->getSceneNode("TreeNode");
+    Ogre::Vector3 depart = treeNode->getPosition() + offset; //offset pour que le robot ne soit pas dans l'arbre au depart
+    depart[1] = 0; //y a 0
+
+    //point controle
+    Ogre::Vector3 controle = (depart + Ogre::Vector3(600,0,500));
+    //porte d'entrée
+    Node * immeubleNode = mShortStory->getSceneManager()->getSceneNode("ImmeubleNode");
+    Ogre::Vector3 point1 = immeubleNode->getPosition() + offset;
+
+    Ogre::ManualObject *Path = mShortStory->getSceneManager()->createManualObject("Path"); //TODO : suprimer ce file a la fin
+    Path->begin("BumpyMetal", Ogre::RenderOperation::OT_LINE_LIST);
+
+    //trajectoire
+    bezierCurve3P(depart,controle,point1, 0.003, &mPathRobot);
+    for(int i = 0; i < mPathRobot.size(); ++i)
+        Path->position(*mPathRobot.at(i));
+
+    Path->end();
+    Ogre::SceneNode *PathNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Path");
+    PathNode->attachObject(Path);
+
+    //point de passage
+    pointPassageRobot = 0;
+}
+
+bool Scene::deplacementRobotArbre2Porte(){
+    Entity * robot = mShortStory->getSceneManager()->getEntity("Robot");
+    Node * robotNode = robot->getParentNode(); //SceneNode * robotNode = mSceneMgr->getSceneNode("RobotNode");
+    Ogre::Vector3 position = robotNode->getPosition();
+    position[1] = 0;
+
+    if( pointPassageRobot >= mPathRobot.size()){
+        return false;
+    }
+
+    if(pointPassageRobot == 0 ){
+        pointPassageRobot = 1;
+        robotNode->setPosition(*mPathRobot[pointPassageRobot]); //TODO : c'est moche, a supprimer
+        position = robotNode->getPosition();
+    }
+
+    robotNode->setPosition(*mPathRobot[pointPassageRobot]);
+    pointPassageRobot++;
+
+
+    return true;
+}
+
 void Scene::setCamera ()
 {
 	nCamera = nCharacCamera->createChildSceneNode("CameraNode");
@@ -530,4 +640,33 @@ SceneNode* Scene::getCameraNode ()
 SceneNode* Scene::getCharacterNode ()
 {
 	return nCharacter;
+}
+
+//outils
+
+
+void Scene::bezierCurve3P(Ogre::Vector3 &depart, Ogre::Vector3 &controle, Ogre::Vector3 &arrive, float precision, std::vector<Ogre::Vector3 *> * out){
+    float xa, za, xb, zb, x, z;
+    out->push_back(&depart);
+    for( float i = 0 ; i < 1 ; i += precision )
+    {
+        // The Green Line
+        xa = getPt( depart[0] , controle[0] , i );
+        za = getPt( depart[2] , controle[2] , i );
+        xb = getPt( controle[0] , arrive[0] , i );
+        zb = getPt( controle[2] , arrive[2] , i );
+
+        // The Black Dot
+        x = getPt( xa , xb , i );
+        z = getPt( za , zb , i );
+        out->push_back(new Vector3(x,0,z));
+    }
+    //out->push_back(&arrive);
+}
+
+int Scene::getPt( int n1 , int n2 , float perc )
+{
+    int diff = n2 - n1;
+
+    return n1 + ( diff * perc );
 }

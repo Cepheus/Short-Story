@@ -36,11 +36,17 @@ using namespace OIS;
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
 {
 private:
-	/** atidtude du personnage*/
-	enum PersonnageStat
-	{
-		IDLE1, IDLE2, IDLE3, WALK, KICK, SIDEKICK, DEATH2
-	};
+    /** atidtudes du personnage*/
+    enum PersonnageStats
+    {
+        pIDLE1, pIDLE2, pIDLE3, pWALK, pKICK, pSIDEKICK, pDEATH2
+    };
+
+    /** atidtudes du robot*/
+    enum RobotStats
+    {
+        rIDLE, rWALK, rSHOOT, rSLUMP
+    };
 
 	/** La scène contenant les objets à manipuler */
 	Scene *mScene;
@@ -57,7 +63,9 @@ private:
 	/** Permet de gérer les inputs du clavier */
 	Keyboard* mKeyboard;
 	// Déplacement
-	PersonnageStat mPersonnageStat;
+    PersonnageStats mPersonnageStat;
+    RobotStats mRobotStat;
+
 	/** Tant que vrai, le programe s'exécute */
 	bool mContinuer;
 	/** Vrai si espace est enfoncé (mode noclip / ghost = monter verticalement) */
@@ -144,8 +152,21 @@ protected:
 	virtual bool keyPressed (const KeyEvent &e);
 	virtual bool keyReleased (const KeyEvent &e);
 
-	// gestion du ninja
+    /**
+     * @brief deplacementNinja
+     * @param evt
+     * @param deplacement
+     * @brief gestion du ninja
+     */
 	void deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0, 0, 0));
+
+    /**
+     * @brief deplacementNinja
+     * @param evt
+     * @param deplacement
+     * @brief gestion du robot
+     */
+    void deplacementRobot (const FrameEvent& evt);
 };
 
 #endif // INPUTLISTENER_H

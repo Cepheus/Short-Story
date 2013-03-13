@@ -47,7 +47,7 @@ bool OgreRay::RaycastFromPoint (const Ogre::Vector3& point, const Ogre::Vector3&
 	{
 		// stop checking if we have found a raycast hit that is closer
 		// than all remaining entities
-		if (closest_distance >= 0.0f)// && closest_distance < query_result[qr_idx].distance)
+		if (closest_distance >= 0.0f && closest_distance < query_result[qr_idx].distance)
 			break;
 
 		// only check this result if its a hit against an entity

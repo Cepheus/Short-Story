@@ -40,7 +40,6 @@ void InputListener::startOIS ()
 void InputListener::checkCollisions ()
 {
 	const int size = 8, moveOffset = 40, detectOffset = 2;
-	;
 	// Rayon perso pour tester les collisions
 	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
 	ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
@@ -194,7 +193,6 @@ void InputListener::checkCollisions ()
 						mMouvement.z = 0;
 						if (dist < DIST_HORIZONTAL - detectOffset)
 							toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
-						printf("essai\n");
 					}
 					break;
 				default:

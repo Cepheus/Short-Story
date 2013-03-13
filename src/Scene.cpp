@@ -13,6 +13,7 @@ Scene::~Scene ()
 {
 	OGRE_DELETE mTerrain;
 	OGRE_DELETE mGlobals;
+    while(!mPathRobot.empty()) delete mPathRobot.back(), mPathRobot.pop_back();
 }
 
 void Scene::createScene ()
@@ -552,7 +553,7 @@ void Scene::initTrajetRobot(){
     //trajectoire
     bezierCurve3P(depart,controle,point1, 0.003, &mPathRobot);
     for(int i = 0; i < mPathRobot.size(); ++i)
-        Path->position(mPathRobot.at(i));
+        Path->position(*mPathRobot.at(i));
 
     Path->end();
     Ogre::SceneNode *PathNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Path");
@@ -574,11 +575,11 @@ bool Scene::deplacementRobotArbre2Porte(){
 
     if(pointPassageRobot == 0 ){
         pointPassageRobot = 1;
-        robotNode->setPosition(mPathRobot[pointPassageRobot]); //TODO : c'est moche, a supprimer
+        robotNode->setPosition(*mPathRobot[pointPassageRobot]); //TODO : c'est moche, a supprimer
         position = robotNode->getPosition();
     }
 
-    robotNode->setPosition(mPathRobot[pointPassageRobot]);
+    robotNode->setPosition(*mPathRobot[pointPassageRobot]);
     pointPassageRobot++;
 
 
@@ -644,8 +645,9 @@ SceneNode* Scene::getCharacterNode ()
 //outils
 
 
-void Scene::bezierCurve3P(Ogre::Vector3 &depart, Ogre::Vector3 &controle, Ogre::Vector3 &arrive, float precision, std::vector<Ogre::Vector3> * out){
+void Scene::bezierCurve3P(Ogre::Vector3 &depart, Ogre::Vector3 &controle, Ogre::Vector3 &arrive, float precision, std::vector<Ogre::Vector3 *> * out){
     float xa, za, xb, zb, x, z;
+    out->push_back(&depart);
     for( float i = 0 ; i < 1 ; i += precision )
     {
         // The Green Line
@@ -657,8 +659,9 @@ void Scene::bezierCurve3P(Ogre::Vector3 &depart, Ogre::Vector3 &controle, Ogre::
         // The Black Dot
         x = getPt( xa , xb , i );
         z = getPt( za , zb , i );
-        out->push_back(Vector3(x,0,z));
+        out->push_back(new Vector3(x,0,z));
     }
+    //out->push_back(&arrive);
 }
 
 int Scene::getPt( int n1 , int n2 , float perc )

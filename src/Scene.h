@@ -47,7 +47,7 @@ private:
     /**
      * @brief mPathRobot, trajet du robot
      */
-    std::vector<Ogre::Vector3> mPathRobot;
+    std::vector<Ogre::Vector3 *> mPathRobot;
 
     /**
      * @brief pointPassageRobot, avancement du robot sur la trajectoire
@@ -116,9 +116,21 @@ public:
     bool deplacementRobotArbre2Porte();
 
     /**
-     * @brief initTrajetRobot
+     * @brief initTrajetRobot, initialise la trajectoire du robot
      */
     void initTrajetRobot();
+
+    /**
+     * @brief pour effacer les pointeurs
+     */
+    template< typename T >
+    struct delete_pointer_element
+    {
+        void operator()( T element ) const
+        {
+            delete element;
+        }
+    };
 
 	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode ();
@@ -188,7 +200,7 @@ private:
 
 
     /** outil bezier */
-    static void bezierCurve3P(Vector3 &depart, Vector3 &controle, Vector3 &arrive, float precision, std::vector<Vector3> *out);
+    static void bezierCurve3P(Vector3 &depart, Vector3 &controle, Vector3 &arrive, float precision, std::vector<Vector3 *> *out);
     static int getPt( int n1 , int n2 , float perc );
 };
 

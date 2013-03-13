@@ -14,6 +14,8 @@ InputListener::~InputListener ()
 {
 	WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
+    mStatInBuilding = false;
+    mIsInBuilding = false;
 }
 
 void InputListener::startOIS ()
@@ -238,16 +240,18 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 			        SceneNode::TS_LOCAL);
 	}
 
-    if(mIsInBuilding){
-        mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(false);
-        mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(true);
-        mSceneMgr->getSceneNode("rainDevantNode")->setVisible(true);
-    }
-    else
-    {
-        mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(true);
-        mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(false);
-        mSceneMgr->getSceneNode("rainDevantNode")->setVisible(false);
+    if(mIsInBuilding != mStatInBuilding){
+        if(mIsInBuilding){
+            mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(false);
+            mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(true);
+            mSceneMgr->getSceneNode("rainDevantNode")->setVisible(true);
+        }
+        else
+        {
+            mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(true);
+            mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(false);
+            mSceneMgr->getSceneNode("rainDevantNode")->setVisible(false);
+        }
     }
 	return mContinuer;
 }

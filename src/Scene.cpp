@@ -346,7 +346,7 @@ void Scene::setRain ()
     //gauche
     ParticleSystem * rainParticleGauche = mShortStory->getSceneManager()->createParticleSystem("rainGauche", "Rain");
     SceneNode * rainGaucheNode = rainGeneralNode->createChildSceneNode("rainGaucheNode",
-            Ogre::Vector3(100, 3200, -100));
+            Ogre::Vector3(70, 3200, -100));
     rainGaucheNode->attachObject(rainParticleGauche);
     rainParticleGauche->setVisible(false); //masqué par defaut
 

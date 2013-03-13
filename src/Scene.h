@@ -185,6 +185,11 @@ private:
 	void setMeshes (bool withLod);
 	/** Met en place la caméra */
 	void setCamera ();
+
+
+    /** outil bezier */
+    static void bezierCurve3P(Vector3 &depart, Vector3 &controle, Vector3 &arrive, float precision, std::vector<Vector3> *out);
+    static int getPt( int n1 , int n2 , float perc );
 };
 
 #endif // SCENE_H

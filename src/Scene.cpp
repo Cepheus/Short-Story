@@ -540,6 +540,8 @@ void Scene::initTrajetRobot(){
     Ogre::Vector3 depart = treeNode->getPosition() + offset; //offset pour que le robot ne soit pas dans l'arbre au depart
     depart[1] = 0; //y a 0
 
+    //point controle
+    Ogre::Vector3 controle = (depart + Ogre::Vector3(600,0,500));
     //porte d'entrée
     Node * immeubleNode = mShortStory->getSceneManager()->getSceneNode("ImmeubleNode");
     Ogre::Vector3 point1 = immeubleNode->getPosition() + offset;
@@ -548,13 +550,9 @@ void Scene::initTrajetRobot(){
     Path->begin("BumpyMetal", Ogre::RenderOperation::OT_LINE_LIST);
 
     //trajectoire
-    mPathRobot.push_back(depart);
-    mPathRobot.push_back(depart + Ogre::Vector3(300,0,500));
-    mPathRobot.push_back(point1 + Ogre::Vector3(-500,0,500));
-    mPathRobot.push_back(point1);
-
-    for(int i = 0; i < 20; ++i)
-        //Path->position(line.getPoint(i));
+    bezierCurve3P(depart,controle,point1, 0.003, &mPathRobot);
+    for(int i = 0; i < mPathRobot.size(); ++i)
+        Path->position(mPathRobot.at(i));
 
     Path->end();
     Ogre::SceneNode *PathNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Path");
@@ -570,7 +568,9 @@ bool Scene::deplacementRobotArbre2Porte(){
     Ogre::Vector3 position = robotNode->getPosition();
     position[1] = 0;
 
-    int step = 500;
+    if( pointPassageRobot >= mPathRobot.size()){
+        return false;
+    }
 
     if(pointPassageRobot == 0 ){
         pointPassageRobot = 1;
@@ -578,15 +578,10 @@ bool Scene::deplacementRobotArbre2Porte(){
         position = robotNode->getPosition();
     }
 
-    if(position.squaredDistance(mPathRobot[pointPassageRobot]) <= 5000)
-        pointPassageRobot++;
+    robotNode->setPosition(mPathRobot[pointPassageRobot]);
+    pointPassageRobot++;
 
-    if( pointPassageRobot != mPathRobot.size()){
-        Ogre::Vector3 tada(position + (mPathRobot[pointPassageRobot] - mPathRobot[pointPassageRobot-1])/((Ogre::Vector3)((mPathRobot[pointPassageRobot] - mPathRobot[pointPassageRobot-1])).length()*step));
-        robotNode->setPosition(position + (mPathRobot[pointPassageRobot] - mPathRobot[pointPassageRobot-1])/((Ogre::Vector3)((mPathRobot[pointPassageRobot] - mPathRobot[pointPassageRobot-1])).length()*step));
-        printf("x %d,y %d, z %d\n",tada[0], tada[1], tada[2] );
-        return false;
-    }
+
     return true;
 }
 
@@ -644,4 +639,31 @@ SceneNode* Scene::getCameraNode ()
 SceneNode* Scene::getCharacterNode ()
 {
 	return nCharacter;
+}
+
+//outils
+
+
+void Scene::bezierCurve3P(Ogre::Vector3 &depart, Ogre::Vector3 &controle, Ogre::Vector3 &arrive, float precision, std::vector<Ogre::Vector3> * out){
+    float xa, za, xb, zb, x, z;
+    for( float i = 0 ; i < 1 ; i += precision )
+    {
+        // The Green Line
+        xa = getPt( depart[0] , controle[0] , i );
+        za = getPt( depart[2] , controle[2] , i );
+        xb = getPt( controle[0] , arrive[0] , i );
+        zb = getPt( controle[2] , arrive[2] , i );
+
+        // The Black Dot
+        x = getPt( xa , xb , i );
+        z = getPt( za , zb , i );
+        out->push_back(Vector3(x,0,z));
+    }
+}
+
+int Scene::getPt( int n1 , int n2 , float perc )
+{
+    int diff = n2 - n1;
+
+    return n1 + ( diff * perc );
 }

@@ -485,7 +485,7 @@ void InputListener::deplacementRobot(const FrameEvent& evt)
     Node * personneNode = mSceneMgr->getSceneNode("PersonnageCameraNode");
 
     //selection de l'etat
-    if(!mScene->deplacementRobotArbre2Porte())
+    if(mScene->deplacementRobotArbre2Porte())
     {
         mRobotStat = rWALK;
     }

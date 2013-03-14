@@ -14,6 +14,8 @@ InputListener::~InputListener ()
 {
 	WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
+    mStatInBuilding = false;
+    mIsInBuilding = false;
 }
 
 void InputListener::startOIS ()
@@ -90,7 +92,8 @@ void InputListener::checkCollisions ()
 		{
 			toMove->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
 		}
-		mScene->setInBuilding(ray.isTouched());
+        mIsInBuilding = ray.isTouched();
+        mScene->setInBuilding(mIsInBuilding);
 	}
 
 	// détection horizontale
@@ -235,6 +238,19 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 			        SceneNode::TS_LOCAL);
 	}
 
+    if(mIsInBuilding != mStatInBuilding){
+        if(mIsInBuilding){
+            mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(false);
+            mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(true);
+            mSceneMgr->getSceneNode("rainDevantNode")->setVisible(true);
+        }
+        else
+        {
+            mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(true);
+            mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(false);
+            mSceneMgr->getSceneNode("rainDevantNode")->setVisible(false);
+        }
+    }
 	return mContinuer;
 }
 

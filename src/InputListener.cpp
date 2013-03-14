@@ -14,8 +14,8 @@ InputListener::~InputListener ()
 {
 	WindowEventUtilities::removeWindowEventListener(mWindow, this);
 	windowClosed(mWindow);
-    mStatInBuilding = false;
-    mIsInBuilding = false;
+	mStatInBuilding = false;
+	mIsInBuilding = false;
 }
 
 void InputListener::startOIS ()
@@ -39,50 +39,18 @@ void InputListener::startOIS ()
 	mKeyboard->setEventCallback(this);
 }
 
-void InputListener::checkCollisions ()
+void InputListener::checkCollisions (SceneNode *toMove, bool detectLesMurs)
 {
 	const int size = 8, moveOffset = 40, detectOffset = 2;
 	// Rayon perso pour tester les collisions
 	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
 	ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
-	// le nœud à bouger
-	SceneNode *toMove = mScene->getCharacCamera();
 	// résultat où est stocké la collision
 	Ogre::Vector3 result;
 	// place actuelle du perso
 	Ogre::Vector3 nperso = toMove->getPosition();
 	// direction du rayon vertical
 	Ogre::Vector3 vertical(0, -1, 0);
-	// direction des vecteurs horizontaux (4 dans x, -x, z, -z)
-	Quaternion quaternions[size];
-	// tmp vector pour les côtés
-	Ogre::Vector3 tmp;
-
-	// initialisation des horizontaux
-	for (int i = 0; i < size; i++)
-		quaternions[i] = Quaternion::IDENTITY;
-	// x
-	quaternions[0].x = 1;
-	// -x
-	quaternions[1].x = -1;
-	// z
-	quaternions[2].z = 1;
-	// -z
-	quaternions[3].z = -1;
-	// x, z
-	quaternions[4].x = 1;
-	quaternions[4].z = 1;
-	// -x, z
-	quaternions[5].x = -1;
-	quaternions[5].z = 1;
-	// x, -z
-	quaternions[6].x = 1;
-	quaternions[6].z = -1;
-	// -x, -z
-	quaternions[7].x = -1;
-	quaternions[7].z = -1;
-	for (int i = 0; i < size; i++)
-		quaternions[i] = toMove->convertLocalToWorldOrientation(quaternions[i]);
 
 	// détection verticale
 	if (ray.RaycastFromPoint(nperso, vertical, result))
@@ -92,114 +60,148 @@ void InputListener::checkCollisions ()
 		{
 			toMove->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
 		}
-        mIsInBuilding = ray.isTouched();
-        mScene->setInBuilding(mIsInBuilding);
+		mIsInBuilding = ray.isTouched();
+		mScene->setInBuilding(mIsInBuilding);
 	}
 
-	// détection horizontale
-	for (int i = 0; i < size; i++)
+	if (detectLesMurs)
 	{
-		tmp.x = quaternions[i].x;
-		tmp.y = quaternions[i].y;
-		tmp.z = quaternions[i].z;
+		// direction des vecteurs horizontaux (4 dans x, -x, z, -z)
+		Quaternion quaternions[size];
+		// tmp vector pour les côtés
+		Ogre::Vector3 tmp;
 
-		if (ray.RaycastFromPoint(nperso, tmp, result))
+		// initialisation des horizontaux
+		for (int i = 0; i < size; i++)
+			quaternions[i] = Quaternion::IDENTITY;
+		// x
+		quaternions[0].x = 1;
+		// -x
+		quaternions[1].x = -1;
+		// z
+		quaternions[2].z = 1;
+		// -z
+		quaternions[3].z = -1;
+		// x, z
+		quaternions[4].x = 1;
+		quaternions[4].z = 1;
+		// -x, z
+		quaternions[5].x = -1;
+		quaternions[5].z = 1;
+		// x, -z
+		quaternions[6].x = 1;
+		quaternions[6].z = -1;
+		// -x, -z
+		quaternions[7].x = -1;
+		quaternions[7].z = -1;
+		for (int i = 0; i < size; i++)
+			quaternions[i] = toMove->convertLocalToWorldOrientation(quaternions[i]);
+
+		// détection horizontale
+		for (int i = 0; i < size; i++)
 		{
-			Real dist = result.distance(nperso);
-			if (dist < DIST_HORIZONTAL)
+			tmp.x = quaternions[i].x;
+			tmp.y = quaternions[i].y;
+			tmp.z = quaternions[i].z;
+
+			if (ray.RaycastFromPoint(nperso, tmp, result))
 			{
-				switch (i)
+				Real dist = result.distance(nperso);
+				if (dist < DIST_HORIZONTAL)
 				{
-				case 0:
-					if (mMouvement.x == 1)
+					switch (i)
 					{
-						mMouvement.x = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
+					case 0:
+						if (mMouvement.x == 1)
+						{
+							mMouvement.x = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
+						}
+						break;
+					case 1:
+						if (mMouvement.x == -1)
+						{
+							mMouvement.x = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
+						}
+						break;
+					case 2:
+						if (mMouvement.z == 1)
+						{
+							mMouvement.z = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
+						}
+						break;
+					case 3:
+						if (mMouvement.z == -1)
+						{
+							mMouvement.z = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
+						}
+						break;
+					case 4:
+						if (mMouvement.x == 1)
+						{
+							mMouvement.x = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
+						}
+						if (mMouvement.z == 1)
+						{
+							mMouvement.z = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
+						}
+						break;
+					case 5:
+						if (mMouvement.x == -1)
+						{
+							mMouvement.x = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
+						}
+						if (mMouvement.z == 1)
+						{
+							mMouvement.z = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
+						}
+						break;
+					case 6:
+						if (mMouvement.x == 1)
+						{
+							mMouvement.x = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
+						}
+						if (mMouvement.z == -1)
+						{
+							mMouvement.z = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
+						}
+						break;
+					case 7:
+						if (mMouvement.x == -1)
+						{
+							mMouvement.x = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
+						}
+						if (mMouvement.z == -1)
+						{
+							mMouvement.z = 0;
+							if (dist < DIST_HORIZONTAL - detectOffset)
+								toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
+						}
+						break;
+					default:
+						break;
 					}
-					break;
-				case 1:
-					if (mMouvement.x == -1)
-					{
-						mMouvement.x = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
-					}
-					break;
-				case 2:
-					if (mMouvement.z == 1)
-					{
-						mMouvement.z = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
-					}
-					break;
-				case 3:
-					if (mMouvement.z == -1)
-					{
-						mMouvement.z = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
-					}
-					break;
-				case 4:
-					if (mMouvement.x == 1)
-					{
-						mMouvement.x = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
-					}
-					if (mMouvement.z == 1)
-					{
-						mMouvement.z = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
-					}
-					break;
-				case 5:
-					if (mMouvement.x == -1)
-					{
-						mMouvement.x = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
-					}
-					if (mMouvement.z == 1)
-					{
-						mMouvement.z = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
-					}
-					break;
-				case 6:
-					if (mMouvement.x == 1)
-					{
-						mMouvement.x = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
-					}
-					if (mMouvement.z == -1)
-					{
-						mMouvement.z = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
-					}
-					break;
-				case 7:
-					if (mMouvement.x == -1)
-					{
-						mMouvement.x = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
-					}
-					if (mMouvement.z == -1)
-					{
-						mMouvement.z = 0;
-						if (dist < DIST_HORIZONTAL - detectOffset)
-							toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
-					}
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -218,13 +220,13 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mCollisionVect.y = 1;
 	mCollisionVect.z = 1;
 	if (detectionCollision)
-		checkCollisions();
+		checkCollisions(mScene->getCharacCamera(), true);
 
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 	deplacement = mMouvement * mCollisionVect * mVitesse * evt.timeSinceLastFrame;
 
 	deplacementNinja(evt, deplacement);
-    deplacementRobot(evt);
+	deplacementRobot(evt);
 
 	mScene->getCharacterCameraNode()->translate(deplacement, SceneNode::TS_LOCAL);
 
@@ -238,19 +240,21 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 			        SceneNode::TS_LOCAL);
 	}
 
-    if(mIsInBuilding != mStatInBuilding){
-        if(mIsInBuilding){
-            mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(false);
-            mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(true);
-            mSceneMgr->getSceneNode("rainDevantNode")->setVisible(true);
-        }
-        else
-        {
-            mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(true);
-            mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(false);
-            mSceneMgr->getSceneNode("rainDevantNode")->setVisible(false);
-        }
-    }
+	if (mIsInBuilding != mStatInBuilding)
+	{
+		if (mIsInBuilding)
+		{
+			mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(false);
+			mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(true);
+			mSceneMgr->getSceneNode("rainDevantNode")->setVisible(true);
+		}
+		else
+		{
+			mSceneMgr->getSceneNode("CharacterRainNode")->setVisible(true);
+			mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(false);
+			mSceneMgr->getSceneNode("rainDevantNode")->setVisible(false);
+		}
+	}
 	return mContinuer;
 }
 
@@ -447,84 +451,84 @@ bool InputListener::keyReleased (const KeyEvent &e)
 
 void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement)
 {
-    //selection de l'etat
-    if (deplacement != Ogre::Vector3(0, 0, 0))
-    {
-        mPersonnageStat =pWALK;
-    }
-    else
-    {
-        if ((mPersonnageStat != pIDLE1) && (mPersonnageStat != pIDLE2) && (mPersonnageStat != pIDLE3))
-        {
-            mPersonnageStat = pIDLE3;
-        }
-    }
+	//selection de l'etat
+	if (deplacement != Ogre::Vector3(0, 0, 0))
+	{
+		mPersonnageStat = pWALK;
+	}
+	else
+	{
+		if ((mPersonnageStat != pIDLE1) && (mPersonnageStat != pIDLE2) && (mPersonnageStat != pIDLE3))
+		{
+			mPersonnageStat = pIDLE3;
+		}
+	}
 
-    //application du mouvement
-    switch (mPersonnageStat)
-    {
-    case pWALK:
-        mScene->walkPersonnage(evt);
-        break;
-    case pIDLE1:
-        mScene->idle1Personnage(evt);
-        break;
-    case pIDLE2:
-        mScene->idle2Personnage(evt);
-        break;
-    case pIDLE3:
-        mScene->idle3Personnage(evt);
-        break;
-    case pKICK:
-        mScene->kickPersonnage(evt);
-        break;
-    case pSIDEKICK:
-        mScene->sideKickPersonnage(evt);
-        break;
-    case pDEATH2:
-        mScene->death2Personnage(evt);
-        break;
-    default:
-        mPersonnageStat = pIDLE3;
-        break;
-    }
+	//application du mouvement
+	switch (mPersonnageStat)
+	{
+	case pWALK:
+		mScene->walkPersonnage(evt);
+		break;
+	case pIDLE1:
+		mScene->idle1Personnage(evt);
+		break;
+	case pIDLE2:
+		mScene->idle2Personnage(evt);
+		break;
+	case pIDLE3:
+		mScene->idle3Personnage(evt);
+		break;
+	case pKICK:
+		mScene->kickPersonnage(evt);
+		break;
+	case pSIDEKICK:
+		mScene->sideKickPersonnage(evt);
+		break;
+	case pDEATH2:
+		mScene->death2Personnage(evt);
+		break;
+	default:
+		mPersonnageStat = pIDLE3;
+		break;
+	}
 }
 
-void InputListener::deplacementRobot(const FrameEvent& evt)
+void InputListener::deplacementRobot (const FrameEvent& evt)
 {
-    Entity * robot = mSceneMgr->getEntity("Robot");
-    Node * robotNode = robot->getParentNode(); //SceneNode * robotNode = mSceneMgr->getSceneNode("RobotNode");
+	Entity * robot = mSceneMgr->getEntity("Robot");
+	Node * robotNode = robot->getParentNode(); //SceneNode * robotNode = mSceneMgr->getSceneNode("RobotNode");
 
-    //Entity * personnage = mSceneMgr->getEntity("Personnage");
-    Node * personneNode = mSceneMgr->getSceneNode("PersonnageCameraNode");
+	//Entity * personnage = mSceneMgr->getEntity("Personnage");
+	Node * personneNode = mSceneMgr->getSceneNode("PersonnageCameraNode");
 
-    //selection de l'etat
-    if(mScene->deplacementRobotArbre2Porte())
-    {
-        mRobotStat = rWALK;
-    }
-    else
-    {
-        mRobotStat = rIDLE;
-    }
+	//selection de l'etat
+	if (mScene->deplacementRobotArbre2Porte())
+	{
+		mRobotStat = rWALK;
+	}
+	else
+	{
+		mRobotStat = rIDLE;
+	}
 
-    //application du mouvement
-    switch (mRobotStat)
-    {
-    case rWALK:
-        mScene->walkRobot(evt);
-        break;
-    case rIDLE:
-        mScene->idleRobot(evt);
-        break;
-    case rSLUMP:
-        mScene->slumpRobot(evt);
-        break;
-    case rSHOOT:
-        mScene->shootRobot(evt);
-        break;
-    default:
-        mRobotStat = rIDLE;
-        break;
-    }
+	//application du mouvement
+	switch (mRobotStat)
+	{
+	case rWALK:
+		mScene->walkRobot(evt);
+		break;
+	case rIDLE:
+		mScene->idleRobot(evt);
+		break;
+	case rSLUMP:
+		mScene->slumpRobot(evt);
+		break;
+	case rSHOOT:
+		mScene->shootRobot(evt);
+		break;
+	default:
+		mRobotStat = rIDLE;
+		break;
+	}
 }

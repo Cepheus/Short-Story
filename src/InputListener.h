@@ -133,11 +133,16 @@ public:
 		mVitesseRotation = vitesse;
 	}
 
+	/**
+	 * Vérifie la hauteur de l'objet
+	 * @param toMove le nœud contenant les objets à bouger selon la hauteur
+	 * @param detectLesMurs si vrai, détecte aussi les collisions avec les murs
+	 */
+	void checkCollisions (SceneNode *toMove, bool detectLesMurs);
+
 protected:
 	/** Initialise la gestion des inputs */
 	void startOIS ();
-	/** Vérifie la hauteur du bonhomme et la collision avec les murs */
-	void checkCollisions ();
 // ci-dessous, l'implémentation des méthodes purement virtuelles permettant de gérer les inputs
 	// FrameListener
 	bool frameRenderingQueued (const FrameEvent& evt);

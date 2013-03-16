@@ -1,5 +1,6 @@
 #include "InputListener.h"
 #include "OgreRay.h"
+#include "Picking.h"
 #include <sstream>
 
 InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
@@ -338,7 +339,8 @@ bool InputListener::mouseReleased (const MouseEvent &arg, MouseButtonID id)
 
 bool InputListener::keyPressed (const KeyEvent &e)
 {
-	Ogre::Vector3 posCamera, posVoiture;
+	Ogre::Vector3 posCamera, posVoiture,posCharacter;
+	Picking pick(mSceneMgr,mScene->getCharacterCameraNode(),mSceneMgr->getSceneNode("Voiture"),100.f);
 	switch (e.key)
 	{
 	case OIS::KC_ESCAPE:
@@ -396,6 +398,13 @@ bool InputListener::keyPressed (const KeyEvent &e)
 		mSceneMgr->getSceneNode("Voiture");
 		std::cout << "Distance Voiture - Camera : " << posCamera.distance(posVoiture) << std::endl;
 		break;
+    case OIS::KC_K:
+        posCharacter = mScene->getCharacterCameraNode()->getPosition();
+        std::cout << "Character: " << posCharacter.x<<" "<<posCharacter.y<<" "<<posCharacter.z<<std::endl;
+        break;
+	case OIS::KC_L:
+        pick.isPicked();
+        break;
 	default:
 		break;
 	}

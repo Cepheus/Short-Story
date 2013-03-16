@@ -26,7 +26,7 @@ void Scene::createScene ()
 	setPersonnage();
     setRobot();
 	setCamera();
-	setMeshes(true);
+	setMeshes(false);
     initTrajetRobot();// a la fin, toujours
 }
 

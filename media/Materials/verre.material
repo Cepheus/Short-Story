@@ -18,7 +18,7 @@ material verre
             cull_hardware clockwise
             depth_check on
             depth_func less_equal
-            depth_write on
+            depth_write off
             illumination_stage 
             light_clip_planes off
             light_scissor off
@@ -26,7 +26,6 @@ material verre
             normalise_normals off
             polygon_mode solid
             scene_blend alpha_blend 
-            scene_blend_op add
             shading gouraud
             transparent_sorting on
 

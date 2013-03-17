@@ -26,14 +26,17 @@ public:
     Entity* mPersonnage;
 
     Ogre::AnimationState *mRobotTree2DoorAnimationState;
-    int mRobotCurantTrack;
+    Ogre::AnimationState *mRobotJump24thState;
+    bool mRobotActiveBoust;
 
     //animations du robot
     void setRobotTrack(int track);
     bool displayRobot(RobotStats track, const FrameEvent &evt);
+    void robotAnimation_Jump24thParticules();
 
     void setRobotAnimations();
     void robotAnimation_Tree2Door();
+    void robotAnimation_Jump24th();
     void walkRobot(const FrameEvent &evt);
     void idleRobot (const FrameEvent &evt);
     void shootRobot (const FrameEvent &evt);

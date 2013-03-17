@@ -255,6 +255,8 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 			mSceneMgr->getSceneNode("rainGaucheNode")->setVisible(false);
 			mSceneMgr->getSceneNode("rainDevantNode")->setVisible(false);
 		}
+
+        mStatInBuilding = mIsInBuilding;
 	}
 	return mContinuer;
 }
@@ -508,6 +510,8 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 
 void InputListener::deplacementRobot (const FrameEvent& evt)
 {
-    mAnimations->displayRobot(Animations::TRACK0,evt);
+    if(!mAnimations->displayRobot(Animations::TRACK0,evt)){
+        mAnimations->displayRobot(Animations::TRACK1,evt);
+    }
 
 }

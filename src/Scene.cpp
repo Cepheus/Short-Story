@@ -399,7 +399,7 @@ void Scene::setPersonnage ()
 void Scene::setRobot(){
     Entity* robot = mShortStory->getSceneManager()->createEntity("Robot", "robot.mesh");
 
-    SceneNode* robotNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("robotNode");
+    SceneNode* robotNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("RobotNode");
     robotNode->setPosition(-100, 0, 500);
     robotNode->attachObject(robot);
     robotNode->scale(1, 1, 1);

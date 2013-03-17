@@ -6,15 +6,12 @@
 class Picking
 {
 public:
-    Picking(Ogre::SceneManager* sceneMgr,Ogre::SceneNode *_node1,Ogre::SceneNode *_node2,float _distance);
+    Picking(Ogre::SceneManager* sceneMgr);
     ~Picking();
 
-    bool isPicked();
+    bool isPicked(Ogre::SceneNode *node1,Ogre::SceneNode *node2,float distance);
 
 private:
-    Ogre::SceneNode *node1;
-    Ogre::SceneNode *node2;
-    float           distance;
     Ogre::RaySceneQuery* mRayScnQuery; //!< Ray query
 };
 

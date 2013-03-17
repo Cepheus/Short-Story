@@ -3,24 +3,25 @@
 
 #include <Ogre.h>
 #include "ShortStory.h"
+#include "Picking.h"
 #include <Terrain/OgreTerrain.h>
 
-/** La distance entre la tête du bonhomme et le sol */
+/** La distance entre la tÃªte du bonhomme et le sol */
 #define HAUTEUR_PERS 110
-/** distance de la caméra au perso en X */
+/** distance de la camÃ©ra au perso en X */
 #define FAR_PERS_X 25
-/** distance de la caméra au perso en Y */
+/** distance de la camÃ©ra au perso en Y */
 #define FAR_PERS_Y 15
 
 using namespace Ogre;
 
 /**
- * Contient la scène, avec tous les objets importés et les mesh créés.
+ * Contient la scÃ¨ne, avec tous les objets importÃ©s et les mesh crÃ©Ã©s.
  */
 class Scene
 {
 private:
-	/** Le scene manager, qui crée les objets */
+	/** Le scene manager, qui crÃ©e les objets */
 	ShortStory* mShortStory;
 	/** Le terrain */
 	SceneNode* nTerrain;
@@ -32,44 +33,50 @@ private:
 	SceneNode* nCamera;
 	/** Le noeud de l'immeuble */
 	SceneNode* nImmeuble;
-	/** Distance personnage/caméra */
+	/** Distance personnage/camÃ©ra */
 	Real dDistanceCharacCamera;
 
 	/** Le terrain heightmap */
 	Terrain *mTerrain;
-    /** La lumiere dy terrain, initialisé dans lumiere, utilisé dans terrain */
+    /** La lumiere dy terrain, initialisÃ© dans lumiere, utilisÃ© dans terrain */
 	Light *terrainLight;
-    /** Le truc pour gérer le terrain */
+    /** Le truc pour gÃ©rer le terrain */
 	TerrainGlobalOptions *mGlobals;
 	/** true si le perso est dans l'immeuble, faux sinon */
 	bool inBuilding;
+	/** false, window can be destroied, true, window is already destroied */
+	bool windowIsDestroy;
+
+public:
+    /** Picking system */
+	Picking picking;
 
 public:
 	/**
 	 * Constructeur
-	 * @param scenemgr le scène manager créé dans ShortStory
+	 * @param scenemgr le scÃ¨ne manager crÃ©Ã© dans ShortStory
 	 */
 	Scene (ShortStory *shortStory);
 
 	/** Destructeur */
 	virtual ~Scene ();
 
-	/** Créé la scène avec tous les meshs blablabla */
+	/** CrÃ©Ã© la scÃ¨ne avec tous les meshs blablabla */
 	void createScene ();
 
-	/** Récupère le noeud immeuble */
+	/** RÃ©cupÃ¨re le noeud immeuble */
 	SceneNode* getImmeubleNode ();
 
-	/** Récupère le noeud du terrain */
+	/** RÃ©cupÃ¨re le noeud du terrain */
 	SceneNode* getTerrainNode ();
 
-	/** Récupère le noeud de la caméra et du personnage */
+	/** RÃ©cupÃ¨re le noeud de la camÃ©ra et du personnage */
 	SceneNode* getCharacterCameraNode ();
 
-	/** Récupère le noeud de la caméra */
+	/** RÃ©cupÃ¨re le noeud de la camÃ©ra */
 	SceneNode* getCameraNode ();
 
-	/** Récupère le noeud du personnage */
+	/** RÃ©cupÃ¨re le noeud du personnage */
 	SceneNode* getCharacterNode ();
 
     /** Destruction de la fenetre */
@@ -96,7 +103,7 @@ public:
 
     inline void setFPS ()
 	{
-		// on se met devant le mesh pour éviter de le voir de l'intérieur, sinon faudrait le suppr
+		// on se met devant le mesh pour Ã©viter de le voir de l'intÃ©rieur, sinon faudrait le suppr
 		mShortStory->getCamera()->setPosition(-5, 12, -12);
 	}
 
@@ -116,7 +123,7 @@ public:
 	}
 
 private:
-	/** Met en place la lumière */
+	/** Met en place la lumiÃ¨re */
 	void setLight ();
 	/** Met en place le terrain */
 	void setTerrain ();
@@ -130,9 +137,9 @@ private:
 	void setPersonnage ();
     /** Met en place le robot */
     void setRobot();
-	/** Met en place les différents meshes */
+	/** Met en place les diffÃ©rents meshes */
 	void setMeshes (bool withLod);
-	/** Met en place la caméra */
+	/** Met en place la camÃ©ra */
 	void setCamera ();
 
 };

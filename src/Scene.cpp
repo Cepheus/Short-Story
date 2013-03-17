@@ -3,7 +3,8 @@
 
 Scene::Scene (ShortStory *shortStory) :
 		mShortStory(shortStory), nTerrain(0), nCharacCamera(0), nCharacter(0), nCamera(0), nImmeuble(0), dDistanceCharacCamera(
-		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false)
+		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false), windowIsDestroy(false),
+		         picking(mShortStory->getSceneManager())
 {
 	nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
 	nCharacCamera->setPosition(300., HAUTEUR_PERS, 500.);
@@ -140,7 +141,7 @@ void Scene::setTerrain ()
 
 	//initialisation
 	mGlobals = OGRE_NEW Ogre::TerrainGlobalOptions();
-	mGlobals->setMaxPixelError(8); //précision avec la quelle le terrain est rendu
+	mGlobals->setMaxPixelError(8); //prÃ©cision avec la quelle le terrain est rendu
 
 	//lumiere du terrain
 	Ogre::Vector3 lightdir(0.55f, -0.3f, 0.75f);
@@ -163,7 +164,7 @@ void Scene::setTerrain ()
 	Ogre::Image img;
 	img.load("heightmap.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-    //Les paramčtres géométriques
+    //Les paramÄtres gÃ©omÃ©triques
 	Ogre::Terrain::ImportData imp;
 	imp.inputImage = &img;
 	imp.terrainSize = img.getWidth();
@@ -175,8 +176,8 @@ void Scene::setTerrain ()
 	//textures
 	imp.layerList.resize(3);
 	imp.layerList[0].worldSize = 100; //tail de la texture dans le monde
-	imp.layerList[0].textureNames.push_back("grass_green-01_diffusespecular.dds"); //une texture diffuse, qui contient les couleurs, les motifs du matériau ;
-	imp.layerList[0].textureNames.push_back("grass_green-01_normalheight.dds"); //une texture normale, contenant des informations sur le relief du matériau.
+	imp.layerList[0].textureNames.push_back("grass_green-01_diffusespecular.dds"); //une texture diffuse, qui contient les couleurs, les motifs du matÃ©riau ;
+	imp.layerList[0].textureNames.push_back("grass_green-01_normalheight.dds"); //une texture normale, contenant des informations sur le relief du matÃ©riau.
 	imp.layerList[1].worldSize = 300;
 	imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_diffusespecular.dds");
 	imp.layerList[1].textureNames.push_back("growth_weirdfungus-03_normalheight.dds");
@@ -219,7 +220,7 @@ void Scene::setTerrain ()
 		}
 	}
 
-    blendMap1->dirty(); //préciser que les données de la TerrainLayerBlendMap sont obsolčtes
+    blendMap1->dirty(); //prÃ©ciser que les donnÃ©es de la TerrainLayerBlendMap sont obsolÄtes
 	blendMap1->update(); //mise a jour
 	blendMap2->dirty();
 	blendMap2->update();
@@ -346,7 +347,7 @@ void Scene::setRain ()
     SceneNode * rainGaucheNode = rainGeneralNode->createChildSceneNode("rainGaucheNode",
             Ogre::Vector3(50, 3200, -100));
     rainGaucheNode->attachObject(rainParticleGauche);
-    rainParticleGauche->setVisible(false); //masqué par defaut
+    rainParticleGauche->setVisible(false); //masquÃ© par defaut
 
     //devant
     ParticleSystem * rainParticleDevant = mShortStory->getSceneManager()->createParticleSystem("rainDevant", "Rain");
@@ -354,7 +355,7 @@ void Scene::setRain ()
             Ogre::Vector3(0, 3200, -50));
     rainDevantNode->rotate(Ogre::Vector3(0,1,0), Degree(90));
     rainDevantNode->attachObject(rainParticleDevant);
-    rainDevantNode->setVisible(false); //masqué par defaut
+    rainDevantNode->setVisible(false); //masquÃ© par defaut
 }
 
 void Scene::setImmeuble ()
@@ -473,13 +474,17 @@ SceneNode* Scene::getCharacterNode ()
 	return nCharacter;
 }
 
-void Scene::destroyWindow(){
-    Entity* window = mShortStory->getSceneManager()->getEntity("window");
-    window->setVisible(false);
+void Scene::destroyWindow()
+{
+    if(!windowIsDestroy)
+    {
+        windowIsDestroy=true;
+        Entity* window = mShortStory->getSceneManager()->getEntity("window");
+        window->setVisible(false);
 
-    ParticleSystem * windowPart = mShortStory->getSceneManager()->createParticleSystem("verresecurite", "verresecurite");
-    SceneNode * windowPartNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("verresecuriteNode",
-            Ogre::Vector3(0, 1000, -600));
-    windowPartNode->attachObject(windowPart);
-
+        ParticleSystem * windowPart = mShortStory->getSceneManager()->createParticleSystem("verresecurite", "verresecurite");
+        SceneNode * windowPartNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("verresecuriteNode",
+                Ogre::Vector3(0, 1000, -600));
+        windowPartNode->attachObject(windowPart);
+    }
 }

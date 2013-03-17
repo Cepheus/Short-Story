@@ -44,16 +44,6 @@ private:
 	/** true si le perso est dans l'immeuble, faux sinon */
 	bool inBuilding;
 
-    /**
-     * @brief mPathRobot, trajet du robot
-     */
-    std::vector<Ogre::Vector3 *> mPathRobot;
-
-    /**
-     * @brief pointPassageRobot, avancement du robot sur la trajectoire
-     */
-    size_t pointPassageRobot;
-
 public:
 	/**
 	 * Constructeur
@@ -76,55 +66,14 @@ public:
 	/** Récupère le noeud de la caméra et du personnage */
 	SceneNode* getCharacterCameraNode ();
 
-    /** animations du personnage */
-	void walkPersonnage (const FrameEvent& evt);
-	void idle1Personnage (const FrameEvent &evt);
-	void idle2Personnage (const FrameEvent &evt);
-	void idle3Personnage (const FrameEvent &evt);
-	void kickPersonnage (const FrameEvent &evt);
-	void sideKickPersonnage (const FrameEvent &evt);
-	void death2Personnage (const FrameEvent &evt);
-
-    /** animations du robot */
-    /**
-     * @brief walkRobot
-     * @param evt
-     */
-    void walkRobot (const FrameEvent &evt);
-    /**
-     * @brief idleRobot
-     * @param evt
-     */
-    void idleRobot (const FrameEvent &evt);
-    /**
-     * @brief shootRobot
-     * @param evt
-     */
-    void shootRobot (const FrameEvent &evt);
-    /**
-     * @brief slumpRobot
-     * @param evt
-     */
-    void slumpRobot (const FrameEvent &evt);
-
-    /**
-     * @brief deplacementRobotArbre2Porte
-     * @param evt
-     * @return true si l'action est finit
-     * @brief delace le robot de l'arbre à la port
-     */
-    bool deplacementRobotArbre2Porte();
-
-    /**
-     * @brief initTrajetRobot, initialise la trajectoire du robot
-     */
-    void initTrajetRobot();
-
 	/** Récupère le noeud de la caméra */
 	SceneNode* getCameraNode ();
 
 	/** Récupère le noeud du personnage */
 	SceneNode* getCharacterNode ();
+
+    /** Destruction de la fenetre */
+    void destroyWindow();
 
     inline SceneNode* getCharacCamera ()
 	{
@@ -186,10 +135,6 @@ private:
 	/** Met en place la caméra */
 	void setCamera ();
 
-
-    /** outil bezier */
-    static void bezierCurve3P(Vector3 &depart, Vector3 &controle, Vector3 &arrive, float precision, std::vector<Vector3 *> *out);
-    static int getPt( int n1 , int n2 , float perc );
 };
 
 #endif // SCENE_H

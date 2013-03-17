@@ -13,7 +13,6 @@ Scene::~Scene ()
 {
 	OGRE_DELETE mTerrain;
 	OGRE_DELETE mGlobals;
-    while(!mPathRobot.empty()) delete mPathRobot.back(), mPathRobot.pop_back();
 }
 
 void Scene::createScene ()
@@ -27,7 +26,6 @@ void Scene::createScene ()
     setRobot();
 	setCamera();
 	setMeshes(false);
-    initTrajetRobot();// a la fin, toujours
 }
 
 void Scene::setLight ()
@@ -346,14 +344,14 @@ void Scene::setRain ()
     //gauche
     ParticleSystem * rainParticleGauche = mShortStory->getSceneManager()->createParticleSystem("rainGauche", "Rain");
     SceneNode * rainGaucheNode = rainGeneralNode->createChildSceneNode("rainGaucheNode",
-            Ogre::Vector3(70, 3200, -100));
+            Ogre::Vector3(50, 3200, -100));
     rainGaucheNode->attachObject(rainParticleGauche);
     rainParticleGauche->setVisible(false); //masqué par defaut
 
     //devant
     ParticleSystem * rainParticleDevant = mShortStory->getSceneManager()->createParticleSystem("rainDevant", "Rain");
     SceneNode * rainDevantNode = rainGeneralNode->createChildSceneNode("rainDevantNode",
-            Ogre::Vector3(0, 3200, -90));
+            Ogre::Vector3(0, 3200, -50));
     rainDevantNode->rotate(Ogre::Vector3(0,1,0), Degree(90));
     rainDevantNode->attachObject(rainParticleDevant);
     rainDevantNode->setVisible(false); //masqué par defaut
@@ -367,6 +365,12 @@ void Scene::setImmeuble ()
 
 	nImmeuble->setPosition(0., 0., 0.);
 	nImmeuble->scale(120., 100., 100.);
+
+    Entity* window = mShortStory->getSceneManager()->createEntity("window", "VitreCassee.mesh");
+    SceneNode * windowNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
+    windowNode->attachObject(window);
+    windowNode->setPosition(0., 0., 0.);
+    windowNode->scale(120., 100., 100.);
 }
 
 void Scene::setPersonnage ()
@@ -392,100 +396,10 @@ void Scene::setPersonnage ()
 
 }
 
-void Scene::walkPersonnage (const FrameEvent &evt)
-{
-	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	AnimationState *mAnimState;
-	AnimationStateSet *set = personnage->getAllAnimationStates();
-	AnimationStateIterator it = set->getAnimationStateIterator();
-
-	//load animation
-	while (it.hasMoreElements())
-	{
-		mAnimState = it.getNext();
-		mAnimState->setEnabled(false);
-	}
-
-//    if(inBuilding){//infiltration dans le batiment
-//        personnage->getAnimationState("Stealth")->setEnabled(true);
-//        personnage->getAnimationState("Stealth")->addTime(evt.timeSinceLastFrame);
-//    }
-//    else
-//    {
-        personnage->getAnimationState("Walk")->setEnabled(true);
-        personnage->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
-//    }
-
-}
-
-void Scene::idle1Personnage (const FrameEvent &evt)
-{
-	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	personnage->getAnimationState("Idle1")->setEnabled(true);
-	personnage->getAnimationState("Idle1")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::idle2Personnage (const FrameEvent &evt)
-{
-	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	personnage->getAnimationState("Idle2")->setEnabled(true);
-	personnage->getAnimationState("Idle2")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::idle3Personnage (const FrameEvent &evt)
-{
-	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	personnage->getAnimationState("Idle3")->setEnabled(true);
-	personnage->getAnimationState("Idle3")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::kickPersonnage (const FrameEvent &evt)
-{
-	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	AnimationState *mAnimState;
-	AnimationStateSet *set = personnage->getAllAnimationStates();
-	AnimationStateIterator it = set->getAnimationStateIterator();
-
-	//load animation
-	while (it.hasMoreElements())
-	{
-		mAnimState = it.getNext();
-		mAnimState->setEnabled(false);
-	}
-
-	personnage->getAnimationState("Kick")->setEnabled(true);
-	personnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::sideKickPersonnage (const FrameEvent &evt)
-{
-	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	personnage->getAnimationState("SideKick")->setEnabled(true);
-	personnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::death2Personnage (const FrameEvent &evt)
-{
-	Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
-	if (!personnage->getAnimationState("Death2")->hasEnded())
-	{
-		personnage->getAnimationState("Death2")->setLoop(false);
-		personnage->getAnimationState("Death2")->setEnabled(true);
-		personnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
-	}
-}
-
 void Scene::setRobot(){
     Entity* robot = mShortStory->getSceneManager()->createEntity("Robot", "robot.mesh");
 
-    SceneNode* robotNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("RobotNode");
+    SceneNode* robotNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("robotNode");
     robotNode->setPosition(-100, 0, 500);
     robotNode->attachObject(robot);
     robotNode->scale(1, 1, 1);
@@ -501,92 +415,6 @@ void Scene::setRobot(){
         mAnimState = it.getNext();
         mAnimState->setEnabled(false);
     }
-}
-
-void Scene::walkRobot (const FrameEvent &evt)
-{
-    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
-
-    robot->getAnimationState("Walk")->setEnabled(true);
-    robot->getAnimationState("Walk")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::idleRobot (const FrameEvent &evt)
-{
-    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
-
-    robot->getAnimationState("Idle")->setEnabled(true);
-    robot->getAnimationState("Idle")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::shootRobot (const FrameEvent &evt)
-{
-    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
-
-    robot->getAnimationState("Shoot")->setEnabled(true);
-    robot->getAnimationState("Shoot")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::slumpRobot (const FrameEvent &evt)
-{
-    Entity* robot = mShortStory->getSceneManager()->getEntity("Robot");
-
-    robot->getAnimationState("Slump")->setEnabled(true);
-    robot->getAnimationState("Slump")->addTime(evt.timeSinceLastFrame);
-}
-
-void Scene::initTrajetRobot(){
-
-    Ogre::Vector3 offset(300,0,300);
-
-    //point de depart
-    Node * treeNode = mShortStory->getSceneManager()->getSceneNode("TreeNode");
-    Ogre::Vector3 depart = treeNode->getPosition() + offset; //offset pour que le robot ne soit pas dans l'arbre au depart
-    depart[1] = 0; //y a 0
-
-    //point controle
-    Ogre::Vector3 controle = (depart + Ogre::Vector3(600,0,500));
-    //porte d'entrée
-    Node * immeubleNode = mShortStory->getSceneManager()->getSceneNode("ImmeubleNode");
-    Ogre::Vector3 point1 = immeubleNode->getPosition() + offset;
-
-    Ogre::ManualObject *Path = mShortStory->getSceneManager()->createManualObject("Path"); //TODO : suprimer ce file a la fin
-    Path->begin("BumpyMetal", Ogre::RenderOperation::OT_LINE_LIST);
-
-    //trajectoire
-    bezierCurve3P(depart,controle,point1, 0.003, &mPathRobot);
-    for(int i = 0; i < mPathRobot.size(); ++i)
-        Path->position(*mPathRobot.at(i));
-
-    Path->end();
-    Ogre::SceneNode *PathNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Path");
-    PathNode->attachObject(Path);
-
-    //point de passage
-    pointPassageRobot = 0;
-}
-
-bool Scene::deplacementRobotArbre2Porte(){
-    Entity * robot = mShortStory->getSceneManager()->getEntity("Robot");
-    Node * robotNode = robot->getParentNode(); //SceneNode * robotNode = mSceneMgr->getSceneNode("RobotNode");
-    Ogre::Vector3 position = robotNode->getPosition();
-    position[1] = 0;
-
-    if( pointPassageRobot >= mPathRobot.size()){
-        return false;
-    }
-
-    if(pointPassageRobot == 0 ){
-        pointPassageRobot = 1;
-        robotNode->setPosition(*mPathRobot[pointPassageRobot]); //TODO : c'est moche, a supprimer
-        position = robotNode->getPosition();
-    }
-
-    robotNode->setPosition(*mPathRobot[pointPassageRobot]);
-    pointPassageRobot++;
-
-
-    return true;
 }
 
 void Scene::setCamera ()
@@ -645,31 +473,13 @@ SceneNode* Scene::getCharacterNode ()
 	return nCharacter;
 }
 
-//outils
+void Scene::destroyWindow(){
+    Entity* window = mShortStory->getSceneManager()->getEntity("window");
+    window->setVisible(false);
 
+    ParticleSystem * windowPart = mShortStory->getSceneManager()->createParticleSystem("verresecurite", "verresecurite");
+    SceneNode * windowPartNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("verresecuriteNode",
+            Ogre::Vector3(0, 1000, -600));
+    windowPartNode->attachObject(windowPart);
 
-void Scene::bezierCurve3P(Ogre::Vector3 &depart, Ogre::Vector3 &controle, Ogre::Vector3 &arrive, float precision, std::vector<Ogre::Vector3 *> * out){
-    float xa, za, xb, zb, x, z;
-    out->push_back(&depart);
-    for( float i = 0 ; i < 1 ; i += precision )
-    {
-        // The Green Line
-        xa = getPt( depart[0] , controle[0] , i );
-        za = getPt( depart[2] , controle[2] , i );
-        xb = getPt( controle[0] , arrive[0] , i );
-        zb = getPt( controle[2] , arrive[2] , i );
-
-        // The Black Dot
-        x = getPt( xa , xb , i );
-        z = getPt( za , zb , i );
-        out->push_back(new Vector3(x,0,z));
-    }
-    //out->push_back(&arrive);
-}
-
-int Scene::getPt( int n1 , int n2 , float perc )
-{
-    int diff = n2 - n1;
-
-    return n1 + ( diff * perc );
 }

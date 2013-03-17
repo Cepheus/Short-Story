@@ -5,6 +5,7 @@
 #include <OIS.h>
 
 #include "Scene.h"
+#include "Animations.h"
 
 /** La distance entre la tête du bonhomme et le sol */
 #define DIST_VERTICAL HAUTEUR_PERS
@@ -42,12 +43,6 @@ private:
         pIDLE1, pIDLE2, pIDLE3, pWALK, pKICK, pSIDEKICK, pDEATH2
     };
 
-    /** atidtudes du robot*/
-    enum RobotStats
-    {
-        rIDLE, rWALK, rSHOOT, rSLUMP
-    };
-
 	/** La scène contenant les objets à manipuler */
 	Scene *mScene;
 	/** Le scene manager, qui crée les objets */
@@ -62,9 +57,10 @@ private:
 	Mouse* mMouse;
 	/** Permet de gérer les inputs du clavier */
 	Keyboard* mKeyboard;
+    /** Gestion des annimations */
+    Animations * mAnimations;
 	// Déplacement
     PersonnageStats mPersonnageStat;
-    RobotStats mRobotStat;
     /** Le personnage est il dans l'immeuble ?*/
     bool mIsInBuilding;
     bool mStatInBuilding;
@@ -96,7 +92,7 @@ public:
 	 * @param camera la caméra à gérer avec le clavier
 	 * @note faudra surement utiliser le node contentant le perso + la cam au lieu de juste la cam
 	 */
-	InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera);
+    InputListener (Scene *scene, Animations * animations, SceneManager *scmanager, RenderWindow *wnd, Camera *camera);
 
 	/** destructeur */
 	virtual ~InputListener ();

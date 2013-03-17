@@ -2,6 +2,7 @@
 #include "ShortStory.h"
 #include "InputListener.h"
 #include "Scene.h"
+#include "Animations.h"
 
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -18,23 +19,28 @@ int main(int argc, char **argv)
 	InputListener *il = 0;
 	// Contient la scène principale
 	Scene *scene = 0;
+    Animations * animations = 0;
 
 	try
 	{
 		if (shst.Initialize()) // le lancement est OK
 		{
 			// création de la scène
-			scene = new Scene(&shst);
+            scene = new Scene(&shst);
 			scene->createScene();
 
+            // création des animations
+            animations = new Animations(&shst);
+
 			// ajout des inputs
-			il = new InputListener(scene, shst.getSceneManager(), shst.getWindow(), shst.getCamera());
+            il = new InputListener(scene, animations, shst.getSceneManager(), shst.getWindow(), shst.getCamera());
 			shst.getRoot()->addFrameListener(il);
 
 			// On lance la boucle de rendu, affichage du bouzin
 			shst.start();
 
 			delete scene;
+            delete animations;
 			delete il;
 		}
 	}

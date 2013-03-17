@@ -3,8 +3,8 @@
 #include "Picking.h"
 #include <sstream>
 
-InputListener::InputListener (Scene *scene, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
-		mScene(scene), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mgoDown(
+InputListener::InputListener (Scene *scene, Animations * animations, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
+        mScene(scene), mAnimations(animations), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mgoDown(
 		        false), mMouvement(Ogre::Vector3::ZERO), mCollisionVect(1, 1, 1), mVitesse(VITESSE), mVitesseRotation(
 		        VROTATION), detectionCollision(true), isFPS(false)
 {
@@ -402,8 +402,11 @@ bool InputListener::keyPressed (const KeyEvent &e)
         posCharacter = mScene->getCharacterCameraNode()->getPosition();
         std::cout << "Character: " << posCharacter.x<<" "<<posCharacter.y<<" "<<posCharacter.z<<std::endl;
         break;
-	case OIS::KC_L:
+    case OIS::KC_L:
         pick.isPicked();
+        mScene->destroyWindow();
+    case OIS::KC_B:
+        mScene->destroyWindow();
         break;
 	default:
 		break;
@@ -477,25 +480,25 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 	switch (mPersonnageStat)
 	{
 	case pWALK:
-		mScene->walkPersonnage(evt);
+        mAnimations->walkPersonnage(evt);
 		break;
 	case pIDLE1:
-		mScene->idle1Personnage(evt);
+        mAnimations->idle1Personnage(evt);
 		break;
 	case pIDLE2:
-		mScene->idle2Personnage(evt);
+        mAnimations->idle2Personnage(evt);
 		break;
 	case pIDLE3:
-		mScene->idle3Personnage(evt);
+        mAnimations->idle3Personnage(evt);
 		break;
 	case pKICK:
-		mScene->kickPersonnage(evt);
+        mAnimations->kickPersonnage(evt);
 		break;
 	case pSIDEKICK:
-		mScene->sideKickPersonnage(evt);
+        mAnimations->sideKickPersonnage(evt);
 		break;
 	case pDEATH2:
-		mScene->death2Personnage(evt);
+        mAnimations->death2Personnage(evt);
 		break;
 	default:
 		mPersonnageStat = pIDLE3;
@@ -505,39 +508,6 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 
 void InputListener::deplacementRobot (const FrameEvent& evt)
 {
-	Entity * robot = mSceneMgr->getEntity("Robot");
-	Node * robotNode = robot->getParentNode(); //SceneNode * robotNode = mSceneMgr->getSceneNode("RobotNode");
+    mAnimations->displayRobot(Animations::TRACK0,evt);
 
-	//Entity * personnage = mSceneMgr->getEntity("Personnage");
-	Node * personneNode = mSceneMgr->getSceneNode("PersonnageCameraNode");
-
-	//selection de l'etat
-	if (mScene->deplacementRobotArbre2Porte())
-	{
-		mRobotStat = rWALK;
-	}
-	else
-	{
-		mRobotStat = rIDLE;
-	}
-
-	//application du mouvement
-	switch (mRobotStat)
-	{
-	case rWALK:
-		mScene->walkRobot(evt);
-		break;
-	case rIDLE:
-		mScene->idleRobot(evt);
-		break;
-	case rSLUMP:
-		mScene->slumpRobot(evt);
-		break;
-	case rSHOOT:
-		mScene->shootRobot(evt);
-		break;
-	default:
-		mRobotStat = rIDLE;
-		break;
-	}
 }

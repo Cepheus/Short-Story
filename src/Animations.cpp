@@ -33,12 +33,14 @@ bool Animations::displayRobot(RobotStats track, const FrameEvent &evt){
         if(!mRobotJump24thState->hasEnded()){
             if(mRobotActiveBoust == false){
                 robotAnimation_Jump24thParticules();
+                mRobotActiveBoust = true;
             }
             mRobotJump24thState->addTime(evt.timeSinceLastFrame);
             //walkRobot(evt);
             return true;
         }
         else{
+            robotAnimation_Jump24thParticules();
             idleRobot(evt);
             return false;
         }
@@ -92,13 +94,11 @@ void Animations::robotAnimation_Jump24thParticules(){
     if(!mRobotActiveBoust){
         mShortStory->getSceneManager()->getSceneNode("fire1Node")->setVisible(true);
         mShortStory->getSceneManager()->getSceneNode("fire2Node")->setVisible(true);
-        mRobotActiveBoust = true;
     }
     else
     {
         mShortStory->getSceneManager()->getSceneNode("fire1Node")->setVisible(false);
         mShortStory->getSceneManager()->getSceneNode("fire2Node")->setVisible(false);
-        mRobotActiveBoust = false;
     }
 }
 
@@ -142,8 +142,8 @@ void Animations::setRobotAnimations(){
     SceneNode * fire2Node = robotNode->createChildSceneNode("fire2Node");
     fire2Node->attachObject(fire2);
 
-    fire1Node->setPosition(0,0,-20);
-    fire2Node->setPosition(0,0,20);
+    fire1Node->setPosition(0,0,-10);
+    fire2Node->setPosition(0,0,10);
 
     fire1Node->setVisible(false);
     fire2Node->setVisible(false);

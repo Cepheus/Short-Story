@@ -39,7 +39,7 @@ void InputListener::startOIS ()
 	mKeyboard->setEventCallback(this);
 }
 
-void InputListener::checkCollisions (SceneNode *toMove, bool detectLesMurs)
+void InputListener::checkCollisions (SceneNode *toMove, bool detectLesMurs, Real distanceFromGround)
 {
 	const int size = 8, moveOffset = 40, detectOffset = 2;
 	// Rayon perso pour tester les collisions
@@ -56,9 +56,9 @@ void InputListener::checkCollisions (SceneNode *toMove, bool detectLesMurs)
 	if (ray.RaycastFromPoint(nperso, vertical, result))
 	{
 		Real dist = result.distance(nperso);
-		if (dist != DIST_VERTICAL)
+		if (dist != distanceFromGround)
 		{
-			toMove->setPosition(nperso.x, nperso.y - dist + DIST_VERTICAL, nperso.z);
+			toMove->setPosition(nperso.x, nperso.y - dist + distanceFromGround, nperso.z);
 		}
 		mIsInBuilding = ray.isTouched();
 		mScene->setInBuilding(mIsInBuilding);

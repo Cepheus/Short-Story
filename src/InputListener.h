@@ -134,7 +134,7 @@ public:
 	 * @param toMove le nœud contenant les objets à bouger selon la hauteur
 	 * @param detectLesMurs si vrai, détecte aussi les collisions avec les murs
 	 */
-	void checkCollisions (SceneNode *toMove, bool detectLesMurs);
+	void checkCollisions (SceneNode *toMove, bool detectLesMurs, Real distanceFromGround = DIST_VERTICAL);
 
 protected:
 	/** Initialise la gestion des inputs */

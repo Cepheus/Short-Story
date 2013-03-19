@@ -22,7 +22,7 @@ void Scene::createScene ()
 	setTerrain();
 	setSky();
 	setRain();
-	setImmeuble();
+    setImmeuble();
 	setPersonnage();
     setRobot();
 	setCamera();
@@ -382,19 +382,6 @@ void Scene::setPersonnage ()
 	nCharacter->setPosition(0, -HAUTEUR_PERS, 0);
 	nCharacter->attachObject(personnage);
 	nCharacter->scale(0.75, 0.75, 0.75);
-
-    //iterateurs d'animation
-    AnimationState *mAnimState;
-    AnimationStateSet *set = personnage->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
-
-    //load animation
-    while (it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
-
 }
 
 void Scene::setRobot(){
@@ -404,18 +391,6 @@ void Scene::setRobot(){
     robotNode->setPosition(-100, 0, 500);
     robotNode->attachObject(robot);
     robotNode->scale(1, 1, 1);
-
-    //iterateurs d'animation
-    AnimationState *mAnimState;
-    AnimationStateSet *set = robot->getAllAnimationStates();
-    AnimationStateIterator it = set->getAnimationStateIterator();
-
-    //load animation
-    while (it.hasMoreElements())
-    {
-        mAnimState = it.getNext();
-        mAnimState->setEnabled(false);
-    }
 }
 
 void Scene::setCamera ()

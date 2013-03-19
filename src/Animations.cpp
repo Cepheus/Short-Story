@@ -36,15 +36,18 @@ bool Animations::displayRobot(RobotStats track, const FrameEvent &evt){
                 mRobotActiveBoust = true;
             }
             mRobotJump24thState->addTime(evt.timeSinceLastFrame);
-            //walkRobot(evt);
+            slumpRobot(evt);
             return true;
         }
         else{
             robotAnimation_Jump24thParticules();
             idleRobot(evt);
+            mRobotJump24thState->setEnabled(false);
             return false;
         }
         break;
+    case Animations::TRACK2 :
+
     default:
         idleRobot(evt);
         break;
@@ -79,7 +82,7 @@ void Animations::robotAnimation_Tree2Door(){
     key2->setRotation(Ogre::Quaternion(Ogre::Degree(10), Ogre::Vector3::UNIT_Y));
     key2->setTranslate(Ogre::Vector3(1000, 0, 700));
 
-    //2ere clef
+    //2eme clef
     Ogre::TransformKeyFrame *key3 = track->createNodeKeyFrame(30);
     key3->setRotation(Ogre::Quaternion(Ogre::Degree(90), Ogre::Vector3::UNIT_Y));
     key3->setTranslate(Ogre::Vector3(1200, 0, 600));
@@ -92,13 +95,13 @@ void Animations::robotAnimation_Tree2Door(){
 
 void Animations::robotAnimation_Jump24thParticules(){
     if(!mRobotActiveBoust){
-        mShortStory->getSceneManager()->getSceneNode("fire1Node")->setVisible(true);
-        mShortStory->getSceneManager()->getSceneNode("fire2Node")->setVisible(true);
+        mShortStory->getSceneManager()->getParticleSystem("fire1Robot")->setVisible(true);
+        mShortStory->getSceneManager()->getParticleSystem("fire2Robot")->setVisible(true);
     }
     else
     {
-        mShortStory->getSceneManager()->getSceneNode("fire1Node")->setVisible(false);
-        mShortStory->getSceneManager()->getSceneNode("fire2Node")->setVisible(false);
+        mShortStory->getSceneManager()->getParticleSystem("fire1Robot")->setVisible(false);
+        mShortStory->getSceneManager()->getParticleSystem("fire1Robot")->setVisible(false);
     }
 }
 
@@ -121,7 +124,7 @@ void Animations::robotAnimation_Jump24th(){
     key1->setRotation(Ogre::Quaternion(Ogre::Degree(0), Ogre::Vector3::UNIT_Y));
     key1->setTranslate(Ogre::Vector3(0, 900, -150));
 
-    //2ere clef
+    //2eme clef
     Ogre::TransformKeyFrame *key2 = track->createNodeKeyFrame(10);
     key2->setRotation(Ogre::Quaternion(Ogre::Degree(10), Ogre::Vector3::UNIT_Y));
     key2->setTranslate(Ogre::Vector3(0, 700, -300));
@@ -132,21 +135,71 @@ void Animations::robotAnimation_Jump24th(){
     mRobotJump24thState->setEnabled(false);
 }
 
+//void Animations::personnageAnimation_Death(){
+//    Ogre::TransformKeyFrame *key;
+//    SceneNode * robotNode = mShortStory->getSceneManager()->getSceneNode("RobotNode");
+//    //declaration de l'animation
+//    Ogre::Animation *robotAnimation = mShortStory->getSceneManager()->createAnimation("RobotDeathAnimation", 11); //30 secondes d'annimation
+
+//    //mode d'intermolation Translation et rotation
+//    robotAnimation->setRotationInterpolationMode(Ogre::Animation::RIM_LINEAR);
+//    robotAnimation->setInterpolationMode(Ogre::Animation::IM_SPLINE);
+
+//    //piste n°0
+//    Ogre::NodeAnimationTrack *track = robotAnimation->createNodeTrack(0, robotNode);
+//    track->createNodeKeyFrame(0);
+//    robotNode->setInitialState();
+
+
+//    key = track->createNodeKeyFrame(0.01);
+//    key->setRotation(Ogre::Quaternion(Ogre::Degree(0), Ogre::Vector3::UNIT_Y));
+//    key->setTranslate(Ogre::Vector3(100, 150, -200));
+
+//    //1ere clef piste 0
+//    key = track->createNodeKeyFrame(5);
+//    key->setRotation(Ogre::Quaternion(Ogre::Degree(0), Ogre::Vector3::UNIT_Y));
+//    key->setTranslate(Ogre::Vector3(100, 150, -200));
+
+//    //2eme clef piste 0
+//    key = track->createNodeKeyFrame(10);
+//    key->setRotation(Ogre::Quaternion(Ogre::Degree(90), Ogre::Vector3::UNIT_Y));
+//    key->setTranslate(Ogre::Vector3(50, 150, -300));
+
+//    //3eme clef piste 0
+//    key = track->createNodeKeyFrame(10);
+//    key->setRotation(Ogre::Quaternion(Ogre::Degree(0), Ogre::Vector3::UNIT_Y));
+//    key->setTranslate(Ogre::Vector3(0, 150, -400));
+
+//    mRobotDeathState = mShortStory->getSceneManager()->createAnimationState("RobotDeathAnimation");
+//    mRobotDeathState->setTimePosition(0);
+//    mRobotDeathState->setLoop(false);
+//    mRobotDeathState->setEnabled(false);
+//}
+
 void Animations::setRobotAnimations(){
+
+    //iterateurs d'animation
+    AnimationState *mAnimState;
+    AnimationStateSet *set = mRobot->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while (it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
+
     SceneNode * robotNode = mShortStory->getSceneManager()->getSceneNode("RobotNode");
 
-    ParticleSystem * fire1 = mShortStory->getSceneManager()->createParticleSystem("fire1Robot", "Particles/Plasma");
-    SceneNode * fire1Node = robotNode->createChildSceneNode("fire1Node");
-    fire1Node->attachObject(fire1);
-    ParticleSystem * fire2 = mShortStory->getSceneManager()->createParticleSystem("fire2Robot", "Particles/Plasma");
-    SceneNode * fire2Node = robotNode->createChildSceneNode("fire2Node");
-    fire2Node->attachObject(fire2);
+    ParticleSystem * fire1 = mShortStory->getSceneManager()->createParticleSystem("fire1Robot", "Smoke");
+    ParticleSystem * fire2 = mShortStory->getSceneManager()->createParticleSystem("fire2Robot", "Smoke");
 
-    fire1Node->setPosition(0,0,-10);
-    fire2Node->setPosition(0,0,10);
+    mRobot->attachObjectToBone("Joint8", fire1);
+    mRobot->attachObjectToBone("Joint4", fire2);
 
-    fire1Node->setVisible(false);
-    fire2Node->setVisible(false);
+    fire1->setVisible(false);
+    fire2->setVisible(false);
 
     robotAnimation_Tree2Door();
     robotAnimation_Jump24th();
@@ -200,57 +253,48 @@ void Animations::walkPersonnage (const FrameEvent &evt)
 
 void Animations::stealthPersonnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Stealth")->setEnabled(true);
     mPersonnage->getAnimationState("Stealth")->addTime(evt.timeSinceLastFrame);
 }
 
 void Animations::idle1Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Idle1")->setEnabled(true);
     mPersonnage->getAnimationState("Idle1")->addTime(evt.timeSinceLastFrame);
 }
 
 void Animations::idle2Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Idle2")->setEnabled(true);
     mPersonnage->getAnimationState("Idle2")->addTime(evt.timeSinceLastFrame);
 }
 
 void Animations::idle3Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Idle3")->setEnabled(true);
     mPersonnage->getAnimationState("Idle3")->addTime(evt.timeSinceLastFrame);
 }
 
 void Animations::kickPersonnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Kick")->setEnabled(true);
     mPersonnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
 }
 
 void Animations::sideKickPersonnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("SideKick")->setEnabled(true);
     mPersonnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
 }
 
-void Animations::death2Personnage (const FrameEvent &evt)
+void Animations::death1Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Death2")->setEnabled(true);
     mPersonnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
+}
 
+void Animations::death2Personnage (const FrameEvent &evt)
+{
+    mPersonnage->getAnimationState("Death2")->setEnabled(true);
+    mPersonnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
 }

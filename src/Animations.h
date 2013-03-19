@@ -16,7 +16,7 @@ public:
     /** track du robot*/
     enum RobotStats
     {
-        TRACK0, TRACK1
+        TRACK0, TRACK1, TRACK2
     };
 
 //private:
@@ -27,6 +27,7 @@ public:
 
     Ogre::AnimationState *mRobotTree2DoorAnimationState;
     Ogre::AnimationState *mRobotJump24thState;
+    Ogre::AnimationState *mRobotDeathState;
     bool mRobotActiveBoust;
 
     //animations du robot
@@ -43,6 +44,8 @@ public:
     void slumpRobot (const FrameEvent &evt);
 
     //animations du personnage;
+    //void personnageAnimation_Death();
+    void death1Personnage (const FrameEvent &evt);
     void death2Personnage (const FrameEvent &evt);
     void sideKickPersonnage (const FrameEvent &evt);
     void kickPersonnage (const FrameEvent &evt);

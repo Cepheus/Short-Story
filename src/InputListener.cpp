@@ -510,7 +510,9 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 void InputListener::deplacementRobot (const FrameEvent& evt)
 {
     if(!mAnimations->displayRobot(Animations::TRACK0,evt)){
-        mAnimations->displayRobot(Animations::TRACK1,evt);
+        if(!mAnimations->displayRobot(Animations::TRACK1,evt)){
+            mAnimations->displayRobot(Animations::TRACK2,evt);
+        }
     }
 
 }

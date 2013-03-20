@@ -474,6 +474,11 @@ SceneNode* Scene::getCharacterNode ()
 	return nCharacter;
 }
 
+SceneNode* Scene::getCatNode()
+{
+    return nChat;
+}
+
 void Scene::destroyWindow()
 {
     if(!windowIsDestroy)

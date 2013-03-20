@@ -257,3 +257,31 @@ void Animations::death2Personnage (const FrameEvent &evt)
     mPersonnage->getAnimationState("Death2")->setEnabled(true);
     mPersonnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
 }
+
+
+/** Chat **/
+
+void Animations::walkCat (const FrameEvent &evt){
+    Entity* chat = mShortStory->getSceneManager()->getEntity("Chat");
+    chat->getAnimationState("marche")->setEnabled(true);
+    chat->getAnimationState("marche")->addTime(evt.timeSinceLastFrame);
+}
+
+void Animations::waitCat (const FrameEvent  &evt){
+    Entity* chat = mShortStory->getSceneManager()->getEntity("Chat");
+    chat->getAnimationState("attend")->setEnabled(true);
+    chat->getAnimationState("attend")->addTime(evt.timeSinceLastFrame);
+}
+
+void Animations::sitCat (const FrameEvent & evt){
+    Entity* chat = mShortStory->getSceneManager()->getEntity("Chat");
+    chat->getAnimationState("assoir")->setEnabled(true);
+    chat->getAnimationState("assoir")->addTime(evt.timeSinceLastFrame);
+}
+
+void Animations::getupCat(const FrameEvent & evt){
+    Entity* chat = mShortStory->getSceneManager()->getEntity("Chat");
+    chat->getAnimationState("debout")->setEnabled(true);
+    chat->getAnimationState("debout")->addTime(evt.timeSinceLastFrame);
+
+}

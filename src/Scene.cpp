@@ -25,6 +25,7 @@ void Scene::createScene ()
     setImmeuble();
 	setPersonnage();
     setRobot();
+	setChat();
 	setCamera();
 	setMeshes(false);
 }
@@ -394,6 +395,27 @@ void Scene::setRobot(){
     robotNode->setPosition(-100, 0, 500);
     robotNode->attachObject(robot);
     robotNode->scale(1, 1, 1);
+}
+
+void Scene::setChat(){
+    Entity* chat = mShortStory->getSceneManager()->createEntity("Chat", "chat.mesh");
+
+    nChat = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("ChatNode");
+    nChat->setPosition(-110, 40, 500);
+    nChat->attachObject(chat);
+    nChat->scale(0.75, 0.75, 0.75);
+
+    //iterateurs d'animation
+    AnimationState *mAnimState;
+    AnimationStateSet *set = chat->getAllAnimationStates();
+    AnimationStateIterator it = set->getAnimationStateIterator();
+
+    //load animation
+    while (it.hasMoreElements())
+    {
+        mAnimState = it.getNext();
+        mAnimState->setEnabled(false);
+    }
 }
 
 void Scene::setCamera ()

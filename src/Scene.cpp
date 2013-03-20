@@ -54,7 +54,7 @@ void Scene::setTerrain ()
 	ent->setCastShadows(true);
 
 	//**street lamp 1**//
-    Real range = 1000;
+    Real range = 2000;
 	Real attenuation = 1.0;
 	Real linear = 4.5 / range;
 	Real Quadratic = 75.0 / (range * range);
@@ -171,7 +171,7 @@ void Scene::setTerrain ()
 	Ogre::Terrain::ImportData imp;
 	imp.inputImage = &img;
 	imp.terrainSize = img.getWidth();
-	imp.worldSize = 12000; //tail du terrain
+    imp.worldSize = 12000; //tail du terrain
 	imp.inputScale = imp.worldSize * 1 / 10; //hauteur du terrain
 	imp.minBatchSize = 33; //lod terrain min
 	imp.maxBatchSize = 65; //lod terrain max : 65 c'est le maximum sinon 2^n+1

@@ -38,6 +38,9 @@ void Scene::setLight ()
 
 void Scene::setTerrain ()
 {
+    //fog
+    mShortStory->getSceneManager()->setFog(Ogre::FOG_EXP2, Ogre::ColourValue::Black, 0.0002, 1500, 2000);
+
 	//sol palpable
 	SceneManager* sceneManager = mShortStory->getSceneManager();
 	Plane plan(Vector3::UNIT_Y, 0);
@@ -51,7 +54,7 @@ void Scene::setTerrain ()
 	ent->setCastShadows(true);
 
 	//**street lamp 1**//
-	Real range = 2000;
+    Real range = 1000;
 	Real attenuation = 1.0;
 	Real linear = 4.5 / range;
 	Real Quadratic = 75.0 / (range * range);
@@ -325,9 +328,9 @@ void Scene::setSky ()
 {
 	//mShortStory->getSceneManager()->setSkyDome(true, "CloudySky", 5, 8);
 	Plane plane;
-	plane.d = 10000;
+    plane.d = 2000;
 	plane.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;
-	mShortStory->getSceneManager()->setSkyPlane(true, plane, "NightCloudySky", 1500, 10, true, 1.5f, 150, 150);
+    mShortStory->getSceneManager()->setSkyPlane(true, plane, "NightCloudySky", 500, 10, true, 1.5f, 150, 150);
 }
 
 void Scene::setRain ()

@@ -66,6 +66,11 @@ void ShortStory::initScene ()
 	mCamera->lookAt(Vector3(0, 0, 0));
 	mCamera->setNearClipDistance(5);
 
+    if (mRoot->getRenderSystem()->getCapabilities()->hasCapability(Ogre::RSC_INFINITE_FAR_PLANE))
+    {
+        mCamera->setFarClipDistance(0);   // enable infinite far clip distance if we can
+    }
+
 	Viewport* vp = mWindow->addViewport(mCamera);
 	vp->setBackgroundColour(ColourValue(0, 0, 0));
 	mCamera->setAspectRatio(Real(vp->getActualWidth()) / Real(vp->getActualHeight()));

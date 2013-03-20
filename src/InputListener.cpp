@@ -511,7 +511,7 @@ void InputListener::deplacementRobot (const FrameEvent& evt)
 {
     if(!mAnimations->displayRobot(Animations::TRACK0,evt)){
         if(!mAnimations->displayRobot(Animations::TRACK1,evt)){
-            mAnimations->displayRobot(Animations::TRACK2,evt);
+            //mAnimations->displayRobot(Animations::TRACK2,evt);
         }
     }
 

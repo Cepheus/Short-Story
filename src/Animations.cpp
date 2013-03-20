@@ -135,47 +135,6 @@ void Animations::robotAnimation_Jump24th(){
     mRobotJump24thState->setEnabled(false);
 }
 
-//void Animations::personnageAnimation_Death(){
-//    Ogre::TransformKeyFrame *key;
-//    SceneNode * robotNode = mShortStory->getSceneManager()->getSceneNode("RobotNode");
-//    //declaration de l'animation
-//    Ogre::Animation *robotAnimation = mShortStory->getSceneManager()->createAnimation("RobotDeathAnimation", 11); //30 secondes d'annimation
-
-//    //mode d'intermolation Translation et rotation
-//    robotAnimation->setRotationInterpolationMode(Ogre::Animation::RIM_LINEAR);
-//    robotAnimation->setInterpolationMode(Ogre::Animation::IM_SPLINE);
-
-//    //piste n°0
-//    Ogre::NodeAnimationTrack *track = robotAnimation->createNodeTrack(0, robotNode);
-//    track->createNodeKeyFrame(0);
-//    robotNode->setInitialState();
-
-
-//    key = track->createNodeKeyFrame(0.01);
-//    key->setRotation(Ogre::Quaternion(Ogre::Degree(0), Ogre::Vector3::UNIT_Y));
-//    key->setTranslate(Ogre::Vector3(100, 150, -200));
-
-//    //1ere clef piste 0
-//    key = track->createNodeKeyFrame(5);
-//    key->setRotation(Ogre::Quaternion(Ogre::Degree(0), Ogre::Vector3::UNIT_Y));
-//    key->setTranslate(Ogre::Vector3(100, 150, -200));
-
-//    //2eme clef piste 0
-//    key = track->createNodeKeyFrame(10);
-//    key->setRotation(Ogre::Quaternion(Ogre::Degree(90), Ogre::Vector3::UNIT_Y));
-//    key->setTranslate(Ogre::Vector3(50, 150, -300));
-
-//    //3eme clef piste 0
-//    key = track->createNodeKeyFrame(10);
-//    key->setRotation(Ogre::Quaternion(Ogre::Degree(0), Ogre::Vector3::UNIT_Y));
-//    key->setTranslate(Ogre::Vector3(0, 150, -400));
-
-//    mRobotDeathState = mShortStory->getSceneManager()->createAnimationState("RobotDeathAnimation");
-//    mRobotDeathState->setTimePosition(0);
-//    mRobotDeathState->setLoop(false);
-//    mRobotDeathState->setEnabled(false);
-//}
-
 void Animations::setRobotAnimations(){
 
     //iterateurs d'animation

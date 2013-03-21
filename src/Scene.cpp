@@ -3,7 +3,7 @@
 
 Scene::Scene (ShortStory *shortStory) :
 		mShortStory(shortStory), nTerrain(0), nCharacCamera(0), nCharacter(0), nCamera(0), nImmeuble(0), dDistanceCharacCamera(
-		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false), windowIsDestroy(false),
+		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false), windowIsDestroy(false),doorIsDestroy(true),
 		         picking(mShortStory->getSceneManager())
 {
 	nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
@@ -27,7 +27,7 @@ void Scene::createScene ()
 	setChat();
 	setCamera();
 	setMeshes(false);
-	//setDoor();
+	setDoor();
 }
 
 void Scene::setLight ()
@@ -447,6 +447,7 @@ void Scene::setDoor()
 	nDoor->attachObject(entDoor);
     nDoor->setPosition(360.0, 0., -11.21);
 	nDoor->scale(120., 100., 100.);
+	doorIsDestroy = false;
 }
 
 SceneNode* Scene::getImmeubleNode ()
@@ -481,8 +482,12 @@ SceneNode* Scene::getCatNode()
 
 void Scene::openDoor()
 {
-     Entity* door = mShortStory->getSceneManager()->getEntity("Door");
-     door->setVisible(!door->getVisible());
+    if(!doorIsDestroy)
+    {
+        Entity* door = mShortStory->getSceneManager()->getEntity("Door");
+        door->setVisible(!door->getVisible());
+        mShortStory->getSceneManager()->destroySceneNode("Door");
+    }
 }
 
 void Scene::destroyWindow()

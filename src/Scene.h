@@ -48,6 +48,8 @@ private:
 	bool inBuilding;
 	/** false, window can be destroied, true, window is already destroied */
 	bool windowIsDestroy;
+	/** false, door can be destroied, true, door is already destroied */
+	bool doorIsDestroy;
 
 public:
     /** Picking system */
@@ -98,6 +100,11 @@ public:
     inline SceneNode* getCharacCamera ()
 	{
 		return nCharacCamera;
+	}
+
+    inline bool isExistDoor()
+	{
+		return !doorIsDestroy;
 	}
 
     inline Real getDistanceCharacCamera () const

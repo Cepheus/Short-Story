@@ -1,6 +1,7 @@
 #include "InputListener.h"
 #include "OgreRay.h"
 #include <sstream>
+#include <utility>
 
 InputListener::InputListener (Scene *scene, Animations * animations, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
         mScene(scene), mAnimations(animations), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mgoDown(
@@ -39,175 +40,6 @@ void InputListener::startOIS ()
 	mKeyboard->setEventCallback(this);
 }
 
-void InputListener::checkCollisions (SceneNode *toMove, bool detectLesMurs, Real distanceFromGround)
-{
-	const int size = 8, moveOffset = 40, detectOffset = 2;
-	// Rayon perso pour tester les collisions
-	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
-	ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
-	// résultat où est stocké la collision
-	Ogre::Vector3 result;
-	// place actuelle du perso
-	Ogre::Vector3 nperso = toMove->getPosition();
-	// direction du rayon vertical
-	Ogre::Vector3 vertical(0, -1, 0);
-
-	// détection verticale
-	if (ray.RaycastFromPoint(nperso, vertical, result))
-	{
-		Real dist = result.distance(nperso);
-		if (dist != distanceFromGround)
-		{
-			toMove->setPosition(nperso.x, nperso.y - dist + distanceFromGround, nperso.z);
-		}
-		mIsInBuilding = ray.isTouched();
-		mScene->setInBuilding(mIsInBuilding);
-	}
-
-	if (detectLesMurs)
-	{
-		// direction des vecteurs horizontaux (4 dans x, -x, z, -z)
-		Quaternion quaternions[size];
-		// tmp vector pour les côtés
-		Ogre::Vector3 tmp;
-
-		// initialisation des horizontaux
-		for (int i = 0; i < size; i++)
-			quaternions[i] = Quaternion::IDENTITY;
-		// x
-		quaternions[0].x = 1;
-		// -x
-		quaternions[1].x = -1;
-		// z
-		quaternions[2].z = 1;
-		// -z
-		quaternions[3].z = -1;
-		// x, z
-		quaternions[4].x = 1;
-		quaternions[4].z = 1;
-		// -x, z
-		quaternions[5].x = -1;
-		quaternions[5].z = 1;
-		// x, -z
-		quaternions[6].x = 1;
-		quaternions[6].z = -1;
-		// -x, -z
-		quaternions[7].x = -1;
-		quaternions[7].z = -1;
-		for (int i = 0; i < size; i++)
-			quaternions[i] = toMove->convertLocalToWorldOrientation(quaternions[i]);
-
-		// détection horizontale
-		for (int i = 0; i < size; i++)
-		{
-			tmp.x = quaternions[i].x;
-			tmp.y = quaternions[i].y;
-			tmp.z = quaternions[i].z;
-
-			if (ray.RaycastFromPoint(nperso, tmp, result))
-			{
-				Real dist = result.distance(nperso);
-				if (dist < DIST_HORIZONTAL)
-				{
-					switch (i)
-					{
-					case 0:
-						if (mMouvement.x == 1)
-						{
-							mMouvement.x = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
-						}
-						break;
-					case 1:
-						if (mMouvement.x == -1)
-						{
-							mMouvement.x = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
-						}
-						break;
-					case 2:
-						if (mMouvement.z == 1)
-						{
-							mMouvement.z = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
-						}
-						break;
-					case 3:
-						if (mMouvement.z == -1)
-						{
-							mMouvement.z = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
-						}
-						break;
-					case 4:
-						if (mMouvement.x == 1)
-						{
-							mMouvement.x = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
-						}
-						if (mMouvement.z == 1)
-						{
-							mMouvement.z = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
-						}
-						break;
-					case 5:
-						if (mMouvement.x == -1)
-						{
-							mMouvement.x = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
-						}
-						if (mMouvement.z == 1)
-						{
-							mMouvement.z = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x, nperso.y, nperso.z - moveOffset);
-						}
-						break;
-					case 6:
-						if (mMouvement.x == 1)
-						{
-							mMouvement.x = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x - moveOffset, nperso.y, nperso.z);
-						}
-						if (mMouvement.z == -1)
-						{
-							mMouvement.z = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
-						}
-						break;
-					case 7:
-						if (mMouvement.x == -1)
-						{
-							mMouvement.x = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x + moveOffset, nperso.y, nperso.z);
-						}
-						if (mMouvement.z == -1)
-						{
-							mMouvement.z = 0;
-							if (dist < DIST_HORIZONTAL - detectOffset)
-								toMove->setPosition(nperso.x, nperso.y, nperso.z + moveOffset);
-						}
-						break;
-					default:
-						break;
-					}
-				}
-			}
-		}
-	}
-}
-
 void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove, bool detectLesMurs, Real distanceFromGround, bool chat){
 
 	// Rayon perso pour tester les collisions
@@ -216,6 +48,9 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
 	// résultat où est stocké la collision
 	Ogre::Vector3 result(0,0,0);
 	double resultX = 0;
+	// résultat pour la collision avec le terrain
+	std::pair<bool, Ogre::Vector3> resultTerrain;
+	bool resultGround;
 
 	// place actuelle du perso
 	Ogre::Vector3 pos_node = ObjectNode->getPosition();
@@ -226,10 +61,24 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
 	Ogre::Vector3 vertical(0, -1, 0);
     Ogre::Vector3 honrizontal_X(1,0,0);
     Ogre::Vector3 honrizontal_Z(0,0,1);
+
 	// détection verticale
-	if (ray.RaycastFromPoint(pos_node, vertical, result))
+    resultTerrain = mScene->getTerrain()->rayIntersects(Ray(pos_node, vertical));
+    resultGround = ray.RaycastFromPoint(pos_node, vertical, result);
+	if (resultGround || resultTerrain.first)
 	{
-		Real dist = result.distance(pos_node);
+		Real dist = 0, tmp = 0;
+
+		if (resultTerrain.first)
+			dist = resultTerrain.second.distance(pos_node);
+		if (resultGround)
+		{
+			if ((tmp = result.distance(pos_node)) < dist)
+				dist = tmp;
+		}
+
+		if (resultTerrain.first && pos_node.distance(resultTerrain.second) < dist)
+			dist = pos_node.distance(resultTerrain.second);
 
 		if (dist > distanceFromGround+1)
 		{
@@ -263,7 +112,6 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
 
         if (ray.RaycastFromPoint(pos_node2,-honrizontal_X,result)){
             if (result.distance(pos_node2)<50){
-                    std::cout << "result - honX : " << result<< " pos_char" << pos_node<<std::endl;
                     if(fabs(orient_node.x)>=0.7){
                         ObjectNode->setPosition(result.x-50,pos_node.y, pos_node.z);
                         resultX = result.x-50;
@@ -275,7 +123,6 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
         }
         if (ray.RaycastFromPoint(pos_node2,honrizontal_Z,result)){
             if (result.distance(pos_node2)<50){
-                    std::cout << "result honZ : " << result<< " pos_char" << pos_node<<std::endl;
                     if(fabs(orient_node.x)>=0.7){
                         ObjectNode->setPosition(resultX,pos_node.y, result.z+50);
                     }else{
@@ -285,7 +132,6 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
         }
         if (ray.RaycastFromPoint(pos_node2,-honrizontal_Z,result)){
             if (result.distance(pos_node2)<50){
-                    std::cout << "result - honZ : " << result<< " pos_char" << pos_node<<std::endl;
                     if(fabs(orient_node.x)>=0.7){
                         ObjectNode->setPosition(resultX,pos_node.y, result.z-50);
                     }else{
@@ -313,7 +159,6 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	deplacement = mMouvement * mCollisionVect * mVitesse * evt.timeSinceLastFrame;
 
 	deplacementNinja(evt, deplacement);
-	deplacementRobot(evt);
 
 	mScene->getCharacterCameraNode()->translate(deplacement, SceneNode::TS_LOCAL);
 
@@ -325,6 +170,14 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 		if (mgoDown)
 			mScene->getCharacterCameraNode()->translate(Ogre::Vector3(0, -mVitesse * evt.timeSinceLastFrame, 0),
 			        SceneNode::TS_LOCAL);
+	}
+	else
+	{
+		if (mIsInBuilding)
+		{
+			isFPS = true;
+			mScene->setFPS();
+		}
 	}
 
 	if (mIsInBuilding != mStatInBuilding)
@@ -420,7 +273,7 @@ bool InputListener::mouseMoved (const MouseEvent &e)
 		mScene->getCameraNode()->setOrientation(orientationCamera);
 	}
 
-	if ((zoom = e.state.Z.rel) != 0)
+	if ((zoom = e.state.Z.rel) != 0 && !isFPS)
 		mScene->setDistanceCharacCamera(mScene->getDistanceCharacCamera() - zoom / 10);
 
 	return true;
@@ -621,15 +474,6 @@ void InputListener::deplacementNinja (const FrameEvent& evt, Ogre::Vector3 depla
 		mPersonnageStat = pIDLE3;
 		break;
 	}
-}
-
-void InputListener::deplacementRobot (const FrameEvent& evt)
-{
-    if(!mAnimations->displayRobot(Animations::TRACK0,evt)){
-        if(!mAnimations->displayRobot(Animations::TRACK1,evt)){
-            //mAnimations->displayRobot(Animations::TRACK2,evt);
-        }
-    }
 }
 
 void InputListener::deplacementChat (const FrameEvent& evt, Ogre::Vector3 deplacement){

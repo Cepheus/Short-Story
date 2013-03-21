@@ -24,7 +24,6 @@ void Scene::createScene ()
 	setRain();
     setImmeuble();
 	setPersonnage();
-    setRobot();
 	setChat();
 	setCamera();
 	setMeshes(false);
@@ -386,15 +385,6 @@ void Scene::setPersonnage ()
 	nCharacter->setPosition(0, -HAUTEUR_PERS, 0);
 	nCharacter->attachObject(personnage);
 	nCharacter->scale(0.75, 0.75, 0.75);
-}
-
-void Scene::setRobot(){
-    Entity* robot = mShortStory->getSceneManager()->createEntity("Robot", "robot.mesh");
-
-    SceneNode* robotNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("RobotNode");
-    robotNode->setPosition(-100, 0, 500);
-    robotNode->attachObject(robot);
-    robotNode->scale(1, 1, 1);
 }
 
 void Scene::setChat(){

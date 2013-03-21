@@ -129,13 +129,6 @@ public:
 		mVitesseRotation = vitesse;
 	}
 
-	/**
-	 * Vérifie la hauteur de l'objet
-	 * @param toMove le nœud contenant les objets à bouger selon la hauteur
-	 * @param detectLesMurs si vrai, détecte aussi les collisions avec les murs
-	 */
-	void checkCollisions (SceneNode *toMove, bool detectLesMurs, Real distanceFromGround = DIST_VERTICAL);
-	
 	void Collisions (SceneNode * ObjectNode,MovableObject* objectMove, bool detectLesMurs, Real distanceFromGround, bool chat);
 
 protected:
@@ -167,14 +160,6 @@ protected:
 	void deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0, 0, 0));
 
     /**
-     * @brief deplacementNinja
-     * @param evt
-     * @param deplacement
-     * @brief gestion du robot
-     */
-    void deplacementRobot (const FrameEvent& evt);
-	
-	      /**
      * @brief deplacementChat
      * @param evt
      * @param deplacement

@@ -484,8 +484,6 @@ void Scene::openDoor()
 {
     if(!doorIsDestroy)
     {
-        Entity* door = mShortStory->getSceneManager()->getEntity("Door");
-        door->setVisible(!door->getVisible());
         mShortStory->getSceneManager()->destroySceneNode("Door");
     }
 }

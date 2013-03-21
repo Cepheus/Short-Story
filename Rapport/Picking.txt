@@ -1,0 +1,3 @@
+Le picking consiste à lancer un rayon dans la scène pour détecter des objets. Ogre3D offre la possibilité d'interroger la scène pour effectuer du picking. On indique la position de départ et la direction du rayon et Ogre3D nous retourne la liste des objets qui ont collisionnés avec le rayon. Lorsque le rayon touche un terrain, on peut aussi obtenir le point sur le terrain touché par le rayon.
+
+Nous utilisons ce système dans notre système de picking. Le système de picking doit faire le trie dans la liste retourner par Ogre3D et vérifier que l'objet n'est pas trop éloigné. De cette manière, on vérifie que notre personnage est bien en face de la vitre ou de la porte avant de lancer l'une des animations.

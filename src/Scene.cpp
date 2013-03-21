@@ -26,7 +26,7 @@ void Scene::createScene ()
 	setPersonnage();
 	setChat();
 	setCamera();
-	setMeshes(false);
+	setMeshes(true);
 }
 
 void Scene::setLight ()
@@ -424,9 +424,9 @@ void Scene::setMeshes (bool withLod)
 		Ogre::MeshPtr voitureMesh = Ogre::MeshManager::getSingleton().load("Sedan02_license_R.mesh",
 		        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 		Ogre::Mesh::LodValueList lodDList;
+		lodDList.push_back(300);
+		lodDList.push_back(500);
 		lodDList.push_back(700);
-		lodDList.push_back(1000);
-		lodDList.push_back(1500);
 		Ogre::ProgressiveMesh::generateLodLevels(voitureMesh.getPointer(), lodDList,
 		        Ogre::ProgressiveMesh::VRQ_PROPORTIONAL, 0.3);
 	}

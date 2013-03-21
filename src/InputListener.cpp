@@ -208,6 +208,93 @@ void InputListener::checkCollisions (SceneNode *toMove, bool detectLesMurs, Real
 	}
 }
 
+void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove, bool detectLesMurs, Real distanceFromGround, bool chat){
+
+	// Rayon perso pour tester les collisions
+	OgreRay ray(mSceneMgr, objectMove);//
+	ray.setToBeTouched(mScene->getImmeubleNode()->getAttachedObject(0));
+	// résultat où est stocké la collision
+	Ogre::Vector3 result(0,0,0);
+	double resultX = 0;
+
+	// place actuelle du perso
+	Ogre::Vector3 pos_node = ObjectNode->getPosition();
+	Ogre::Vector3 pos_node2 = ObjectNode->getPosition();
+	Ogre::Quaternion orient_node = ObjectNode->getOrientation();
+
+	// direction du rayon vertical
+	Ogre::Vector3 vertical(0, -1, 0);
+    Ogre::Vector3 honrizontal_X(1,0,0);
+    Ogre::Vector3 honrizontal_Z(0,0,1);
+	// détection verticale
+	if (ray.RaycastFromPoint(pos_node, vertical, result))
+	{
+		Real dist = result.distance(pos_node);
+
+		if (dist > distanceFromGround+1)
+		{
+			ObjectNode->translate(Ogre::Vector3(0,(distanceFromGround-dist)/10,0),SceneNode::TS_LOCAL);
+		}else if (dist < distanceFromGround-1){
+            ObjectNode->translate(Ogre::Vector3(0,distanceFromGround - dist,0),SceneNode::TS_LOCAL);
+		}
+		mIsInBuilding = ray.isTouched();
+		mScene->setInBuilding(mIsInBuilding);
+	}
+	//On remonte le rayon du chat sinon reste bloquer sur les marches
+	if (chat)
+        pos_node2.y = pos_node2.y +30;
+    //On teste chaque axe X -X Z et -Z
+    //On garde la valeur de resultX poru lros de la vérification de l'autre mur on ne puisse pas passer par les coins
+        if (ray.RaycastFromPoint(pos_node2,honrizontal_X,result)){
+            if (result.distance(pos_node2)<50){
+                    //On vérifie l'oriantation du personnage pour le bloquer dans le sens du mur
+                    if(fabs(orient_node.x)>=0.7){
+                        ObjectNode->setPosition(result.x+50,pos_node.y, pos_node.z);
+                        resultX = result.x+50;
+                        }else{
+                        ObjectNode->setPosition(result.x-50,pos_node.y, pos_node.z);
+                        resultX = result.x-50;
+                    }
+            }else{
+
+                resultX = pos_node.x;
+            }
+        }
+
+        if (ray.RaycastFromPoint(pos_node2,-honrizontal_X,result)){
+            if (result.distance(pos_node2)<50){
+                    std::cout << "result - honX : " << result<< " pos_char" << pos_node<<std::endl;
+                    if(fabs(orient_node.x)>=0.7){
+                        ObjectNode->setPosition(result.x-50,pos_node.y, pos_node.z);
+                        resultX = result.x-50;
+                    }else{
+                        ObjectNode->setPosition(result.x+50,pos_node.y, pos_node.z);
+                        resultX = result.x+50;
+                    }
+            }
+        }
+        if (ray.RaycastFromPoint(pos_node2,honrizontal_Z,result)){
+            if (result.distance(pos_node2)<50){
+                    std::cout << "result honZ : " << result<< " pos_char" << pos_node<<std::endl;
+                    if(fabs(orient_node.x)>=0.7){
+                        ObjectNode->setPosition(resultX,pos_node.y, result.z+50);
+                    }else{
+                        ObjectNode->setPosition(resultX,pos_node.y, result.z-50);
+                    }
+            }
+        }
+        if (ray.RaycastFromPoint(pos_node2,-honrizontal_Z,result)){
+            if (result.distance(pos_node2)<50){
+                    std::cout << "result - honZ : " << result<< " pos_char" << pos_node<<std::endl;
+                    if(fabs(orient_node.x)>=0.7){
+                        ObjectNode->setPosition(resultX,pos_node.y, result.z-50);
+                    }else{
+                        ObjectNode->setPosition(resultX,pos_node.y, result.z+50);
+                    }
+            }
+        }
+}
+
 bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 {
 	if (mWindow->isClosed())
@@ -220,7 +307,7 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 	mCollisionVect.y = 1;
 	mCollisionVect.z = 1;
 	if (detectionCollision)
-		checkCollisions(mScene->getCharacCamera(), true);
+        Collisions(mScene->getCharacCamera(),mScene->getCharacterNode()->getAttachedObject(0), true, HAUTEUR_PERS,false);
 
 	Ogre::Vector3 deplacement = Ogre::Vector3::ZERO;
 	deplacement = mMouvement * mCollisionVect * mVitesse * evt.timeSinceLastFrame;
@@ -257,6 +344,35 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 
         mStatInBuilding = mIsInBuilding;
 	}
+
+    //Déplacement du chat
+    Ogre::Vector3 pers_pos = mScene->getCharacterCameraNode()->getPosition();
+    Ogre::Vector3 chat_pos = mScene->getCatNode()->getPosition();
+    Ogre::Vector3 move_cat;
+
+    move_cat.x = pers_pos.x - chat_pos.x;
+    move_cat.z = pers_pos.z - chat_pos.z;
+    move_cat.y = 0;
+    move_cat.normalise();
+
+
+    //Déplacment du chat selon le vecteur directeur, celui-ci reste un peu éloigner du personnage 200,200 à modifier si nécéssaire
+    if((fabs(pers_pos.x - chat_pos.x) > 200)||(fabs(pers_pos.z- chat_pos.z) > 200)){
+        mScene->getCatNode()->translate(move_cat*4);
+        //Animation du chat
+        deplacementChat(evt,move_cat);
+    }else{
+        deplacementChat(evt,move_cat.ZERO);
+    }
+
+    //Pour que le chat regarde vers le personnage
+    Ogre::Vector3 orientation = mScene->getCatNode()->getOrientation() * Ogre::Vector3::UNIT_X;
+    Ogre::Quaternion quat = orientation.getRotationTo(move_cat);
+    mScene->getCatNode()->rotate(quat);
+
+    //Collisions du chat
+    Collisions(mScene->getCatNode(),mScene->getCatNode()->getAttachedObject(0),true,40,true);
+
 	return mContinuer;
 }
 
@@ -514,5 +630,12 @@ void InputListener::deplacementRobot (const FrameEvent& evt)
             //mAnimations->displayRobot(Animations::TRACK2,evt);
         }
     }
+}
 
+void InputListener::deplacementChat (const FrameEvent& evt, Ogre::Vector3 deplacement){
+    if(deplacement != deplacement.ZERO){
+        mAnimations->walkCat(evt);
+    }else{
+        mAnimations->waitCat(evt);
+    }
 }

@@ -135,6 +135,8 @@ public:
 	 * @param detectLesMurs si vrai, détecte aussi les collisions avec les murs
 	 */
 	void checkCollisions (SceneNode *toMove, bool detectLesMurs, Real distanceFromGround = DIST_VERTICAL);
+	
+	void Collisions (SceneNode * ObjectNode,MovableObject* objectMove, bool detectLesMurs, Real distanceFromGround, bool chat);
 
 protected:
 	/** Initialise la gestion des inputs */
@@ -171,6 +173,14 @@ protected:
      * @brief gestion du robot
      */
     void deplacementRobot (const FrameEvent& evt);
+	
+	      /**
+     * @brief deplacementChat
+     * @param evt
+     * @param deplacement
+     * @brief gestion du chat
+     */
+    void deplacementChat (const FrameEvent& evt,Ogre::Vector3 deplacement = Ogre::Vector3(0,0,0));
 };
 
 #endif // INPUTLISTENER_H

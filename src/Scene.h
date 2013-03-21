@@ -33,6 +33,8 @@ private:
 	SceneNode* nCamera;
 	/** Le noeud de l'immeuble */
 	SceneNode* nImmeuble;
+	/** Le noeud du chat */
+	SceneNode* nChat;
 	/** Distance personnage/camÃ©ra */
 	Real dDistanceCharacCamera;
 
@@ -78,6 +80,9 @@ public:
 
 	/** RÃ©cupÃ¨re le noeud du personnage */
 	SceneNode* getCharacterNode ();
+	
+	/** Récupération du noeud du chat*/
+	SceneNode* getCatNode();
 
     /** Destruction de la fenetre */
     void destroyWindow();
@@ -141,7 +146,8 @@ private:
 	void setMeshes (bool withLod);
 	/** Met en place la camÃ©ra */
 	void setCamera ();
-
+	/** Met en place le chat **/
+	void setChat ();
 };
 
 #endif // SCENE_H

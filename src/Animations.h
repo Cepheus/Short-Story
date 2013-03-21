@@ -55,6 +55,12 @@ public:
     void stealthPersonnage (const FrameEvent &evt);
     void walkPersonnage (const FrameEvent &evt);
     void setPersonnageAnimation();
+	
+	//animations du chat
+    void walkCat(const FrameEvent &evt);
+    void waitCat (const FrameEvent &evt);
+    void sitCat (const FrameEvent & evt);
+    void getupCat(const FrameEvent & evt);
 };
 
 #endif // ANIMATIONS_H

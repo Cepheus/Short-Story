@@ -281,7 +281,6 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
 
         if (ray.RaycastFromPoint(pos_node2,-honrizontal_X,result)){
             if (result.distance(pos_node2)<50){
-                    std::cout << "result - honX : " << result<< " pos_char" << pos_node<<std::endl;
                     if(fabs(orient_node.x)>=0.7){
                         ObjectNode->setPosition(result.x-50,pos_node.y, pos_node.z);
                         resultX = result.x-50;
@@ -293,7 +292,6 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
         }
         if (ray.RaycastFromPoint(pos_node2,honrizontal_Z,result)){
             if (result.distance(pos_node2)<50){
-                    std::cout << "result honZ : " << result<< " pos_char" << pos_node<<std::endl;
                     if(fabs(orient_node.x)>=0.7){
                         ObjectNode->setPosition(resultX,pos_node.y, result.z+50);
                     }else{
@@ -303,7 +301,6 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
         }
         if (ray.RaycastFromPoint(pos_node2,-honrizontal_Z,result)){
             if (result.distance(pos_node2)<50){
-                    std::cout << "result - honZ : " << result<< " pos_char" << pos_node<<std::endl;
                     if(fabs(orient_node.x)>=0.7){
                         ObjectNode->setPosition(resultX,pos_node.y, result.z-50);
                     }else{
@@ -343,6 +340,14 @@ bool InputListener::frameRenderingQueued (const FrameEvent& evt)
 		if (mgoDown)
 			mScene->getCharacterCameraNode()->translate(Ogre::Vector3(0, -mVitesse * evt.timeSinceLastFrame, 0),
 			        SceneNode::TS_LOCAL);
+	}
+	else
+	{
+		if (mIsInBuilding)
+		{
+			isFPS = true;
+			mScene->setFPS();
+		}
 	}
 
 	if (mIsInBuilding != mStatInBuilding)
@@ -438,7 +443,7 @@ bool InputListener::mouseMoved (const MouseEvent &e)
 		mScene->getCameraNode()->setOrientation(orientationCamera);
 	}
 
-	if ((zoom = e.state.Z.rel) != 0)
+	if ((zoom = e.state.Z.rel) != 0 && !isFPS)
 		mScene->setDistanceCharacCamera(mScene->getDistanceCharacCamera() - zoom / 10);
 
 	return true;

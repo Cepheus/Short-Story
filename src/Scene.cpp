@@ -27,7 +27,7 @@ void Scene::createScene ()
 	setChat();
 	setCamera();
 	setMeshes(false);
-	setDoor();
+	//setDoor();
 }
 
 void Scene::setLight ()
@@ -372,10 +372,11 @@ void Scene::setImmeuble ()
 	nImmeuble->scale(120., 100., 100.);
 
     Entity* window = mShortStory->getSceneManager()->createEntity("window", "VitreCassee.mesh");
-    SceneNode * windowNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
+    windowNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
     windowNode->attachObject(window);
     windowNode->setPosition(0., 0., 0.);
     windowNode->scale(120., 100., 100.);
+
 }
 
 void Scene::setPersonnage ()
@@ -495,7 +496,7 @@ void Scene::destroyWindow()
         windowIsDestroy=true;
         Entity* window = mShortStory->getSceneManager()->getEntity("window");
         window->setVisible(false);
-
+        nImmeuble->removeChild(nWindow);
         ParticleSystem * windowPart = mShortStory->getSceneManager()->createParticleSystem("verresecurite", "verresecurite");
         SceneNode * windowPartNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("verresecuriteNode",
                 Ogre::Vector3(0, 1000, -600));

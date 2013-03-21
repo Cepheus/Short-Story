@@ -26,7 +26,8 @@ void Scene::createScene ()
 	setPersonnage();
 	setChat();
 	setCamera();
-	setMeshes(true);
+	setMeshes(false);
+	//setDoor();
 }
 
 void Scene::setLight ()
@@ -439,6 +440,15 @@ void Scene::setMeshes (bool withLod)
 	VoitureNode->scale(10, 10, 10);
 }
 
+void Scene::setDoor()
+{
+    Ogre::Entity* entDoor = mShortStory->getSceneManager()->createEntity("Door", "PorteMouvante.mesh");
+    Ogre::SceneNode* nDoor = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Door");
+	nDoor->attachObject(entDoor);
+    nDoor->setPosition(360.0, 0., -11.21);
+	nDoor->scale(120., 100., 100.);
+}
+
 SceneNode* Scene::getImmeubleNode ()
 {
 	return nImmeuble;
@@ -467,6 +477,12 @@ SceneNode* Scene::getCharacterNode ()
 SceneNode* Scene::getCatNode()
 {
     return nChat;
+}
+
+void Scene::openDoor()
+{
+     Entity* door = mShortStory->getSceneManager()->getEntity("Door");
+     door->setVisible(!door->getVisible());
 }
 
 void Scene::destroyWindow()

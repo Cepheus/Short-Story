@@ -92,6 +92,9 @@ public:
     /** Destruction de la fenetre */
     void destroyWindow();
 
+    /** Ouvre la porte */
+    void openDoor();
+
     inline SceneNode* getCharacCamera ()
 	{
 		return nCharacCamera;
@@ -151,6 +154,8 @@ private:
 	void setCamera ();
 	/** Met en place le chat **/
 	void setChat ();
+    /** Met en place le porte **/
+	void setDoor ();
 };
 
 #endif // SCENE_H

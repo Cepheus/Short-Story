@@ -496,7 +496,7 @@ void Scene::destroyWindow()
         windowIsDestroy=true;
         Entity* window = mShortStory->getSceneManager()->getEntity("window");
         window->setVisible(false);
-        nImmeuble->removeChild(nWindow);
+        mShortStory->getSceneManager()->getRootSceneNode()->removeChild(nWindow);
         ParticleSystem * windowPart = mShortStory->getSceneManager()->createParticleSystem("verresecurite", "verresecurite");
         SceneNode * windowPartNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("verresecuriteNode",
                 Ogre::Vector3(0, 1000, -600));

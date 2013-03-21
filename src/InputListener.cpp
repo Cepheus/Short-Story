@@ -412,6 +412,10 @@ bool InputListener::keyPressed (const KeyEvent &e)
 		if (mScene->picking.isPicked(mScene->getCharacterCameraNode(), mSceneMgr->getSceneNode("windowNode"), 100.f))
 			mScene->destroyWindow();
 		break;
+	case OIS::KC_H:
+		if (mScene->picking.isPicked(mScene->getCharacterCameraNode(), mSceneMgr->getSceneNode("Door"), 500.f))
+			mScene->openDoor();
+		break;
 	case OIS::KC_B:
 		mScene->destroyWindow();
 		break;

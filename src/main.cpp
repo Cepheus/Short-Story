@@ -3,6 +3,7 @@
 #include "InputListener.h"
 #include "Scene.h"
 #include "Animations.h"
+#include "AnimationsAuto.h"
 
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -10,7 +11,7 @@
 
 INT WINAPI WinMain (HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
 #else
-int main(int argc, char **argv)
+int main (int argc, char **argv)
 #endif
 {
 	// Application générale
@@ -19,40 +20,45 @@ int main(int argc, char **argv)
 	InputListener *il = 0;
 	// Contient la scène principale
 	Scene *scene = 0;
-    Animations * animations = 0;
+	Animations * animations = 0;
+	AnimationsAuto * animationsAuto;
 
 	try
 	{
 		if (shst.Initialize()) // le lancement est OK
 		{
 			// création de la scène
-            scene = new Scene(&shst);
+			scene = new Scene(&shst);
 			scene->createScene();
 
-            // création des animations
-            animations = new Animations(&shst);
+			// création des animations
+			animations = new Animations(&shst);
+			animationsAuto = new AnimationsAuto(&shst);
 
 			// ajout des inputs
-            il = new InputListener(scene, animations, shst.getSceneManager(), shst.getWindow(), shst.getCamera());
+			il = new InputListener(scene, animations, animationsAuto, shst.getSceneManager(), shst.getWindow(),
+			        shst.getCamera());
 			shst.getRoot()->addFrameListener(il);
 
 			// On lance la boucle de rendu, affichage du bouzin
 			shst.start();
 
 			delete scene;
-            delete animations;
+			delete animations;
 			delete il;
 		}
 	}
 	catch (Ogre::Exception& e)
 	{
 		delete il;
+		delete scene;
+		delete animations;
+		delete il;
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 		MessageBoxA(NULL, e.getFullDescription().c_str(), "An exception has occurred!",
-		        MB_OK | MB_ICONERROR | MB_TASKMODAL);
+				MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
-		fprintf(stderr, "An exception has occurred: %s\n",
-				e.getFullDescription().c_str());
+		fprintf(stderr, "An exception has occurred: %s\n", e.getFullDescription().c_str());
 #endif
 	}
 

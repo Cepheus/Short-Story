@@ -145,8 +145,6 @@ private:
 	void setImmeuble ();
 	/** Met en place le personnage */
 	void setPersonnage ();
-    /** Met en place le robot */
-    void setRobot();
 	/** Met en place les diffÃ©rents meshes */
 	void setMeshes (bool withLod);
 	/** Met en place la camÃ©ra */

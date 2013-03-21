@@ -13,7 +13,7 @@ particle_system Rain
     emitter Box
     {
         angle           0
-        emission_rate   12000
+        emission_rate   18000
         time_to_live    4
         direction       -0.25 -1 0
         velocity    	400

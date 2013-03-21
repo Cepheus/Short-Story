@@ -39,7 +39,7 @@ void Scene::setLight ()
 void Scene::setTerrain ()
 {
     //fog
-    mShortStory->getSceneManager()->setFog(Ogre::FOG_EXP2, Ogre::ColourValue::Black, 0.0002, 1500, 2000);
+    mShortStory->getSceneManager()->setFog(Ogre::FOG_EXP2, Ogre::ColourValue::Black, 0.0002);
 
 	//sol palpable
 	SceneManager* sceneManager = mShortStory->getSceneManager();
@@ -173,7 +173,7 @@ void Scene::setTerrain ()
 	imp.terrainSize = img.getWidth();
     imp.worldSize = 12000; //tail du terrain
 	imp.inputScale = imp.worldSize * 1 / 10; //hauteur du terrain
-	imp.minBatchSize = 33; //lod terrain min
+    imp.minBatchSize = 33; //lod terrain min
 	imp.maxBatchSize = 65; //lod terrain max : 65 c'est le maximum sinon 2^n+1
 
 	//textures

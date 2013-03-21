@@ -1,6 +1,7 @@
 #include "InputListener.h"
 #include "OgreRay.h"
 #include <sstream>
+#include <utility>
 
 InputListener::InputListener (Scene *scene, Animations * animations, SceneManager *scmanager, RenderWindow *wnd, Camera *camera) :
         mScene(scene), mAnimations(animations), mSceneMgr(scmanager), mWindow(wnd), mCamera(camera), mContinuer(true), mgoUp(false), mgoDown(
@@ -216,6 +217,9 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
 	// résultat où est stocké la collision
 	Ogre::Vector3 result(0,0,0);
 	double resultX = 0;
+	// résultat pour la collision avec le terrain
+	std::pair<bool, Ogre::Vector3> resultTerrain;
+	bool resultGround;
 
 	// place actuelle du perso
 	Ogre::Vector3 pos_node = ObjectNode->getPosition();
@@ -226,10 +230,24 @@ void InputListener::Collisions (SceneNode * ObjectNode,MovableObject* objectMove
 	Ogre::Vector3 vertical(0, -1, 0);
     Ogre::Vector3 honrizontal_X(1,0,0);
     Ogre::Vector3 honrizontal_Z(0,0,1);
+
 	// détection verticale
-	if (ray.RaycastFromPoint(pos_node, vertical, result))
+    resultTerrain = mScene->getTerrain()->rayIntersects(Ray(pos_node, vertical));
+    resultGround = ray.RaycastFromPoint(pos_node, vertical, result);
+	if (resultGround || resultTerrain.first)
 	{
-		Real dist = result.distance(pos_node);
+		Real dist = 0, tmp = 0;
+
+		if (resultTerrain.first)
+			dist = resultTerrain.second.distance(pos_node);
+		if (resultGround)
+		{
+			if ((tmp = result.distance(pos_node)) < dist)
+				dist = tmp;
+		}
+
+		if (resultTerrain.first && pos_node.distance(resultTerrain.second) < dist)
+			dist = pos_node.distance(resultTerrain.second);
 
 		if (dist > distanceFromGround+1)
 		{

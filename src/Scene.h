@@ -72,6 +72,11 @@ public:
 	/** RÃ©cupÃ¨re le noeud du terrain */
 	SceneNode* getTerrainNode ();
 
+	Terrain* getTerrain()
+	{
+		return mTerrain;
+	}
+
 	/** RÃ©cupÃ¨re le noeud de la camÃ©ra et du personnage */
 	SceneNode* getCharacterCameraNode ();
 
@@ -80,7 +85,7 @@ public:
 
 	/** RÃ©cupÃ¨re le noeud du personnage */
 	SceneNode* getCharacterNode ();
-	
+
 	/** Récupération du noeud du chat*/
 	SceneNode* getCatNode();
 

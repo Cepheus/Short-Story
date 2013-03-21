@@ -33,6 +33,8 @@ private:
 	SceneNode* nCamera;
 	/** Le noeud de l'immeuble */
 	SceneNode* nImmeuble;
+	/** Le noeud de la fenêtre de l'immeuble */
+	SceneNode * nWindow;
 	/** Le noeud du chat */
 	SceneNode* nChat;
 	/** Distance personnage/camÃ©ra */
@@ -48,6 +50,8 @@ private:
 	bool inBuilding;
 	/** false, window can be destroied, true, window is already destroied */
 	bool windowIsDestroy;
+	/** false, door can be destroied, true, door is already destroied */
+	bool doorIsDestroy;
 
 public:
     /** Picking system */
@@ -72,6 +76,11 @@ public:
 	/** RÃ©cupÃ¨re le noeud du terrain */
 	SceneNode* getTerrainNode ();
 
+	Terrain* getTerrain()
+	{
+		return mTerrain;
+	}
+
 	/** RÃ©cupÃ¨re le noeud de la camÃ©ra et du personnage */
 	SceneNode* getCharacterCameraNode ();
 
@@ -80,16 +89,24 @@ public:
 
 	/** RÃ©cupÃ¨re le noeud du personnage */
 	SceneNode* getCharacterNode ();
-	
+
 	/** Récupération du noeud du chat*/
 	SceneNode* getCatNode();
 
     /** Destruction de la fenetre */
     void destroyWindow();
 
+    /** Ouvre la porte */
+    void openDoor();
+
     inline SceneNode* getCharacCamera ()
 	{
 		return nCharacCamera;
+	}
+
+    inline bool isExistDoor()
+	{
+		return !doorIsDestroy;
 	}
 
     inline Real getDistanceCharacCamera () const
@@ -140,14 +157,14 @@ private:
 	void setImmeuble ();
 	/** Met en place le personnage */
 	void setPersonnage ();
-    /** Met en place le robot */
-    void setRobot();
 	/** Met en place les diffÃ©rents meshes */
 	void setMeshes (bool withLod);
 	/** Met en place la camÃ©ra */
 	void setCamera ();
 	/** Met en place le chat **/
 	void setChat ();
+    /** Met en place le porte **/
+	void setDoor ();
 };
 
 #endif // SCENE_H

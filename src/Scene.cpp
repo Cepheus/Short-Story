@@ -3,7 +3,7 @@
 
 Scene::Scene (ShortStory *shortStory) :
 		mShortStory(shortStory), nTerrain(0), nCharacCamera(0), nCharacter(0), nCamera(0), nImmeuble(0), dDistanceCharacCamera(
-		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false), windowIsDestroy(false),
+		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false), windowIsDestroy(false),doorIsDestroy(true),
 		         picking(mShortStory->getSceneManager())
 {
 	nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
@@ -24,10 +24,10 @@ void Scene::createScene ()
 	setRain();
     setImmeuble();
 	setPersonnage();
-    setRobot();
 	setChat();
 	setCamera();
-	setMeshes(false);
+	setMeshes(true);
+	//setDoor();
 }
 
 void Scene::setLight ()
@@ -372,10 +372,11 @@ void Scene::setImmeuble ()
 	nImmeuble->scale(120., 100., 100.);
 
     Entity* window = mShortStory->getSceneManager()->createEntity("window", "VitreCassee.mesh");
-    SceneNode * windowNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
-    windowNode->attachObject(window);
-    windowNode->setPosition(0., 0., 0.);
-    windowNode->scale(120., 100., 100.);
+    nWindow = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
+    nWindow->attachObject(window);
+    nWindow->setPosition(0., 0., 0.);
+    nWindow->scale(120., 100., 100.);
+
 }
 
 void Scene::setPersonnage ()
@@ -386,15 +387,6 @@ void Scene::setPersonnage ()
 	nCharacter->setPosition(0, -HAUTEUR_PERS, 0);
 	nCharacter->attachObject(personnage);
 	nCharacter->scale(0.75, 0.75, 0.75);
-}
-
-void Scene::setRobot(){
-    Entity* robot = mShortStory->getSceneManager()->createEntity("Robot", "robot.mesh");
-
-    SceneNode* robotNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("RobotNode");
-    robotNode->setPosition(-100, 0, 500);
-    robotNode->attachObject(robot);
-    robotNode->scale(1, 1, 1);
 }
 
 void Scene::setChat(){
@@ -434,9 +426,9 @@ void Scene::setMeshes (bool withLod)
 		Ogre::MeshPtr voitureMesh = Ogre::MeshManager::getSingleton().load("Sedan02_license_R.mesh",
 		        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 		Ogre::Mesh::LodValueList lodDList;
+		lodDList.push_back(300);
+		lodDList.push_back(500);
 		lodDList.push_back(700);
-		lodDList.push_back(1000);
-		lodDList.push_back(1500);
 		Ogre::ProgressiveMesh::generateLodLevels(voitureMesh.getPointer(), lodDList,
 		        Ogre::ProgressiveMesh::VRQ_PROPORTIONAL, 0.3);
 	}
@@ -447,6 +439,16 @@ void Scene::setMeshes (bool withLod)
 	VoitureNode->attachObject(entVoiture);
 	VoitureNode->setPosition(-500, 43, -100);
 	VoitureNode->scale(10, 10, 10);
+}
+
+void Scene::setDoor()
+{
+    Ogre::Entity* entDoor = mShortStory->getSceneManager()->createEntity("Door", "PorteMouvante.mesh");
+    Ogre::SceneNode* nDoor = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("Door");
+	nDoor->attachObject(entDoor);
+    nDoor->setPosition(360.0, 0., -11.21);
+	nDoor->scale(120., 100., 100.);
+	doorIsDestroy = false;
 }
 
 SceneNode* Scene::getImmeubleNode ()
@@ -479,6 +481,14 @@ SceneNode* Scene::getCatNode()
     return nChat;
 }
 
+void Scene::openDoor()
+{
+    if(!doorIsDestroy)
+    {
+        mShortStory->getSceneManager()->destroySceneNode("Door");
+    }
+}
+
 void Scene::destroyWindow()
 {
     if(!windowIsDestroy)
@@ -486,7 +496,7 @@ void Scene::destroyWindow()
         windowIsDestroy=true;
         Entity* window = mShortStory->getSceneManager()->getEntity("window");
         window->setVisible(false);
-
+        mShortStory->getSceneManager()->getRootSceneNode()->removeChild(nWindow);
         ParticleSystem * windowPart = mShortStory->getSceneManager()->createParticleSystem("verresecurite", "verresecurite");
         SceneNode * windowPartNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("verresecuriteNode",
                 Ogre::Vector3(0, 1000, -600));

@@ -34,7 +34,7 @@ private:
 	/** Le noeud de l'immeuble */
 	SceneNode* nImmeuble;
 	/** Le noeud de la fenêtre de l'immeuble */
-	SceneNode * windowNode;
+	SceneNode * nWindow;
 	/** Le noeud du chat */
 	SceneNode* nChat;
 	/** Distance personnage/camÃ©ra */

@@ -26,7 +26,7 @@ void Scene::createScene ()
 	setPersonnage();
 	setChat();
 	setCamera();
-	setMeshes(false);
+	setMeshes(true);
 	//setDoor();
 }
 

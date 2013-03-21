@@ -1,4 +1,4 @@
-// Exterieur genrated by blender2ogre 0.5.8
+// Exterieur genrated by blender2ogre 0.5.9
 
 material Exterieur 
 {
@@ -32,7 +32,7 @@ material Exterieur
 
             texture_unit 
             {
-                texture ../Textures/brique.jpg
+                texture brique.jpg
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate

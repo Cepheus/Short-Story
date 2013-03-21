@@ -1,15 +1,15 @@
-// Fondation genrated by blender2ogre 0.5.9
+// Bois genrated by blender2ogre 0.5.9
 
-material Fondation 
+material Bois 
 {
     receive_shadows on 
 
     technique
     {
-        pass Fondation
+        pass Bois
         {
-            ambient 0.42921680212020874 0.42921680212020874 0.42921680212020874 1.0
-            diffuse 0.34337344681283 0.34337344681283 0.34337344681283 1.0
+            ambient 0.21402832865715027 0.08554451912641525 0.02088068798184395 1.0
+            diffuse 0.17122266547713672 0.06843561632090234 0.016704550634392357 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -30,6 +30,13 @@ material Fondation
             shading gouraud
             transparent_sorting on
 
+            texture_unit 
+            {
+                texture bois.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
         }
     }
 }

@@ -372,10 +372,12 @@ void Scene::setImmeuble ()
 	nImmeuble->scale(120., 100., 100.);
 
     Entity* window = mShortStory->getSceneManager()->createEntity("window", "VitreCassee.mesh");
-    SceneNode * windowNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
+    windowNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
     windowNode->attachObject(window);
     windowNode->setPosition(0., 0., 0.);
     windowNode->scale(120., 100., 100.);
+    nImmeuble->removeChild(nWindow);
+
 }
 
 void Scene::setPersonnage ()

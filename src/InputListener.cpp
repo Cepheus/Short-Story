@@ -294,46 +294,52 @@ void InputListener::windowClosed (RenderWindow* wnd)
 
 bool InputListener::mouseMoved (const MouseEvent &e)
 {
-	Real zoom;
-	Quaternion orientationCamera;
-
-	mScene->getCharacterCameraNode()->yaw(Degree(-mVitesseRotation * e.state.X.rel), SceneNode::TS_LOCAL);
-	mScene->getCameraNode()->pitch(Degree(-mVitesseRotation * e.state.Y.rel));
-
-	orientationCamera = mScene->getCameraNode()->getOrientation();
-	if (detectionCollision)
+	if (!stateJeu)
 	{
-		if (orientationCamera.x > 0.5)
-			orientationCamera.x = 0.5;
-		if (orientationCamera.x < -0.5)
-			orientationCamera.x = -0.5;
-		mScene->getCameraNode()->setOrientation(orientationCamera);
-	}
+		Real zoom;
+		Quaternion orientationCamera;
 
-	if ((zoom = e.state.Z.rel) != 0 && !isFPS)
-		mScene->setDistanceCharacCamera(mScene->getDistanceCharacCamera() - zoom / 10);
+		mScene->getCharacterCameraNode()->yaw(Degree(-mVitesseRotation * e.state.X.rel), SceneNode::TS_LOCAL);
+		mScene->getCameraNode()->pitch(Degree(-mVitesseRotation * e.state.Y.rel));
+
+		orientationCamera = mScene->getCameraNode()->getOrientation();
+		if (detectionCollision)
+		{
+			if (orientationCamera.x > 0.5)
+				orientationCamera.x = 0.5;
+			if (orientationCamera.x < -0.5)
+				orientationCamera.x = -0.5;
+			mScene->getCameraNode()->setOrientation(orientationCamera);
+		}
+
+		if ((zoom = e.state.Z.rel) != 0 && !isFPS)
+			mScene->setDistanceCharacCamera(mScene->getDistanceCharacCamera() - zoom / 10);
+	}
 
 	return true;
 }
 
 bool InputListener::mousePressed (const MouseEvent &arg, MouseButtonID id)
 {
-	// Rayon
-	OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
-	Ogre::Vector3 result;
-	Ogre::Vector3 position = mScene->getCharacCamera()->getPosition();
-	Ogre::Vector3 direction = Ogre::Vector3::NEGATIVE_UNIT_Y;
+	if (!stateJeu)
+	{
+		// Rayon
+		OgreRay ray(mSceneMgr, mScene->getCharacterNode()->getAttachedObject(0));
+		Ogre::Vector3 result;
+		Ogre::Vector3 position = mScene->getCharacCamera()->getPosition();
+		Ogre::Vector3 direction = Ogre::Vector3::NEGATIVE_UNIT_Y;
 
-	printf("position: %f, %f, %f\n", position.x, position.y, position.z);
-	if (ray.RaycastFromPoint(position, direction, result))
-	{
-		printf("Your mouse is over the position %f,%f,%f\n", result.x, result.y, result.z);
-		Ogre::Vector3 distance = position;
-		printf("Distance : %f\n", distance.distance(result));
-	}
-	else
-	{
-		printf("No mouse collision\n Are you looking the sky ?\n");
+		printf("position: %f, %f, %f\n", position.x, position.y, position.z);
+		if (ray.RaycastFromPoint(position, direction, result))
+		{
+			printf("Your mouse is over the position %f,%f,%f\n", result.x, result.y, result.z);
+			Ogre::Vector3 distance = position;
+			printf("Distance : %f\n", distance.distance(result));
+		}
+		else
+		{
+			printf("No mouse collision\n Are you looking the sky ?\n");
+		}
 	}
 
 	return true;
@@ -347,90 +353,110 @@ bool InputListener::mouseReleased (const MouseEvent &arg, MouseButtonID id)
 bool InputListener::keyPressed (const KeyEvent &e)
 {
 	Ogre::Vector3 posCamera, posVoiture, posCharacter;
-	switch (e.key)
+	if (!stateJeu)
 	{
-	case OIS::KC_ESCAPE:
-		mContinuer = false;
-		break;
+		switch (e.key)
+		{
+		case OIS::KC_ESCAPE:
+			mContinuer = false;
+			break;
 #if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-		case OIS::KC_W:
-		mMouvement.z = -1;
-		break;
-		case OIS::KC_S:
-		mMouvement.z = 1;
-		break;
-		case OIS::KC_A:
-		mMouvement.x = -1;
-		break;
-		case OIS::KC_D:
-		mMouvement.x = 1;
-		break;
+			case OIS::KC_W:
+			mMouvement.z = -1;
+			break;
+			case OIS::KC_S:
+			mMouvement.z = 1;
+			break;
+			case OIS::KC_A:
+			mMouvement.x = -1;
+			break;
+			case OIS::KC_D:
+			mMouvement.x = 1;
+			break;
 #else
-	case OIS::KC_Z:
-		mMouvement.z = -1;
-		break;
-	case OIS::KC_S:
-		mMouvement.z = 1;
-		break;
-	case OIS::KC_Q:
-		mMouvement.x = -1;
-		break;
-	case OIS::KC_D:
-		mMouvement.x = 1;
-		break;
+		case OIS::KC_Z:
+			mMouvement.z = -1;
+			break;
+		case OIS::KC_S:
+			mMouvement.z = 1;
+			break;
+		case OIS::KC_Q:
+			mMouvement.x = -1;
+			break;
+		case OIS::KC_D:
+			mMouvement.x = 1;
+			break;
 #endif
-	case OIS::KC_LSHIFT:
-		mVitesse = 3 * VITESSE;
-		break;
-	case OIS::KC_SPACE:
-		mgoUp = true;
-		break;
-	case OIS::KC_LCONTROL:
-		mgoDown = true;
-		break;
-	case OIS::KC_END:
-		detectionCollision = !detectionCollision;
-		break;
-	case OIS::KC_P:
-		isFPS = !isFPS;
-		if (isFPS)
-			mScene->setFPS();
-		else
-			mScene->setThirdPerson();
-		break;
-	case OIS::KC_J:
-		posCamera = mCamera->getPosition();
-		posVoiture = mSceneMgr->getSceneNode("Voiture")->getPosition();
-		mSceneMgr->getSceneNode("Voiture");
-		std::cout << "Distance Voiture - Camera : " << posCamera.distance(posVoiture) << std::endl;
-		break;
-	case OIS::KC_K:
-		posCharacter = mScene->getCharacterCameraNode()->getPosition();
-		std::cout << "Character: " << posCharacter.x << " " << posCharacter.y << " " << posCharacter.z << std::endl;
-		break;
-	case OIS::KC_L:
-		if (mScene->picking.isPicked(mScene->getCharacterCameraNode(), mSceneMgr->getSceneNode("windowNode"), 100.f))
+		case OIS::KC_LSHIFT:
+			mVitesse = 3 * VITESSE;
+			break;
+		case OIS::KC_SPACE:
+			mgoUp = true;
+			break;
+		case OIS::KC_LCONTROL:
+			mgoDown = true;
+			break;
+		case OIS::KC_END:
+			detectionCollision = !detectionCollision;
+			break;
+		case OIS::KC_P:
+			isFPS = !isFPS;
+			if (isFPS)
+				mScene->setFPS();
+			else
+				mScene->setThirdPerson();
+			break;
+		case OIS::KC_J:
+			posCamera = mCamera->getPosition();
+			posVoiture = mSceneMgr->getSceneNode("Voiture")->getPosition();
+			mSceneMgr->getSceneNode("Voiture");
+			std::cout << "Distance Voiture - Camera : " << posCamera.distance(posVoiture) << std::endl;
+			break;
+		case OIS::KC_K:
+			posCharacter = mScene->getCharacterCameraNode()->getPosition();
+			std::cout << "Character: " << posCharacter.x << " " << posCharacter.y << " " << posCharacter.z << std::endl;
+			break;
+		case OIS::KC_L:
+			if (mScene->picking.isPicked(mScene->getCharacterCameraNode(), mSceneMgr->getSceneNode("windowNode"),
+			        100.f))
+				mScene->destroyWindow();
+			break;
+		case OIS::KC_H:
+			if (mScene->isExistDoor())
+				if (mScene->picking.isPicked(mScene->getCharacterCameraNode(), mSceneMgr->getSceneNode("Door"), 500.f))
+					mScene->openDoor();
+			break;
+		case OIS::KC_B:
 			mScene->destroyWindow();
-		break;
-    case OIS::KC_H:
-        if(mScene->isExistDoor())
-            if(mScene->picking.isPicked(mScene->getCharacterCameraNode(),mSceneMgr->getSceneNode("Door"),500.f))
-                mScene->openDoor();
-		break;
-	case OIS::KC_B:
-		mScene->destroyWindow();
-		break;
-	case OIS::KC_M:
-		stateJeu = true;
-		mAnimationsAuto->setAnimation();
-		break;
-	case OIS::KC_R:
-		stateJeu = true;
-		mAnimationsAuto->setAnimation();
-		mAnimationsAuto->replay();
-		break;
-	default:
-		break;
+			break;
+		case OIS::KC_M:
+			stateJeu = true;
+			mAnimationsAuto->setAnimation();
+			break;
+		case OIS::KC_R:
+			stateJeu = true;
+			mAnimationsAuto->setAnimation();
+			mAnimationsAuto->replay();
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		switch (e.key)
+		{
+		case OIS::KC_ESCAPE:
+			mContinuer = false;
+			break;
+		case OIS::KC_R:
+			stateJeu = true;
+			mAnimationsAuto->setAnimation();
+			mAnimationsAuto->replay();
+			break;
+		default:
+			break;
+		}
 	}
 
 	return mContinuer;
@@ -475,6 +501,10 @@ bool InputListener::keyReleased (const KeyEvent &e)
 		break;
 	case OIS::KC_LCONTROL:
 		mgoDown = false;
+		break;
+	case OIS::KC_L:
+		stateJeu = true;
+		mAnimationsAuto->setAnimation();
 		break;
 	default:
 		break;

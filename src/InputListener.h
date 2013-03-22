@@ -86,8 +86,9 @@ private:
 	bool detectionCollision;
 	/** vrai si on voit à la première personne, sinon, on est à la 3° */
 	bool isFPS;
-
+	/** if true, on est dans l'animation de fin */
 	bool stateJeu;
+
 
 public:
 	/**

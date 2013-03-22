@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include <OgreProgressiveMesh.h>
+#include "InputListener.h"
 
 Scene::Scene (ShortStory *shortStory) :
 		mShortStory(shortStory), nTerrain(0), nCharacCamera(0), nCharacter(0), nCamera(0), nImmeuble(0), dDistanceCharacCamera(
@@ -40,13 +41,13 @@ void Scene::setLight ()
 void Scene::setTerrain ()
 {
     //fog
-    mShortStory->getSceneManager()->setFog(Ogre::FOG_EXP2, Ogre::ColourValue::Black, 0.0002);
+    mShortStory->getSceneManager()->setFog(Ogre::FOG_EXP2, Ogre::ColourValue::Black, 0.0002, 1500, 2000);
 
 	//sol palpable
 	SceneManager* sceneManager = mShortStory->getSceneManager();
-	Plane plan(Vector3::UNIT_Y, 0);
+	Plane plan(Ogre::Vector3::UNIT_Y, 0);
     MeshManager::getSingleton().createPlane("sol", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plan, 3000, 3000,
-	        100, 100, true, 1, 50, 50, Vector3::UNIT_Z);
+	        100, 100, true, 1, 50, 50, Ogre::Vector3::UNIT_Z);
 	Entity *ent = sceneManager->createEntity("EntiteSol", "sol");
 	nTerrain = sceneManager->getRootSceneNode()->createChildSceneNode();
 	nTerrain->attachObject(ent);
@@ -174,7 +175,7 @@ void Scene::setTerrain ()
 	imp.terrainSize = img.getWidth();
     imp.worldSize = 12000; //tail du terrain
 	imp.inputScale = imp.worldSize * 1 / 10; //hauteur du terrain
-    imp.minBatchSize = 33; //lod terrain min
+	imp.minBatchSize = 33; //lod terrain min
 	imp.maxBatchSize = 65; //lod terrain max : 65 c'est le maximum sinon 2^n+1
 
 	//textures
@@ -321,7 +322,7 @@ void Scene::setTerrain ()
     SceneNode* TreesNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("TreeNode");
     TreesNode->attachObject(Trees);
     TreesNode->setPosition(-1030,230,-270);
-    TreesNode->rotate(Quaternion(Degree(-90), Vector3::UNIT_X));
+    TreesNode->rotate(Quaternion(Degree(-90), Ogre::Vector3::UNIT_X));
     TreesNode->scale(5,5,5);
 }
 

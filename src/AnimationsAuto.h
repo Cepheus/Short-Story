@@ -9,7 +9,7 @@ using namespace Ogre;
 
 class AnimationsAuto
 {
-
+	
 public:
     AnimationsAuto(ShortStory * shortStory);
     ~AnimationsAuto();
@@ -25,29 +25,34 @@ public:
 	float distanceTemp;
 
 	int setFlag;
+	
 
-
-    /** track du robot*/
-    enum RobotStats
-    {
-        TRACK0, TRACK1
-    };
 
 //private:
     ShortStory *mShortStory;
     Scene *mScene;
-    Entity * mChat;
+    //Entity * mRobot;
     Entity* mPersonnage;
 	Camera* mCamera;
 
 
-
+ 
 	Ogre::AnimationState *mPersonnageTomberAnimationState;
 	Ogre::AnimationState *mPersonnageWalkAnimationState;
 	Ogre::AnimationState *mAnimStateCamera;
 
-    bool mChatActiveBoust;
+    bool mRobotActiveBoust;
 	bool mPersonnageActiveBoust;
+
+    //animations du robot
+    void setRobotTrack(int track);
+    //bool displayRobot(RobotStats track, const FrameEvent &evt);
+    void robotAnimation_Jump24thParticules();
+
+    void walkRobot(const FrameEvent &evt);
+    void idleRobot (const FrameEvent &evt);
+    void shootRobot (const FrameEvent &evt);
+    void slumpRobot (const FrameEvent &evt);
 
     //animations du personnage;
     void death2Personnage (const FrameEvent &evt);
@@ -58,15 +63,16 @@ public:
     void idle1Personnage (const FrameEvent &evt);
     void stealthPersonnage (const FrameEvent &evt);
     void walkPersonnage (const FrameEvent &evt);
-
+   
 
 
 	void tomberPersonnage();
-	void tomberChat();
+	void tomberRobot();
 
 	void tomberRegarderCamera();
 
 	void setAnimation();
+	void setPosition();
 	void animationFin(const FrameEvent &evt);
 	void replay();
 };

@@ -38,11 +38,11 @@ using namespace OIS;
 class InputListener: public FrameListener, public WindowEventListener, public KeyListener, public MouseListener
 {
 private:
-	/** atidtudes du personnage*/
-	enum PersonnageStats
-	{
-		pIDLE1, pIDLE2, pIDLE3, pWALK, pKICK, pSIDEKICK, pDEATH2
-	};
+    /** atidtudes du personnage*/
+    enum PersonnageStats
+    {
+        pIDLE1, pIDLE2, pIDLE3, pWALK, pKICK, pSIDEKICK, pDEATH2
+    };
 
 	/** La scène contenant les objets à manipuler */
 	Scene *mScene;
@@ -58,15 +58,15 @@ private:
 	Mouse* mMouse;
 	/** Permet de gérer les inputs du clavier */
 	Keyboard* mKeyboard;
-	/** Gestion des annimations */
-	Animations * mAnimations;
-	/** Gestion de l'annimation auto */
-	AnimationsAuto * mAnimationsAuto;
+    /** Gestion des annimations */
+    Animations * mAnimations;
+	 /** Gestion des annimations */
+    AnimationsAuto * mAnimationsAuto;
 	// Déplacement
-	PersonnageStats mPersonnageStat;
-	/** Le personnage est il dans l'immeuble ?*/
-	bool mIsInBuilding;
-	bool mStatInBuilding;
+    PersonnageStats mPersonnageStat;
+    /** Le personnage est il dans l'immeuble ?*/
+    bool mIsInBuilding;
+    bool mStatInBuilding;
 
 	/** Tant que vrai, le programe s'exécute */
 	bool mContinuer;
@@ -86,8 +86,8 @@ private:
 	bool detectionCollision;
 	/** vrai si on voit à la première personne, sinon, on est à la 3° */
 	bool isFPS;
-	/** state de jeu 0:jeuer 1:film de tomber */
-	bool stateJeu;
+
+	int stateJeu;
 
 public:
 	/**
@@ -97,8 +97,7 @@ public:
 	 * @param camera la caméra à gérer avec le clavier
 	 * @note faudra surement utiliser le node contentant le perso + la cam au lieu de juste la cam
 	 */
-	InputListener (Scene *scene, Animations * animations, AnimationsAuto * animationsAuto, SceneManager *scmanager,
-	        RenderWindow *wnd, Camera *camera);
+    InputListener (Scene *scene, Animations * animations,AnimationsAuto * animationsAuto, SceneManager *scmanager, RenderWindow *wnd, Camera *camera);
 
 	/** destructeur */
 	virtual ~InputListener ();
@@ -135,8 +134,7 @@ public:
 		mVitesseRotation = vitesse;
 	}
 
-	void Collisions (SceneNode * ObjectNode, MovableObject* objectMove, bool detectLesMurs, Real distanceFromGround,
-	        bool chat);
+	void Collisions (SceneNode * ObjectNode,MovableObject* objectMove, bool detectLesMurs, Real distanceFromGround, bool chat);
 
 protected:
 	/** Initialise la gestion des inputs */
@@ -158,28 +156,22 @@ protected:
 	virtual bool keyPressed (const KeyEvent &e);
 	virtual bool keyReleased (const KeyEvent &e);
 
-	/**
-	 * @brief film de fin
-	 * @param evt
-	 * tomber du ninja et regarder par camera
-	 */
-	void filmFin (const FrameEvent& evt);
-
-	/**
-	 * @brief deplacementNinja
-	 * @param evt
-	 * @param deplacement
-	 * @brief gestion du ninja
-	 */
+    /**
+     * @brief deplacementNinja
+     * @param evt
+     * @param deplacement
+     * @brief gestion du ninja
+     */
 	void deplacementNinja (const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0, 0, 0));
 
-	/**
-	 * @brief deplacementChat
-	 * @param evt
-	 * @param deplacement
-	 * @brief gestion du chat
-	 */
-	void deplacementChat (const FrameEvent& evt, Ogre::Vector3 deplacement = Ogre::Vector3(0, 0, 0));
+    /**
+     * @brief deplacementChat
+     * @param evt
+     * @param deplacement
+     * @brief gestion du chat
+     */
+    void deplacementChat (const FrameEvent& evt,Ogre::Vector3 deplacement = Ogre::Vector3(0,0,0));
+	void filmFin(const FrameEvent& evt);
 };
 
 #endif // INPUTLISTENER_H

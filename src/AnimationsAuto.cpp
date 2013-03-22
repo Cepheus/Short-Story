@@ -12,8 +12,8 @@ AnimationsAuto::AnimationsAuto (ShortStory *shortStory)
 
 	mCamera = mShortStory->getCamera();
 	setFlag = 0;
-	x = 140.0;
-	y = 960.0;
+	x = 402.0;
+	y = 850.0;
 	z = -600.0;
 	height = 850.0;
 	lengh = 350;
@@ -85,6 +85,8 @@ void AnimationsAuto::tomberPersonnage ()
 	//Entity* mPersonnage = mShortStory->getSceneManager()->getEntity("Personnage");
 
 	SceneNode * personnageNode = mPersonnage->getParentSceneNode();
+	//SceneNode *persNode = mPersonnage->getParentSceneNode();
+	//persNode->setPosition(x, y, z);
 	//personnageNode->setPosition(Vector3(-800,0,500));
 	//personnageNode->translate(Vector3(-100,0,500));
 	//personnageNode->resetToInitialState();
@@ -93,14 +95,14 @@ void AnimationsAuto::tomberPersonnage ()
 	        20); //30 secondes d'annimation
 	personnageAnimation->setRotationInterpolationMode(Ogre::Animation::RIM_LINEAR);
 	personnageAnimation->setInterpolationMode(Ogre::Animation::IM_LINEAR);
-	//personnageNode->setPosition(Ogre::Vector3(x, y, z));
+	personnageNode->setPosition(Ogre::Vector3(x, y, z));
 	//personnageNode->yaw( Degree( -90 ));
 	//piste n°0
 	//personnageNode->setInitialState();
 	//personnageNode->setPosition(Ogre::Vector3(x, y, z));
 	Ogre::NodeAnimationTrack *track = personnageAnimation->createNodeTrack(0, personnageNode);
 	track->createNodeKeyFrame(0);
-
+	personnageNode->setPosition(Ogre::Vector3(x, y, z));
 	//personnageNode->rotate(Ogre::Quaternion(Ogre::Degree(-25), Ogre::Vector3::UNIT_Y));
 	//personnageNode->setInitialState();
 	//x=x-100;
@@ -201,9 +203,22 @@ void AnimationsAuto::setPosition ()
 {
 	// on place le perso
 	Node *persNode = mPersonnage->getParentNode();
+	persNode->getParent()->getParent()->setPosition(Vector3::ZERO);
+	persNode->getParent()->getParent()->setOrientation(Quaternion(Degree(0),Vector3(0,0,0)));
+	persNode->getParent()->setPosition(Vector3::ZERO);
+	persNode->getParent()->setOrientation(Quaternion(Degree(0),Vector3(0,0,0)));
+
+	
+	//persNode->setp
+	
+	
 	persNode->setPosition(x, y, z);
+	persNode->setOrientation(Quaternion(Degree(90),Vector3(0,1,0)));
+	//persNode->setOrientation(Quaternion(Degree(0),Vector3(0,0,0)));
+
 	// on place la camera
 	SceneNode* camNode = mCamera->getParentSceneNode();
+
 	camNode->setPosition(Vector3::ZERO);
 	mCamera->setPosition(Vector3(x - 2000, y, z - 1000));    //-600,0,-1400
 

@@ -144,6 +144,11 @@ public:
 		this->inBuilding = inBuilding;
 	}
 
+	bool isWindowDestroyed ()
+	{
+	    return windowIsDestroy;
+	}
+
 private:
 	/** Met en place la lumiÃ¨re */
 	void setLight ();

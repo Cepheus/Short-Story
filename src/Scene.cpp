@@ -487,6 +487,7 @@ void Scene::openDoor()
     if(!doorIsDestroy)
     {
         mShortStory->getSceneManager()->destroySceneNode("Door");
+        doorIsDestroy  =true;
     }
 }
 

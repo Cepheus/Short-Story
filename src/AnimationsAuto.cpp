@@ -3,9 +3,10 @@
 AnimationsAuto::AnimationsAuto(ShortStory *shortStory)
 {
     mShortStory = shortStory;
+    mPersonnageTomberAnimationState = 0;
     mPersonnage = mShortStory->getSceneManager()->getEntity("Personnage");
    // mRobot = mShortStory->getSceneManager()->getEntity("Personnage");
-	
+
     //mRobotActiveBoust = false;
 	//mPersonnageActiveBoust = false;
 
@@ -21,9 +22,9 @@ AnimationsAuto::AnimationsAuto(ShortStory *shortStory)
 	g = 98;
 	distanceTemp=4;
 	y = height;
-	
 
-   
+
+
 }
 AnimationsAuto::~AnimationsAuto(){}
 
@@ -39,56 +40,42 @@ void AnimationsAuto::walkPersonnage (const FrameEvent &evt)
 
 void AnimationsAuto::stealthPersonnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Stealth")->setEnabled(true);
     mPersonnage->getAnimationState("Stealth")->addTime(evt.timeSinceLastFrame);
 }
 
 void AnimationsAuto::idle1Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Idle1")->setEnabled(true);
     mPersonnage->getAnimationState("Idle1")->addTime(evt.timeSinceLastFrame);
 }
 
 void AnimationsAuto::idle2Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Idle2")->setEnabled(true);
     mPersonnage->getAnimationState("Idle2")->addTime(evt.timeSinceLastFrame);
 }
 
 void AnimationsAuto::idle3Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Idle3")->setEnabled(true);
     mPersonnage->getAnimationState("Idle3")->addTime(evt.timeSinceLastFrame);
 }
 
 void AnimationsAuto::kickPersonnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Kick")->setEnabled(true);
     mPersonnage->getAnimationState("Kick")->addTime(evt.timeSinceLastFrame);
 }
 
 void AnimationsAuto::sideKickPersonnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("SideKick")->setEnabled(true);
     mPersonnage->getAnimationState("SideKick")->addTime(evt.timeSinceLastFrame);
 }
 
 void AnimationsAuto::death2Personnage (const FrameEvent &evt)
 {
-    Entity* personnage = mShortStory->getSceneManager()->getEntity("Personnage");
-
     mPersonnage->getAnimationState("Death2")->setEnabled(true);
     mPersonnage->getAnimationState("Death2")->addTime(evt.timeSinceLastFrame);
 
@@ -100,7 +87,7 @@ void AnimationsAuto::tomberPersonnage ()
 {
 	//mCamera->getParentNode();
     //Entity* mPersonnage = mShortStory->getSceneManager()->getEntity("Personnage");
-	
+
 	SceneNode * personnageNode = mPersonnage->getParentSceneNode();
 	//personnageNode->setPosition(Vector3(-800,0,500));
 	//personnageNode->translate(Vector3(-100,0,500));
@@ -117,7 +104,7 @@ void AnimationsAuto::tomberPersonnage ()
     Ogre::NodeAnimationTrack *track = personnageAnimation->createNodeTrack(0, personnageNode);
     track->createNodeKeyFrame(0);
 
-    
+
     //personnageNode->rotate(Ogre::Quaternion(Ogre::Degree(-25), Ogre::Vector3::UNIT_Y));
     //personnageNode->setInitialState();
 	//x=x-100;
@@ -145,7 +132,7 @@ void AnimationsAuto::tomberPersonnage ()
 	//7ere clef
     key = track->createNodeKeyFrame(10);
     key->setTranslate(Ogre::Vector3(x-lengh-jumpLengh, y, z));
-	
+
 	int time=2;
 	for(time=2;time<=4;time++)
 	{
@@ -183,25 +170,25 @@ void AnimationsAuto::tomberPersonnage ()
     key = track->createNodeKeyFrame(20);
     key->setTranslate(Ogre::Vector3(x-lengh-jumpLengh, 0, z));
 	key->setRotation(Ogre::Quaternion(Ogre::Degree(90), Ogre::Vector3::UNIT_Z));
-	
+
 
     mPersonnageTomberAnimationState = mShortStory->getSceneManager()->createAnimationState("PersonnageTomberAnimation");
     mPersonnageTomberAnimationState->setTimePosition(0);
     mPersonnageTomberAnimationState->setLoop(false);
     mPersonnageTomberAnimationState->setEnabled(false);
-	
+
 
 }
 
 void AnimationsAuto::animationFin(const FrameEvent &evt)
 {
-	
+
 	mPersonnageTomberAnimationState->setEnabled(true);
 	if(!mPersonnageTomberAnimationState->hasEnded()){
-			
+
             mPersonnageTomberAnimationState->addTime(evt.timeSinceLastFrame);
 	}
-	
+
 	mAnimStateCamera->setEnabled(true);
 	if(!mAnimStateCamera->hasEnded()){
             mAnimStateCamera->addTime(evt.timeSinceLastFrame);
@@ -230,26 +217,26 @@ void AnimationsAuto::setPosition()
 
 void AnimationsAuto::tomberRegarderCamera()
 {
-	using namespace Ogre; 
-	
+	using namespace Ogre;
+
 	SceneNode* camNode = mCamera->getParentSceneNode();
-        
+
         Animation* animCamera = mShortStory->getSceneManager()->createAnimation("TomberCameraTrack", 40);
 		animCamera->setInterpolationMode(Animation::IM_LINEAR);
-       
-		NodeAnimationTrack* track = animCamera->createNodeTrack(0, camNode);
-        
-		
-	
 
-		TransformKeyFrame* key = track->createNodeKeyFrame(0); 
-		
-        
+		NodeAnimationTrack* track = animCamera->createNodeTrack(0, camNode);
+
+
+
+
+		TransformKeyFrame* key = track->createNodeKeyFrame(0);
+
+
 
         key = track->createNodeKeyFrame(10);
         key->setTranslate(Vector3(-800,200,500));
-		
-		
+
+
         key = track->createNodeKeyFrame(20);
         key->setTranslate(Vector3(-850,400,1400));
 
@@ -275,5 +262,5 @@ void AnimationsAuto::setAnimation()
 		tomberPersonnage();
 		setFlag=1;
 	}
-	
+
 }

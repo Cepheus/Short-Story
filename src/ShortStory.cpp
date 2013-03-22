@@ -70,6 +70,9 @@ void ShortStory::initScene ()
     {
         mCamera->setFarClipDistance(0);   // enable infinite far clip distance if we can
     }
+    else{
+        mCamera->setFarClipDistance(2000);
+    }
 
 	Viewport* vp = mWindow->addViewport(mCamera);
 	vp->setBackgroundColour(ColourValue(0, 0, 0));
@@ -92,3 +95,4 @@ bool ShortStory::start ()
 	}
 	return continu;
 }
+

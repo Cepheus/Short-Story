@@ -87,7 +87,7 @@ private:
 	/** vrai si on voit à la première personne, sinon, on est à la 3° */
 	bool isFPS;
 
-	int stateJeu;
+	bool stateJeu;
 
 public:
 	/**

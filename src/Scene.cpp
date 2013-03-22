@@ -3,7 +3,7 @@
 
 Scene::Scene (ShortStory *shortStory) :
 		mShortStory(shortStory), nTerrain(0), nCharacCamera(0), nCharacter(0), nCamera(0), nImmeuble(0), dDistanceCharacCamera(
-		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false), windowIsDestroy(false),
+		        100), mTerrain(0), terrainLight(0), mGlobals(0), inBuilding(false), windowIsDestroy(false),doorIsDestroy(true),
 		         picking(mShortStory->getSceneManager())
 {
 	nCharacCamera = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("PersonnageCameraNode");
@@ -26,7 +26,7 @@ void Scene::createScene ()
 	setPersonnage();
 	setChat();
 	setCamera();
-	setMeshes(false);
+	setMeshes(true);
 	//setDoor();
 }
 
@@ -40,7 +40,7 @@ void Scene::setLight ()
 void Scene::setTerrain ()
 {
     //fog
-    mShortStory->getSceneManager()->setFog(Ogre::FOG_EXP2, Ogre::ColourValue::Black, 0.0002, 1500, 2000);
+    mShortStory->getSceneManager()->setFog(Ogre::FOG_EXP2, Ogre::ColourValue::Black, 0.0002);
 
 	//sol palpable
 	SceneManager* sceneManager = mShortStory->getSceneManager();
@@ -174,7 +174,7 @@ void Scene::setTerrain ()
 	imp.terrainSize = img.getWidth();
     imp.worldSize = 12000; //tail du terrain
 	imp.inputScale = imp.worldSize * 1 / 10; //hauteur du terrain
-	imp.minBatchSize = 33; //lod terrain min
+    imp.minBatchSize = 33; //lod terrain min
 	imp.maxBatchSize = 65; //lod terrain max : 65 c'est le maximum sinon 2^n+1
 
 	//textures
@@ -372,10 +372,11 @@ void Scene::setImmeuble ()
 	nImmeuble->scale(120., 100., 100.);
 
     Entity* window = mShortStory->getSceneManager()->createEntity("window", "VitreCassee.mesh");
-    SceneNode * windowNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
-    windowNode->attachObject(window);
-    windowNode->setPosition(0., 0., 0.);
-    windowNode->scale(120., 100., 100.);
+    nWindow = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("windowNode");
+    nWindow->attachObject(window);
+    nWindow->setPosition(0., 0., 0.);
+    nWindow->scale(120., 100., 100.);
+
 }
 
 void Scene::setPersonnage ()
@@ -447,6 +448,7 @@ void Scene::setDoor()
 	nDoor->attachObject(entDoor);
     nDoor->setPosition(360.0, 0., -11.21);
 	nDoor->scale(120., 100., 100.);
+	doorIsDestroy = false;
 }
 
 SceneNode* Scene::getImmeubleNode ()
@@ -481,8 +483,10 @@ SceneNode* Scene::getCatNode()
 
 void Scene::openDoor()
 {
-     Entity* door = mShortStory->getSceneManager()->getEntity("Door");
-     door->setVisible(!door->getVisible());
+    if(!doorIsDestroy)
+    {
+        mShortStory->getSceneManager()->destroySceneNode("Door");
+    }
 }
 
 void Scene::destroyWindow()
@@ -492,7 +496,7 @@ void Scene::destroyWindow()
         windowIsDestroy=true;
         Entity* window = mShortStory->getSceneManager()->getEntity("window");
         window->setVisible(false);
-
+        mShortStory->getSceneManager()->getRootSceneNode()->removeChild(nWindow);
         ParticleSystem * windowPart = mShortStory->getSceneManager()->createParticleSystem("verresecurite", "verresecurite");
         SceneNode * windowPartNode = mShortStory->getSceneManager()->getRootSceneNode()->createChildSceneNode("verresecuriteNode",
                 Ogre::Vector3(0, 1000, -600));

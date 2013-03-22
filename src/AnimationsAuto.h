@@ -9,7 +9,7 @@ using namespace Ogre;
 
 class AnimationsAuto
 {
-	
+
 public:
     AnimationsAuto(ShortStory * shortStory);
     ~AnimationsAuto();
@@ -25,7 +25,7 @@ public:
 	float distanceTemp;
 
 	int setFlag;
-	
+
 
 
 //private:
@@ -36,12 +36,12 @@ public:
 	Camera* mCamera;
 
 
- 
+
 	Ogre::AnimationState *mPersonnageTomberAnimationState;
 	Ogre::AnimationState *mPersonnageWalkAnimationState;
 	Ogre::AnimationState *mAnimStateCamera;
 
-    bool mRobotActiveBoust;
+    //bool mRobotActiveBoust;
 	bool mPersonnageActiveBoust;
 
     //animations du robot
@@ -63,7 +63,7 @@ public:
     void idle1Personnage (const FrameEvent &evt);
     void stealthPersonnage (const FrameEvent &evt);
     void walkPersonnage (const FrameEvent &evt);
-   
+
 
 
 	void tomberPersonnage();

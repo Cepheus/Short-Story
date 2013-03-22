@@ -33,6 +33,8 @@ private:
 	SceneNode* nCamera;
 	/** Le noeud de l'immeuble */
 	SceneNode* nImmeuble;
+	/** Le noeud de la fenêtre de l'immeuble */
+	SceneNode * nWindow;
 	/** Le noeud du chat */
 	SceneNode* nChat;
 	/** Distance personnage/camÃ©ra */
@@ -48,6 +50,8 @@ private:
 	bool inBuilding;
 	/** false, window can be destroied, true, window is already destroied */
 	bool windowIsDestroy;
+	/** false, door can be destroied, true, door is already destroied */
+	bool doorIsDestroy;
 
 public:
     /** Picking system */
@@ -98,6 +102,11 @@ public:
     inline SceneNode* getCharacCamera ()
 	{
 		return nCharacCamera;
+	}
+
+    inline bool isExistDoor()
+	{
+		return !doorIsDestroy;
 	}
 
     inline Real getDistanceCharacCamera () const

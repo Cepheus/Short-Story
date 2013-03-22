@@ -28,12 +28,12 @@ void Scene::createScene ()
 	setChat();
 	setCamera();
 	setMeshes(true);
-	//setDoor();
+    setDoor();
 }
 
 void Scene::setLight ()
 {
-	mShortStory->getSceneManager()->setAmbientLight(ColourValue(0.3f, 0.3f, 0.3f));
+    mShortStory->getSceneManager()->setAmbientLight(ColourValue(0.5f, 0.5f, 0.5f));
 	Light* ambientLight = mShortStory->getSceneManager()->createLight("MainLight");
 	ambientLight->setPosition(20, 80, 50);
 }

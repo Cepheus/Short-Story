@@ -503,8 +503,11 @@ bool InputListener::keyReleased (const KeyEvent &e)
 		mgoDown = false;
 		break;
 	case OIS::KC_L:
-		stateJeu = true;
-		mAnimationsAuto->setAnimation();
+	    if (!mScene->isExistDoor())
+		{
+		    stateJeu = true;
+            mAnimationsAuto->setAnimation();
+		}
 		break;
 	default:
 		break;
